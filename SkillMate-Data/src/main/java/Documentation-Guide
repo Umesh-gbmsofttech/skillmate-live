@@ -1,0 +1,14 @@
+key things:
+
+payment gateway
+login with mobile-otp
+
+modules:
+Admin,
+Student,
+Trainer,
+courses,
+RatingReviews,
+Login:-(twilio-otp),(email-otp)
+
+MeetingLink

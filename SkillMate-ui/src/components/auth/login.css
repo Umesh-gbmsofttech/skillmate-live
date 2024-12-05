@@ -1,0 +1,169 @@
+/* Wrapper for the login container */
+.login-container-unique {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    /* Adjust the width to make it more responsive */
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f0f0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeIn 0.3s ease-in-out;
+    /* Animation for fade-in */
+}
+
+/* Animation for fade-in effect */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Title of the login form */
+.login-title-unique {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Labels for inputs */
+.label-mobile-unique,
+.label-otp-unique {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #555;
+}
+
+/* Input fields */
+.input-mobile-unique,
+.input-otp-unique {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Focus effect on input fields */
+.input-mobile-unique:focus,
+.input-otp-unique:focus {
+    border-color: #4CAF50;
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+/* Buttons */
+.submit-btn-unique,
+.login-btn-unique,
+.signup-btn-unique {
+    width: 100%;
+    height: 45px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect for buttons */
+.submit-btn-unique:hover,
+.login-btn-unique:hover,
+.signup-btn-unique:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+/* Disabled state for buttons */
+.submit-btn-unique:disabled,
+.login-btn-unique:disabled,
+.signup-btn-unique:disabled {
+    background-color: #c7c7c7;
+    cursor: not-allowed;
+}
+
+/* Error message */
+.error-unique {
+    color: #d9534f;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Full-screen overlay */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: fadeInOverlay 0.3s ease-in-out;
+    /* Animation for overlay fade-in */
+}
+
+/* Animation for the overlay fade-in */
+@keyframes fadeInOverlay {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 480px) {
+    .login-container-unique {
+        padding: 20px;
+        margin: 30px auto;
+        max-width: 350px;
+    }
+
+    .login-title-unique {
+        font-size: 20px;
+    }
+
+    .input-mobile-unique,
+    .input-otp-unique {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .submit-btn-unique,
+    .login-btn-unique,
+    .signup-btn-unique {
+        font-size: 14px;
+        padding: 12px;
+    }
+}
