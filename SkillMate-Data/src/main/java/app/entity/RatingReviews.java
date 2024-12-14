@@ -1,24 +1,37 @@
 package app.entity;
 
+import jakarta.persistence.*;
 import java.sql.Date;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RatingReviews {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String ratingReviewsTo;
-    private String whichUserIsGiveThisRating;
-    // private Trainer trainer;
-    // private Student student;
-    // private Course course;
+	private String review;
+	private Date reviewDate;
 
-    private Date reviewDate;
-    private String review;
+	@ManyToOne
+	@JoinColumn(name = "student_id", nullable = true)
+	private Student student;
+
+	@ManyToOne
+	@JoinColumn(name = "trainer_id", nullable = true)
+	private Trainer trainer;
+
+	@ManyToOne
+	@JoinColumn(name = "course_id", nullable = true)
+	private Course course;
+
+	private boolean isGivenByAdmin;
+
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Batch {
@@ -12,8 +13,13 @@ public class Batch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Student student;
+    @ManyToOne
+    private Student student;  // Reference to Student
+
+    @ManyToOne
     private Trainer trainer;
+
+    @ManyToOne
     private Attendance attendance;
 
     public Long getId() {

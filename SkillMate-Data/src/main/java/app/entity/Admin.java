@@ -1,11 +1,11 @@
-package app.entity;
+// package app.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+// import jakarta.persistence.Entity;
+// import jakarta.persistence.Id;
 
-@Entity
-public class Admin {
+// @Entity
+// public class Admin {
 
-	@Id
-	Long id;
-}
+// @Id
+// Long id;
+// }

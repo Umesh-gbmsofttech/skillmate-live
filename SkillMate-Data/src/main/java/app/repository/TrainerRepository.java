@@ -1,8 +1,10 @@
 package app.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import app.entity.Trainer;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
+    // Custom queries if needed
 }

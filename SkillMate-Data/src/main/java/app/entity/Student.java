@@ -13,6 +13,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Student {
@@ -38,11 +39,148 @@ public class Student {
     @JoinTable(name = "student_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> courses;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL) // Corrected mappedBy here
     private List<Attendance> attendance;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<RatingReviews> ratingReviews;
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Batch> batch;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getWorkingStatus() {
+		return workingStatus;
+	}
+
+	public void setWorkingStatus(String workingStatus) {
+		this.workingStatus = workingStatus;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getQualification() {
+		return qualification;
+	}
+
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
+	}
+
+	public byte[] getResume() {
+		return resume;
+	}
+
+	public void setResume(byte[] resume) {
+		this.resume = resume;
+	}
+
+	public Trainer getTrainer() {
+		return trainer;
+	}
+
+	public void setTrainer(Trainer trainer) {
+		this.trainer = trainer;
+	}
+
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
+	}
+
+	public List<Attendance> getAttendance() {
+		return attendance;
+	}
+
+	public void setAttendance(List<Attendance> attendance) {
+		this.attendance = attendance;
+	}
+
+	public List<RatingReviews> getRatingReviews() {
+		return ratingReviews;
+	}
+
+	public void setRatingReviews(List<RatingReviews> ratingReviews) {
+		this.ratingReviews = ratingReviews;
+	}
+
+	public List<Batch> getBatch() {
+		return batch;
+	}
+
+	public void setBatch(List<Batch> batch) {
+		this.batch = batch;
+	}
+
+	public Student(Long id, String profilePic, String fullName, String mobileNumber, String email, String workingStatus,
+			String address, String qualification, byte[] resume, Trainer trainer, List<Course> courses,
+			List<Attendance> attendance, List<RatingReviews> ratingReviews, List<Batch> batch) {
+		super();
+		this.id = id;
+		this.profilePic = profilePic;
+		this.fullName = fullName;
+		this.mobileNumber = mobileNumber;
+		this.email = email;
+		this.workingStatus = workingStatus;
+		this.address = address;
+		this.qualification = qualification;
+		this.resume = resume;
+		this.trainer = trainer;
+		this.courses = courses;
+		this.attendance = attendance;
+		this.ratingReviews = ratingReviews;
+		this.batch = batch;
+	}
+
     // Getters and Setters
+    
+    
 }

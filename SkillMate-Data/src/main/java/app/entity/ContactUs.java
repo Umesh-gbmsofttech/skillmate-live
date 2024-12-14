@@ -4,6 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class ContactUs {
@@ -11,12 +15,31 @@ public class ContactUs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotEmpty(message = "Full name is required")
+    @Size(min = 3, max = 100, message = "Full name must be between 3 and 100 characters")
     private String fullName;
+
+    @NotEmpty(message = "Email is required")
+    @Email(message = "Please provide a valid email address")
     private String email;
-    private Long contactNumber;
+
+    @NotNull(message = "Contact number is required")
+    private String contactNumber; // Changed to String to handle international phone formats better
+
+    @NotEmpty(message = "Qualification is required")
+    @Size(min = 3, max = 100, message = "Qualification must be between 3 and 100 characters")
     private String qualification;
+
+    @NotEmpty(message = "Query is required")
+    @Size(min = 10, max = 500, message = "Query must be between 10 and 500 characters")
     private String query;
 
+    // Default no-arg constructor
+    public ContactUs() {
+    }
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -41,11 +64,11 @@ public class ContactUs {
         this.email = email;
     }
 
-    public Long getContactNumber() {
+    public String getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(Long contactNumber) {
+    public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
 
@@ -65,4 +88,16 @@ public class ContactUs {
         this.query = query;
     }
 
+    // Override toString for better logging or debugging
+    @Override
+    public String toString() {
+        return "ContactUs{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", contactNumber='" + contactNumber + '\'' +
+                ", qualification='" + qualification + '\'' +
+                ", query='" + query + '\'' +
+                '}';
+    }
 }
