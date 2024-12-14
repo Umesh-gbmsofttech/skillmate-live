@@ -1,0 +1,139 @@
+.ourTopCoursesContainer {
+    background-color: #f1f1f1;
+    padding: 20px;
+}
+
+.ourTopCoursesHeading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.ourTopCoursesCardSection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.courseCard {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    min-width: 350px;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 1.8s ease, opacity 1.8s ease;
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.courseCard.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.courseCard:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.cardImage {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.cardDetails {
+    padding: 0px 15px 15px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    position: relative;
+    /* Important for absolute positioning of the edit icon */
+}
+
+.cardCourseName {
+    padding: 0;
+    margin: 0;
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.cardTrainerName {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.cardRating {
+    font-size: 14px;
+    color: #555;
+    margin: 0px 10px 0px 10px;
+}
+
+.cardBuyNowButton {
+    background-color: #42A4FF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.cardBuyNowButton:hover {
+    background-color: #379bf9;
+}
+
+.editIcon {
+    position: absolute;
+    top: 70px;
+    right: 15px;
+    width: 20px;
+    /* Adjust size as needed */
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.editIcon:hover {
+    transform: scale(1.1);
+    /* Slight scaling effect on hover */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .ourTopCoursesCardSection {
+        gap: 20px;
+    }
+
+    .cardImage {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .courseCard {
+        max-width: 100%;
+    }
+
+    .cardCourseName {
+        font-size: 18px;
+    }
+
+    .cardRating {
+        font-size: 14px;
+    }
+
+    .cardImage {
+        height: 150px;
+    }
+}

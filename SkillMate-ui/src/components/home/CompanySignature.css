@@ -1,0 +1,36 @@
+.GBM-softtech-signature {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #FF6A6A;
+    color: #1c51ff;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.GBM-softtech-signature p {
+    margin: 0;
+}
+
+.GBM-softtech-signature a {
+    color: #1c51ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.GBM-softtech-signature a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .GBM-softtech-signature {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .GBM-softtech-signature a {
+        margin-top: 5px;
+    }
+}

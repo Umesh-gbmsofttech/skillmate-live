@@ -1,0 +1,64 @@
+.admin-container-profile {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.admin-container-profile-welcome {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f3f3;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 90%;
+}
+
+.admin-container-profile-welcome img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: none;
+}
+
+.admin-container-profile-welcome .admin-welcome-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.admin-container-profile-manage-board-heading {
+    text-align: center;
+    margin: 100px 0 0 0;
+}
+
+.admin-dashboard-control-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Create two columns */
+    gap: 10px 50px;
+    padding: 100px 20px;
+    border-radius: 10px;
+    background-color: #f3f3f3;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 5% 4% 5% 4%;
+}
+
+.admin-dashboard-control-buttons button {
+    padding: 15px 25px;
+    border-radius: 10px;
+    background-color: #25ff4d;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    border: none;
+}
+
+.admin-dashboard-control-buttons button:hover {
+    background-color: #19c739;
+}

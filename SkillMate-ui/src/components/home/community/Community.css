@@ -1,0 +1,23 @@
+.community-container-about-section {
+  background-color: #f7f7f7;
+  padding: 50px 20px;
+  text-align: center;
+  border-radius: 10px;
+  color: rgb(206, 60, 31);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.community-container-description-heading {
+  transition: all 0.3s ease;
+  font-size: 36px;
+  font-weight: bold;
+  color: #0f0344;
+  margin-bottom: 20px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.community-container-description {
+  font-size: 18px;
+  color: #443e3e;
+  margin-bottom: 30px;
+}

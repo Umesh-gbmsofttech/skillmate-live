@@ -1,7 +1,7 @@
 .hero-section {
   align-items: center;
   text-align: center;
-  padding: 50px 0;
+  /* padding: 50px 0; */
   width: 94%;
   margin-left: 3%;
   margin-right: 3%;
@@ -24,7 +24,7 @@
 }
 
 .carousel-item img:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 /* Styling for dots */

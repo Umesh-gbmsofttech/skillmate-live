@@ -1,0 +1,205 @@
+/* Overall container for the page */
+.admin-dashboard-manage-students-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #EEEEEE;
+}
+
+/* Welcome section for the admin */
+.admin-dashboard-manage-students-container .admin-welcome {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-welcome h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    width: 100%;
+    background-color: #cdcdcd;
+    padding: 30px 10px;
+    margin: 0;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.admin-welcome p {
+    font-size: 24px;
+    background-color: transparent;
+    padding: 10px 30px;
+    margin: 0;
+    border-radius: 50px;
+    text-align: center;
+    background-color: #cdcdcd;
+}
+
+/* Add new student button */
+.add__new-student-btn {
+    background-color: #356bdf;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 32px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.6s ease, transform 0.3s ease, box-shadow 0.7s ease;
+}
+
+.add__new-student-btn:hover {
+    background-color: #2c5fcb;
+    transform: scale(1.03);
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+}
+
+/* Students list and cards */
+.ad__students-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Individual student card styling */
+.ad__students-list-card {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #FFFFFF;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Student profile image */
+.student-profile {
+    width: 180px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 25px;
+    margin-right: 20px;
+}
+
+/* Student details */
+.students-details-data {
+    flex: 1;
+    padding-bottom: 2%;
+}
+
+.students-details-data h3 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.students-details-data p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Edit button styling */
+.ad_edit_st-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 2% 2% 0;
+    transition: transform 0.3s ease;
+}
+
+.ad_edit_st-btn img {
+    width: 30px;
+    height: 30px;
+}
+
+.ad_edit_st-btn:hover img {
+    transform: scale(1.2);
+}
+
+/* Responsive styling */
+@media (max-width: 1024px) {
+    .ad__students-list-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 15px;
+    }
+
+    .student-profile {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 15px;
+    }
+
+    .students-details-data h3 {
+        font-size: 24px;
+    }
+
+    .students-details-data p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ad__students-list-card {
+        padding: 10px;
+    }
+
+    .student-profile {
+        width: 120px;
+        height: 120px;
+    }
+
+    .students-details-data h3 {
+        font-size: 20px;
+    }
+
+    .students-details-data p {
+        font-size: 12px;
+    }
+
+    .add__new-student-btn {
+        padding: 8px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-dashboard-manage-students-container {
+        padding: 15px;
+    }
+
+    .ad__students-list-card {
+        padding: 5px;
+    }
+
+    .student-profile {
+        width: 100px;
+        height: 100px;
+    }
+
+    .students-details-data h3 {
+        font-size: 18px;
+    }
+
+    .students-details-data p {
+        font-size: 11px;
+    }
+
+    .add__new-student-btn {
+        padding: 6px 18px;
+    }
+
+    .admin-welcome h1 {
+        font-size: 28px;
+        padding: 15px;
+    }
+
+    .admin-welcome p {
+        font-size: 16px;
+        padding: 6px 15px;
+    }
+}

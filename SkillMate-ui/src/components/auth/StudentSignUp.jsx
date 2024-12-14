@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import './StudentSignUp.css';
-import { GlobalContext } from '../context/GlobalContext'; // Ensure GlobalContext is imported
+import { GlobalContext } from '../context/GlobalContext';
 
 const StudentSignUp = () => {
     const [name, setName] = useState('');
@@ -9,6 +9,8 @@ const StudentSignUp = () => {
     const [address, setAddress] = useState('');
     const [qualification, setQualification] = useState('');
     const [profilePic, setProfilePic] = useState(null);
+    const [resume, setResume] = useState(null);
+    const [workStatus, setWorkStatus] = useState('');
     const [error, setError] = useState(null);
     const { setUserData } = useContext(GlobalContext);
 
@@ -19,14 +21,33 @@ const StudentSignUp = () => {
                 setError('Please upload a valid image file.');
                 return;
             }
-            if (file.size > 2 * 1024 * 1024) {  // Limit file size to 2MB
+            if (file.size > 2 * 1024 * 1024) {
                 setError('File size must be less than 2MB.');
                 return;
             }
 
             const reader = new FileReader();
             reader.onloadend = () => {
-                setProfilePic(reader.result.split(',')[1]); // Extract Base64 string
+                setProfilePic(reader.result.split(',')[1]);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleResumeChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (!file.type.includes('pdf')) {
+                setError('Please upload a valid PDF file.');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                setError('File size must be less than 5MB.');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setResume(reader.result.split(',')[1]);
             };
             reader.readAsDataURL(file);
         }
@@ -35,8 +56,8 @@ const StudentSignUp = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!name || !mobile || !email || !address || !qualification || !profilePic) {
-            setError('Please fill in all fields and upload a profile picture.');
+        if (!name || !mobile || !email || !address || !qualification || !profilePic || !resume || !workStatus) {
+            setError('Please fill in all fields and upload a profile picture and resume.');
             return;
         }
 
@@ -46,7 +67,7 @@ const StudentSignUp = () => {
             return;
         }
 
-        const studentData = { name, mobile, email, address, qualification, profilePic };
+        const studentData = { name, mobile, email, address, qualification, profilePic, resume, workStatus };
 
         fetch('http://localhost:8080/student/save', {
             method: 'POST',
@@ -72,14 +93,14 @@ const StudentSignUp = () => {
                     setAddress('');
                     setQualification('');
                     setProfilePic(null);
+                    setResume(null);
+                    setWorkStatus('');
                     setError(null);
 
-                    console.log('Student saved successfully:', data);
                     alert('Student data submitted successfully!');
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
                 setError(error.message || 'An error occurred while submitting the form.');
             });
     };
@@ -152,6 +173,31 @@ const StudentSignUp = () => {
                             type="text"
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
+                            required
+                        />
+                    </label>
+
+                    <label>
+                        Current Work Status:
+                        <select
+                            value={workStatus}
+                            onChange={(e) => setWorkStatus(e.target.value)}
+                            required
+                        >
+                            <option value="">Select</option>
+                            <option value="full-time">Full-time</option>
+                            <option value="part-time">Part-time</option>
+                            <option value="freelance">Freelance</option>
+                            <option value="un-employeed">Unemployed</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Resume (PDF):
+                        <input
+                            type="file"
+                            accept="application/pdf"
+                            onChange={handleResumeChange}
                             required
                         />
                     </label>

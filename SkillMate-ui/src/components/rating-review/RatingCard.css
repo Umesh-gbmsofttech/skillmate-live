@@ -1,0 +1,71 @@
+.rating__card-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.rating___-container-card {
+    display: flex;
+    flex-direction: column;
+    width: 440px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #C7EFFF;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.rating___-container-card-image {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.rating___-container-card-data {
+    padding: 10px;
+}
+
+.rating___-container-card-data h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.rating___-container-card-data p {
+    font-size: 16px;
+    margin: 5px 0;
+    position: relative;
+}
+
+.rating___-container-card-data p textarea {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: transparent;
+}
+
+.rating-stars {
+    margin: 10px 0;
+}
+
+.rating__submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.rating__submit-btn:hover {
+    background-color: #45a049;
+}
+
+/* Additional styles for star colors */
+.grey {
+    color: grey;
+}
+
+.gold {
+    color: gold;
+}

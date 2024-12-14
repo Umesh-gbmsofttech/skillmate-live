@@ -58,16 +58,17 @@
 }
 
 .sign-in-btn {
-  padding: 10px 15px;
+  padding: 8px 15px;
   border-radius: 5px;
-  background-color: #ff8c00;
+  background-color: #ffffff;
   border: none;
-  color: #fff;
+  color: #000000;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-left: 20px;
+  border: 1px solid gray;
 }
 
 .notification-btn {
@@ -77,7 +78,7 @@
 }
 
 .sign-in-btn:hover {
-  background-color: #ff9900;
+  background-color: #e8e8e8;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 

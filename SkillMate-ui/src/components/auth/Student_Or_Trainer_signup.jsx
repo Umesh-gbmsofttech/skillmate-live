@@ -1,16 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Stud_Trainer_Admin.css';
+import './Student_Or_Trainer_signup.css';
 
-function Stud_Trainer_Admin() {
+function Student_Or_Trainer_signup() {
     const navigate = useNavigate();
 
     const handleHomeClick = () => {
         navigate('/');
     };
 
-    const handleAdminSignUpClick = () => {
-        navigate('/admin-signup');
+    const handleLoginBackClick = () => {
+        navigate('/login/mobile');
     };
 
     const handleStudentSignUpClick = () => {
@@ -26,10 +26,10 @@ function Stud_Trainer_Admin() {
             <div className="stud-trainer-admin-container">
                 <button className="stud-trainer-button" onClick={handleStudentSignUpClick}>Sign Up as a Student</button>
                 <button className="stud-trainer-button" onClick={handleTrainerSignUpClick}>Sign Up as a Trainer</button>
-                <button className="stud-trainer-button" onClick={handleAdminSignUpClick}>Sign Up as an Admin</button>
+                <i><a onClick={handleLoginBackClick}>Back to Login</a></i>
             </div>
         </div>
     );
 }
 
-export default Stud_Trainer_Admin;
+export default Student_Or_Trainer_signup;

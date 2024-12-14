@@ -22,18 +22,35 @@ const TrainerSignUp = () => {
                 setError('Please upload a valid image file.');
                 return;
             }
-            if (file.size > 2 * 1024 * 1024) {  // Limit to 2MB
+            if (file.size > 2 * 1024 * 1024) {
                 setError('File size must be less than 2MB.');
                 return;
             }
             const reader = new FileReader();
             reader.onloadend = () => {
-                setProfilePic(reader.result.split(',')[1]); // Extract Base64 string (remove the "data:image/jpeg;base64," part)
+                setProfilePic(reader.result.split(',')[1]);
             };
             reader.readAsDataURL(file);
         }
     };
-
+    const handleResumeChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (!file.type.includes('pdf')) {
+                setError('Please upload a valid PDF file.');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                setError('File size must be less than 5MB.');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setResume(reader.result.split(',')[1]);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -73,7 +90,6 @@ const TrainerSignUp = () => {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log('Trainer data submitted successfully:', result);
                 alert('Trainer data submitted successfully!');
                 setUserData(result);
             } else {
@@ -82,15 +98,11 @@ const TrainerSignUp = () => {
             }
         } catch (error) {
             setError('Network error. Please check your connection or try again later.');
-            console.error('Error submitting form:', error);
         }
     };
 
     const handleTechnologiesChange = (e) => {
-        const selectedTechnologies = Array.from(
-            e.target.selectedOptions,
-            (option) => option.value
-        );
+        const selectedTechnologies = Array.from(e.target.selectedOptions, (option) => option.value);
         setTechnologies(selectedTechnologies);
     };
 
@@ -203,7 +215,7 @@ const TrainerSignUp = () => {
                     </label>
 
                     <label>
-                        Work Status:
+                        Current Work Status:
                         <select
                             name="workStatus"
                             value={workStatus}
@@ -214,7 +226,18 @@ const TrainerSignUp = () => {
                             <option value="full-time">Full-time</option>
                             <option value="part-time">Part-time</option>
                             <option value="freelance">Freelance</option>
+                            <option value="un-employeed">Un Employeed</option>
                         </select>
+                    </label>
+
+                    <label>
+                        Resume (PDF):
+                        <input
+                            type="file"
+                            accept="application/pdf"
+                            onChange={handleResumeChange}
+                            required
+                        />
                     </label>
 
                     <label>

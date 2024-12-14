@@ -17,14 +17,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 60vh;
-    max-width: 60vh;
-    width: 100%;
-    padding: 20px;
+    height: 40vh;
+    max-width: 50vh;
+    width: 80%;
+    /* padding: 20px; */
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: auto;
+}
+
+.stud-trainer-admin-container a:hover {
+    cursor: pointer;
+    background-color: #f3f3f3;
 }
 
 .stud-trainer-button {
@@ -32,15 +37,16 @@
     margin: 10px 0;
     font-size: 16px;
     color: white;
-    background-color: #007bff;
+    background-color: #4CAF50;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease-in-out;
 }
 
 .stud-trainer-button:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
+    transform: translateY(-2px);
 }
 
 .stud-trainer-button:focus {
@@ -53,8 +59,8 @@
     }
 
     .stud-trainer-admin-container {
-        height: 60%;
-        padding: 15px;
+        height: 40%;
+        /* padding: 15px; */
         max-width: 80%;
     }
 }

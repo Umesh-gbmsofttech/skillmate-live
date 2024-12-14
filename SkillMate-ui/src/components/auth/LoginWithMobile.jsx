@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import './login.css';
+import './LoginWithMobile.css';
 import { useNavigate } from 'react-router-dom';
-import { GlobalContext } from '../context/GlobalContext'; // Import GlobalContext
+import { GlobalContext } from '../context/GlobalContext';
 
-// Function to fetch user data
 const findUser = async (url, method, body) => {
     const response = await fetch(url, {
         method,
@@ -13,7 +12,7 @@ const findUser = async (url, method, body) => {
     return response.json();
 };
 
-const Login = () => {
+const LoginWithMobile = () => {
     const [mobile, setMobile] = useState('');
     const [otp, setOtp] = useState('');
     const [error, setError] = useState(null);
@@ -24,7 +23,6 @@ const Login = () => {
     const { setUserData: setGlobalUserData } = useContext(GlobalContext);
     const navigate = useNavigate();
 
-    // Set up OTP timer
     useEffect(() => {
         let timer;
         if (timeRemaining > 0) {
@@ -54,7 +52,7 @@ const Login = () => {
                 setUserData(null);
             } else {
                 setUserExists(true);
-                setUserData(response); // Store user data temporarily
+                setUserData(response);
                 setError(null);
                 sendOtp();
             }
@@ -111,19 +109,19 @@ const Login = () => {
     return (
         <div>
             <div className="login-overlay">
-                <div className="login-container-unique">
-                    <h2 className="login-title-unique">Login Form</h2>
-                    {error && <p className="error-unique">{error}</p>}
+                <div className="login-container-mobile">
+                    <h2 className="login-title-mobile">Login Form</h2>
+                    {error && <p className="error-mobile">{error}</p>}
 
                     <form onSubmit={isOtpSent ? handleLogin : handleUserCheck}>
-                        <label htmlFor="mobile" className="label-otp-unique">
+                        <label htmlFor="mobile" className="label-mobile">
                             Mobile Number:
                             <input
                                 id="mobile"
                                 type="text"
                                 value={mobile}
                                 onChange={handleMobileChange}
-                                className="input-otp-unique"
+                                className="input-mobile"
                                 required
                             />
                         </label>
@@ -131,22 +129,24 @@ const Login = () => {
 
                         {isOtpSent && (
                             <>
-                                <label htmlFor="otp" className="label-otp-unique">
+                                <label htmlFor="otp" className="label-otp">
                                     OTP:
                                     <input
                                         id="otp"
                                         type="text"
                                         value={otp}
                                         onChange={handleOtpChange}
-                                        className="input-otp-unique"
+                                        className="input-otp"
                                         required
                                     />
                                 </label>
                                 <br />
                             </>
                         )}
+                        <i> <a onClick={() => navigate('/login/email')}>Login With Email </a></i>
+                        <br /><i><a onClick={() => navigate('/student-or-trainer/sigunup')}>Don't have an account Signup </a></i>
 
-                        <button type="submit" className="login-btn-unique">
+                        <button type="submit" className="login-btn-mobile">
                             {isOtpSent ? 'Login' : 'Get OTP'}
                         </button>
 
@@ -154,9 +154,6 @@ const Login = () => {
                             <p>Resend OTP in {timeRemaining} seconds</p>
                         )}
 
-                        <br />
-                        <span>Don't have an account? </span>
-                        <button type="button" onClick={() => navigate('/stud_trainer_admin')} className="signup-btn-unique">Sign Up</button>
                     </form>
 
                     {userExists && userData && (
@@ -173,4 +170,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginWithMobile;

@@ -13,6 +13,9 @@ function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleTestClick = () => {
+    navigate('/test');
+  };
   const handleHomeClick = () => {
     navigate('/');
   };
@@ -38,7 +41,7 @@ function Navbar() {
   };
 
   const handleSignInClick = () => {
-    navigate('/login');
+    navigate('/login/mobile');
   };
 
   const handleProfileClick = () => {
@@ -51,6 +54,7 @@ function Navbar() {
         <img src={logo} alt="Logo" />
       </div>
       <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
+        <li onClick={handleTestClick}>Test</li>
         <li onClick={handleHomeClick}>Home</li>
         <li onClick={handleCoursesClick}>Courses</li>
         <li onClick={handleCommunityClick}>Community</li>
