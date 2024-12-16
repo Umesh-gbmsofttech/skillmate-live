@@ -14,7 +14,7 @@ const findUser = async (url, method, body) => {
 };
 
 const Login = () => {
-    const [mobile, setMobile] = useState('');
+    const [number, setNumber] = useState('');
     const [otp, setOtp] = useState('');
     const [error, setError] = useState(null);
     const [isOtpSent, setIsOtpSent] = useState(false);
@@ -36,7 +36,7 @@ const Login = () => {
     }, [timeRemaining]);
 
     const handleMobileChange = (e) => {
-        setMobile(e.target.value);
+        setNumber(e.target.value);
     };
 
     const handleOtpChange = (e) => {
@@ -46,7 +46,7 @@ const Login = () => {
     const handleUserCheck = async (e) => {
         e.preventDefault();
         try {
-            const response = await findUser(`http://localhost:8080/login/find-user/${mobile}`, 'GET');
+            const response = await findUser(`http://localhost:8080/login//find-user/${id}`, 'GET');
 
             if (response && response === 'User not found') {
                 setError('User not found!');
@@ -66,10 +66,10 @@ const Login = () => {
 
     const sendOtp = async () => {
         try {
-            const response = await fetch('http://localhost:3001/send-otp', {
+            const response = await fetch('http://localhost:8080/otp/sendOtp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mobile }),
+                body: JSON.stringify({ number }),
             });
 
             const data = await response.json();
@@ -89,10 +89,10 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3001/verify-otp', {
+            const response = await fetch('http://localhost:8080/otp/verifyOtp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mobile, otp }),
+                body: JSON.stringify({ number, otp }),
             });
 
             const data = await response.json();
@@ -116,12 +116,12 @@ const Login = () => {
                     {error && <p className="error-unique">{error}</p>}
 
                     <form onSubmit={isOtpSent ? handleLogin : handleUserCheck}>
-                        <label htmlFor="mobile" className="label-otp-unique">
+                        <label htmlFor="number" className="label-otp-unique">
                             Mobile Number:
                             <input
-                                id="mobile"
+                                id="number"
                                 type="text"
-                                value={mobile}
+                                value={number}
                                 onChange={handleMobileChange}
                                 className="input-otp-unique"
                                 required
