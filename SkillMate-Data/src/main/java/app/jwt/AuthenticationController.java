@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.otpconfig.OtpService;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
@@ -28,6 +30,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@RequestBody JwtRequest jwtRequest) {
+		return null;
         // Authenticate using mobile and password
         // Create JWT token and return it
         // (Implement authentication with mobile and password)

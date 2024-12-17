@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class AuthService {
 
 	@Autowired
-	private UsersRepo usersRepository;
+	private UserLoginRepo usersRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
