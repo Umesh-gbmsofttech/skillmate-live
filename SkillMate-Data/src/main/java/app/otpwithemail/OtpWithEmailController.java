@@ -12,7 +12,7 @@ public class OtpWithEmailController {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("/send")
+    @PostMapping("/sendEmailOtp")
     public ResponseEntity<String> sendOtp(@RequestBody OtpRequest request) {
         String otp = emailService.generateOtp(request.getEmail());
         emailService.sendOtpEmail(request.getEmail(), otp);
