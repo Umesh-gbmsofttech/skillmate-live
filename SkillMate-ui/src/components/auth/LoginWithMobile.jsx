@@ -16,7 +16,7 @@ const LoginWithMobile = () => {
     const [mobile, setMobile] = useState('');
     const [otp, setOtp] = useState('');
     const [error, setError] = useState(null);
-    const [isOtpSent, setIsOtpSent] = useState(false);
+    const [isOtpSent, setIsOtpSent] = useState(true);
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [userExists, setUserExists] = useState(false);
     const [userData, setUserData] = useState(null);
@@ -41,11 +41,32 @@ const LoginWithMobile = () => {
         setOtp(e.target.value.trim());
     };
 
+    // const handleUserCheck = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await findUser(`http://localhost:8080/students/fetch/${id}`, 'GET');
+
+    //         if (response && response === 'User not found') {
+    //             setError('User not found!');
+    //             setUserExists(false);
+    //             setUserData(null);
+    //         } else {
+    //             setUserExists(true);
+    //             setUserData(response);
+    //             setError(null);
+    //             sendOtp();
+    //         }
+    //     } catch (err) {
+    //         setError('Error checking user');
+    //         setUserExists(false);
+    //     }
+    // };
+
     const handleUserCheck = async (e) => {
         e.preventDefault();
         try {
-            const response = await findUser(`http://localhost:8080/login/find-user/${mobile}`, 'GET');
-
+            const response = await findUser(`http://localhost:8080/otp/fetch/${mobile}`, 'GET');
+    
             if (response && response === 'User not found') {
                 setError('User not found!');
                 setUserExists(false);
@@ -54,57 +75,110 @@ const LoginWithMobile = () => {
                 setUserExists(true);
                 setUserData(response);
                 setError(null);
-                sendOtp();
+                await sendOtp(); // Send OTP only if user exists
             }
         } catch (err) {
             setError('Error checking user');
             setUserExists(false);
         }
     };
+    
 
-    const sendOtp = async () => {
-        try {
-            const response = await fetch('http://localhost:3001/send-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mobile }),
-            });
+    // const sendOtp = async () => {
+    //     try {
+    //         const response = await fetch('http://localhost:8080/otp/sendOtp', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({ mobile }),
+    //         });
 
-            const data = await response.json();
+    //         const data = await response.json();
 
-            if (response.ok) {
-                setIsOtpSent(true);
-                setTimeRemaining(60);
-            } else {
-                setError(data.error || 'Failed to send OTP');
-            }
-        } catch (error) {
-            setError('Failed to send OTP');
-        }
-    };
+    //         if (response.ok) {
+    //             setIsOtpSent(true);
+    //             setTimeRemaining(60);
+    //         } else {
+    //             setError(data.error || 'Failed to send OTP');
+    //         }
+    //     } catch (error) {
+    //         setError('Failed to send OTP');
+    //     }
+    // };
+
+    // const handleLogin = async (e) => {
+    //     e.preventDefault();
+
+    //     try {
+    //         const response = await fetch('http://localhost:8080/otp/verifyOtp', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({ mobile, otp }),
+    //         });
+
+    //         const data = await response.json();
+
+    //         if (response.ok) {
+    //             setGlobalUserData(userData);
+    //             navigate('/');
+    //         } else {
+    //             setError(data.error || 'Invalid OTP');
+    //         }
+    //     } catch (error) {
+    //         setError('Failed to verify OTP');
+    //     }
+    // };
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         try {
-            const response = await fetch('http://localhost:3001/verify-otp', {
+            const response = await fetch('http://localhost:8080/otp/verifyOtp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mobile, otp }),
             });
-
+    
             const data = await response.json();
-
+    
             if (response.ok) {
-                setGlobalUserData(userData);
-                navigate('/');
+                setGlobalUserData(userData);  
+                navigate('/');  
             } else {
+               
                 setError(data.error || 'Invalid OTP');
             }
         } catch (error) {
-            setError('Failed to verify OTP');
+
+            setError('Failed to verify OTP. Please try again later.');
+            console.error('Error during OTP verification:', error); 
         }
     };
+    
+    
+    const sendOtp = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/otp/sendOtp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mobile }),
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+               
+                setIsOtpSent(true);
+                setTimeRemaining(60);
+            } else {
+                
+                setError(data.error || 'Failed to send OTP');
+            }
+        } catch (error) {
+            
+            setError('Failed to send OTP due to network issues');
+        }
+    };
+    
 
     return (
         <div>
@@ -161,7 +235,7 @@ const LoginWithMobile = () => {
                             <h3>User Details:</h3>
                             <p>Name: {userData.name}</p>
                             <p>Email: {userData.email}</p>
-                            <p>Phone: {userData.phoneNo || userData.moNo}</p>
+                            <p>Phone: {userData.mobile || userData.mobile}</p>
                         </div>
                     )}
                 </div>
