@@ -10,22 +10,20 @@
     align-items: center;
     backdrop-filter: blur(5px);
     z-index: 999;
+    
 }
 
 .trainer-signup-form-container {
-    position: relative;
-    z-index: 1000;
-    padding: 20px;
-    padding-right: 40px;
-    background-color: #fff;
+    padding: 50px 20px; 
+    padding-top: 20px;
+    background-color: #ffffff; 
     border-radius: 10px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 80vh;
+    max-width: 400px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 40px;
-    margin-bottom: 40px;
-    overflow-y: auto;
+    max-height: calc(100% - 40px); 
+    margin: 20px auto; 
+    overflow-y: scroll;
+    scrollbar-width: none;  
 }
 
 .trainer-signup-form-container h2 {
@@ -71,6 +69,7 @@ button[type="submit"]:hover {
     margin-bottom: 15px;
 }
 
+
 .profile-pic-container {
     margin-top: 10px;
     display: flex;
@@ -106,4 +105,66 @@ button[type="submit"]:hover {
     color: #fff;
     font-size: 12px;
     text-align: center;
+}
+
+.technologies-checkbox {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    
+    margin-bottom: 16px;
+}
+
+.selected-technologies {
+    margin-bottom: 10px;
+}
+
+.selected-technologies h4 {
+    margin-bottom: 10px;
+}
+
+.technologies-display {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 10px;
+}
+
+.technology-tag {
+    background-color: #e0e0e0;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
+
+
+
+.profile-pic-container {
+    margin-bottom: 16px;
+}
+
+.profile-pic-container label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.trainer-signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+button {
+    padding: 10px;
+    background-color:blue;
+   
+    color: rgb(255, 255, 255);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: blue;
 }

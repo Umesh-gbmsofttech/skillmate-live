@@ -1,27 +1,28 @@
 .student-overlay {
-    position: fixed;
+    position: fixed; 
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    overflow-y: auto; 
     display: flex;
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(5px);
-    z-index: 999;
 }
 
 .student-signup-form-container {
-    position: relative;
-    z-index: 1000;
-    padding: 20px;
-    background-color: #fff;
+    padding: 30px 20px; 
+    background-color: #ffffff; 
     border-radius: 10px;
-    max-width: 500px;
+    max-width: 1000px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 100px;
-    margin-bottom: 100px;
+    max-height: calc(100% - 40px); 
+    margin: 20px auto; 
+    overflow-y: scroll;
+    scrollbar-width: none; 
+    
 }
 
 .student-signup-form-container h2 {

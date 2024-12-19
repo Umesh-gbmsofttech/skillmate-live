@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import './StudentSignUp.css';
 import { GlobalContext } from '../context/GlobalContext';
+import { Link } from 'react-router-dom';
 
 const StudentSignUp = () => {
     const [name, setName] = useState('');
@@ -69,7 +70,7 @@ const StudentSignUp = () => {
 
         const studentData = { name, mobile, email, address, qualification, profilePic, resume, workStatus };
 
-        fetch('http://localhost:8080/student/save', {
+        fetch('http://localhost:8080/students/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -212,10 +213,14 @@ const StudentSignUp = () => {
                         />
                     </label>
 
-                    <button type="submit">Submit</button>
+                    <button type="submit" >Submit</button>
                 </form>
+                <Link to="/login/mobile">
+                    Have a account? plz Login
+             </Link>
             </div>
         </div>
+
     );
 };
 
