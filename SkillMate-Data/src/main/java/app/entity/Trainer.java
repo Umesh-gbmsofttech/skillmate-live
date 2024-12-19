@@ -1,22 +1,33 @@
 package app.entity;
 
+import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Trainer {
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String profilePic;
+    @Lob
+    private byte[] profilePic;
     private String fullName;
     private String mobileNumber;
     private String email;
@@ -26,7 +37,6 @@ public class Trainer {
     private String address;
     private String qualification;
 
-    @ElementCollection
     private List<String> technologies;
 
     @Lob
@@ -50,10 +60,16 @@ public class Trainer {
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<Batch> batch;
 
-    // Getters and Setters
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();  // This will initialize the Set
 
-    
-    public Long getId() {
+	public Trainer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Long getId() {
 		return id;
 	}
 
@@ -61,11 +77,11 @@ public class Trainer {
 		this.id = id;
 	}
 
-	public String getProfilePic() {
+	public byte[] getProfilePic() {
 		return profilePic;
 	}
 
-	public void setProfilePic(String profilePic) {
+	public void setProfilePic(byte[] profilePic) {
 		this.profilePic = profilePic;
 	}
 
@@ -197,10 +213,18 @@ public class Trainer {
 		this.batch = batch;
 	}
 
-	public Trainer(Long id, String profilePic, String fullName, String mobileNumber, String email, String workingStatus,
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	public Trainer(Long id, byte[] profilePic, String fullName, String mobileNumber, String email, String workingStatus,
 			String experience, String companyName, String address, String qualification, List<String> technologies,
 			byte[] resume, List<Student> students, List<Course> courses, List<Attendance> attendance,
-			List<Meeting> meetings, List<RatingReviews> ratingReviews, List<Batch> batch) {
+			List<Meeting> meetings, List<RatingReviews> ratingReviews, List<Batch> batch, Set<Role> roles) {
 		super();
 		this.id = id;
 		this.profilePic = profilePic;
@@ -220,6 +244,11 @@ public class Trainer {
 		this.meetings = meetings;
 		this.ratingReviews = ratingReviews;
 		this.batch = batch;
+		this.roles = roles;
 	}
 
-	}
+
+    // Getters and setters for all fields, including technologies
+   
+
+}

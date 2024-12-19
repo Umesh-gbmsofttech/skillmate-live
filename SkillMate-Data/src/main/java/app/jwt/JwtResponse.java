@@ -8,6 +8,17 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class JwtResponse {
-    public String jwtToken;
-    public String mobile;  // Return mobile instead of username
+    private String token;
+
+    public JwtResponse(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

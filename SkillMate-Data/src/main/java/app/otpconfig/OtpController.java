@@ -52,6 +52,7 @@ public class OtpController {
     String result = otpService.validateOtp(mobile, otp);
 
     if ("OTP validated successfully!".equals(result)) {
+    	//here need to implement find the user which has this mobile number
         return ResponseEntity.ok(result);
     } else {
         return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(result);

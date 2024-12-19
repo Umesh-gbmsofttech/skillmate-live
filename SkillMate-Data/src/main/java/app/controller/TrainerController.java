@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import app.jwt.JwtResponse;
 
 //import javax.validation.Valid;
 import java.util.List;
@@ -20,16 +21,21 @@ public class TrainerController {
     @Autowired
     private TrainerService trainerService;
 
-    // Create a new Trainer
+    // Create a new Trainer and return the JWT token
     @PostMapping("/create")
-    public ResponseEntity<Trainer> createTrainer(@Valid @RequestBody Trainer trainer) {
+    public ResponseEntity<Object> createTrainer(@Valid @RequestBody Trainer trainer) {
         try {
-            Trainer createdTrainer = trainerService.createTrainer(trainer);
-            return new ResponseEntity<>(createdTrainer, HttpStatus.CREATED);
+            // Create trainer and generate JWT token
+            String jwtToken = trainerService.createTrainer(trainer);
+            // Return response with the JWT token
+            return new ResponseEntity<>(new JwtResponse(jwtToken), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            // Handle exception
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     // Get all Trainers
     @GetMapping("/fetch")

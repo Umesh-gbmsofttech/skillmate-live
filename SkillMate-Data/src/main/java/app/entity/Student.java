@@ -1,9 +1,15 @@
 package app.entity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,7 +19,6 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Student {
@@ -47,6 +52,10 @@ public class Student {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Batch> batch;
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();  // This will initialize the Set
 
 	public Long getId() {
 		return id;
@@ -160,9 +169,17 @@ public class Student {
 		this.batch = batch;
 	}
 
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
 	public Student(Long id, String profilePic, String fullName, String mobileNumber, String email, String workingStatus,
 			String address, String qualification, byte[] resume, Trainer trainer, List<Course> courses,
-			List<Attendance> attendance, List<RatingReviews> ratingReviews, List<Batch> batch) {
+			List<Attendance> attendance, List<RatingReviews> ratingReviews, List<Batch> batch, Set<Role> roles) {
 		super();
 		this.id = id;
 		this.profilePic = profilePic;
@@ -178,9 +195,9 @@ public class Student {
 		this.attendance = attendance;
 		this.ratingReviews = ratingReviews;
 		this.batch = batch;
+		this.roles = roles;
 	}
 
-    // Getters and Setters
-    
+	
     
 }

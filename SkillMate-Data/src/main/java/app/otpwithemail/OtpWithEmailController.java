@@ -23,6 +23,7 @@ public class OtpWithEmailController {
     public ResponseEntity<String> verifyOtp(@RequestBody OtpVerificationRequest request) {
         boolean isValid = emailService.verifyOtp(request.getEmail(), request.getOtp());
         if (isValid) {
+//        	here need to implement the logic of find the user which has this email
             return ResponseEntity.ok("OTP verified successfully!");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired OTP!");

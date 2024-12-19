@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.entity.Student;
+import app.jwt.JwtResponse;
 import app.service.StudentService;
 import jakarta.validation.Valid;
 
@@ -22,12 +23,16 @@ public class StudentController {
 
     // Create a new Student
     @PostMapping("/create")
-    public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student) {
+    public ResponseEntity<Object> createStudent(@Valid @RequestBody Student student) {
         try {
-            Student createdStudent = studentService.createStudent(student);
-            return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
+            // Create trainer and generate JWT token
+            String jwtToken = studentService.createStudent(student);
+            // Return response with the JWT token
+            return new ResponseEntity<>(new JwtResponse(jwtToken), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            // Handle exception
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

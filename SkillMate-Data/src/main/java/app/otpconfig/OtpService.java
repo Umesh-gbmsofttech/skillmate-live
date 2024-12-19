@@ -154,7 +154,7 @@ public class OtpService {
         }
     }
 
-    private String generateOtp() {
+    public String generateOtp() {
         int otp = (int) (Math.random() * 1000000); // Generate a random 6-digit OTP
         return String.format("%06d", otp);
     }
