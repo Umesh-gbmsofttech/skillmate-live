@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.entity.Trainer;
+import app.entity.TrainerProfileUpdated;
 import app.service.TrainerService;
 import jakarta.validation.Valid;
 
@@ -54,25 +55,31 @@ public class TrainerController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Trainer> updateTrainer(@PathVariable("id") Long id, @Valid @RequestBody Trainer trainer) {
+    public ResponseEntity<TrainerProfileUpdated> updateTrainerProfile(
+            @PathVariable("id") Long id, 
+            @Valid @RequestBody Trainer trainer) {
+
         Optional<Trainer> existingTrainer = trainerService.getTrainerById(id);
 
         if (existingTrainer.isPresent()) {
-            trainer.setId(id);
-            Trainer updatedTrainer = trainerService.updateTrainer(trainer);
-            return new ResponseEntity<>(updatedTrainer, HttpStatus.OK);
+           
+            TrainerProfileUpdated updatedProfile = trainerService.updateTrainerWithHistory(id, trainer);
+            return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
         } else {
+           
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // Delete a Trainer
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<HttpStatus> deleteTrainer(@PathVariable("id") Long id) {
+    
+    public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
         try {
             trainerService.deleteTrainer(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.ok("trainer profile deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }

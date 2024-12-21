@@ -2,8 +2,14 @@ package app.service;
 
 import app.entity.Role;
 import app.entity.Trainer;
+import app.entity.TrainerProfileDeleted;
+import app.entity.TrainerProfileUpdated;
 import app.jwt.AuthService;
+import app.repository.TrainerProfileDeletedRepository;
+import app.repository.TrainerProfileUpdatedRepository;
 import app.repository.TrainerRepository;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +26,12 @@ public class TrainerService {
 
     @Autowired
     private TrainerRepository trainerRepository;
+    
+    @Autowired
+    private TrainerProfileUpdatedRepository trainerProfileUpdatedRepository;
+    
+    @Autowired
+    private TrainerProfileDeletedRepository trainerProfileDeletedRepository;
 
     // Create a new Trainer with role
     public String createTrainer(Trainer trainer) {
@@ -55,7 +67,72 @@ public class TrainerService {
     }
 
     // Delete Trainer by ID
-    public void deleteTrainer(Long id) {
+    public void deleteTrainer1(Long id) {
         trainerRepository.deleteById(id);
     }
+    
+    
+    @Transactional
+    public TrainerProfileUpdated updateTrainerWithHistory(Long id, Trainer updatedTrainer) {
+       
+        Trainer existingTrainer = trainerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trainer not found with ID: " + id));
+
+        
+        Optional<TrainerProfileUpdated> existingUpdatedProfile = 
+                trainerProfileUpdatedRepository.findByTrainerId(existingTrainer.getId());
+
+        TrainerProfileUpdated trainerProfileUpdated;
+
+        if (existingUpdatedProfile.isPresent()) {
+           
+            trainerProfileUpdated = existingUpdatedProfile.get();
+        } else {
+            
+            trainerProfileUpdated = new TrainerProfileUpdated();
+            trainerProfileUpdated.setTrainerId(existingTrainer.getId()); 
+        }
+
+        
+        trainerProfileUpdated.setProfilePic(updatedTrainer.getProfilePic());
+        trainerProfileUpdated.setFullName(updatedTrainer.getFullName());
+        trainerProfileUpdated.setMobileNumber(updatedTrainer.getMobileNumber());
+        trainerProfileUpdated.setEmail(updatedTrainer.getEmail());
+        trainerProfileUpdated.setWorkingStatus(updatedTrainer.getWorkingStatus());
+        trainerProfileUpdated.setExperience(updatedTrainer.getExperience());
+        trainerProfileUpdated.setCompanyName(updatedTrainer.getCompanyName());
+        trainerProfileUpdated.setAddress(updatedTrainer.getAddress());
+        trainerProfileUpdated.setQualification(updatedTrainer.getQualification());
+        trainerProfileUpdated.setResume(updatedTrainer.getResume());
+
+       
+        return trainerProfileUpdatedRepository.save(trainerProfileUpdated);
+    }
+   
+    @Transactional
+    public void deleteTrainer(Long id) {
+        
+        Trainer trainer = trainerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trainer not found with ID: " + id));
+
+       
+        TrainerProfileDeleted trainerProfileDeleted = new TrainerProfileDeleted();
+        trainerProfileDeleted.setTrainerId(trainer.getId());
+        trainerProfileDeleted.setProfilePic(trainer.getProfilePic());
+        trainerProfileDeleted.setFullName(trainer.getFullName());
+        trainerProfileDeleted.setMobileNumber(trainer.getMobileNumber());
+        trainerProfileDeleted.setEmail(trainer.getEmail());
+        trainerProfileDeleted.setWorkingStatus(trainer.getWorkingStatus());
+        trainerProfileDeleted.setExperience(trainer.getExperience());
+        trainerProfileDeleted.setCompanyName(trainer.getCompanyName());
+        trainerProfileDeleted.setAddress(trainer.getAddress());
+        trainerProfileDeleted.setQualification(trainer.getQualification());
+        trainerProfileDeleted.setResume(trainer.getResume());
+
+        trainerProfileDeletedRepository.save(trainerProfileDeleted);
+
+        
+        trainerRepository.deleteById(id);
+    }
+
 }

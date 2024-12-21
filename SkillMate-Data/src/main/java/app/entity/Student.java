@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,7 +28,9 @@ public class Student {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String profilePic;
+	 @Lob
+	   @Column(name="profile_pic",columnDefinition = "LONGBLOB")
+      private byte[] profilePic;
     private String fullName;
     private String mobileNumber;
     private String email;
@@ -67,13 +70,7 @@ public class Student {
 		this.id = id;
 	}
 
-	public String getProfilePic() {
-		return profilePic;
-	}
-
-	public void setProfilePic(String profilePic) {
-		this.profilePic = profilePic;
-	}
+	
 
 	public String getFullName() {
 		return fullName;
@@ -178,8 +175,20 @@ public class Student {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
+	
+	public Student() {
+		super();
+	}
 
-	public Student(Long id, String profilePic, String fullName, String mobileNumber, String email, String workingStatus,
+	public byte[] getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(byte[] profilePic) {
+		this.profilePic = profilePic;
+	}
+
+	public Student(Long id, byte[] profilePic, String fullName, String mobileNumber, String email, String workingStatus,
 			String address, String qualification, byte[] resume, Trainer trainer, List<Course> courses,
 			List<Attendance> attendance, List<RatingReviews> ratingReviews, List<Batch> batch, Set<Role> roles) {
 		super();
@@ -198,10 +207,6 @@ public class Student {
 		this.ratingReviews = ratingReviews;
 		this.batch = batch;
 		this.roles = roles;
-	}
-	
-	public Student() {
-		super();
 	}
 
 	

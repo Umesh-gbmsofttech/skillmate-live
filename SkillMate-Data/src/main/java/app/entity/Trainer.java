@@ -28,7 +28,8 @@ public class Trainer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Lob
-    private byte[] profilePic;
+	   @Column(name="profile_pic",columnDefinition = "LONGBLOB")
+     private byte[] profilePic;
     private String fullName;
     private String mobileNumber;
     private String email;

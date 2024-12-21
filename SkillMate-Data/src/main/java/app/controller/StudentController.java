@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.entity.Student;
+import app.entity.StudentProfileUpdated;
 import app.jwt.JwtResponse;
 import app.service.StudentService;
 import jakarta.validation.Valid;
@@ -59,28 +60,26 @@ public class StudentController {
         }
     }
 
-    // Update a Student
     @PutMapping("/update/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable("id") Long id, @Valid @RequestBody Student student) {
-        Optional<Student> existingStudent = studentService.getStudentById(id);
-
-        if (existingStudent.isPresent()) {
-            student.setId(id);
-            Student updatedStudent = studentService.updateStudent(student);
-            return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
-        } else {
+    public ResponseEntity<StudentProfileUpdated> updateStudentProfile(
+            @PathVariable("id") Long id, 
+            @Valid @RequestBody Student updatedStudent) {
+        try {
+            StudentProfileUpdated updatedProfile = studentService.updateStudentWithHistory(id, updatedStudent);
+            return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    // Delete a Student
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<HttpStatus> deleteStudent(@PathVariable("id") Long id) {
+ 
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
         try {
             studentService.deleteStudent(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.ok("Student profile deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+
 }
