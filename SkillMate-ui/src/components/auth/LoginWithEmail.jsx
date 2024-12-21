@@ -1,27 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginWithMobile.css';
 import { useNavigate } from 'react-router-dom';
-import { GlobalContext } from '../context/GlobalContext';
-
-const findUserByEmail = async (url, method, body) => {
-    const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: body ? JSON.stringify(body) : null,
-    });
-    return response.json();
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { setEmail, setOtp, setUserData, setError } from '../redux/authSlice';
+import urls from '../urls/Urls';
 
 const LoginWithEmail = () => {
-    const [email, setEmail] = useState('');
-    const [otp, setOtp] = useState('');
-    const [error, setError] = useState(null);
-    const [isOtpSent, setIsOtpSent] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const email = useSelector((state) => state.auth.email);
+    const otp = useSelector((state) => state.auth.otp);
+    const error = useSelector((state) => state.auth.error);
+    const isOtpSent = useSelector((state) => state.auth.isOtpSent);
+    const userData = useSelector((state) => state.auth.userData);
+
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [userExists, setUserExists] = useState(false);
-    const [userData, setUserData] = useState(null);
-    const { setUserData: setGlobalUserData } = useContext(GlobalContext);
-    const navigate = useNavigate();
 
     useEffect(() => {
         let timer;
@@ -34,37 +29,16 @@ const LoginWithEmail = () => {
     }, [timeRemaining]);
 
     const handleEmailChange = (e) => {
-        setEmail(e.target.value);
+        dispatch(setEmail(e.target.value));
     };
 
     const handleOtpChange = (e) => {
-        setOtp(e.target.value.trim());
-    };
-
-    const handleUserCheck = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await findUserByEmail(`http://localhost:8080/login/find-user-email/${email}`, 'GET');
-
-            if (response && response === 'User not found') {
-                setError('User not found!');
-                setUserExists(false);
-                setUserData(null);
-            } else {
-                setUserExists(true);
-                setUserData(response);
-                setError(null);
-                sendOtp();
-            }
-        } catch (err) {
-            setError('Error checking user');
-            setUserExists(false);
-        }
+        dispatch(setOtp(e.target.value.trim()));
     };
 
     const sendOtp = async () => {
         try {
-            const response = await fetch('http://localhost:3001/send-otp-email', {
+            const response = await fetch(urls.login.sendOtpEmail, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
@@ -73,13 +47,13 @@ const LoginWithEmail = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setIsOtpSent(true);
+                dispatch(setOtp(true));
                 setTimeRemaining(60);
             } else {
-                setError(data.error || 'Failed to send OTP');
+                dispatch(setError(data.error || 'Failed to send OTP'));
             }
         } catch (error) {
-            setError('Failed to send OTP');
+            dispatch(setError('Failed to send OTP due to network issues'));
         }
     };
 
@@ -87,7 +61,7 @@ const LoginWithEmail = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3001/verify-otp-email', {
+            const response = await fetch(urls.login.verifyOtpEmail, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, otp }),
@@ -96,13 +70,14 @@ const LoginWithEmail = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setGlobalUserData(userData);
+                dispatch(setUserData(data.user));  // Assuming response has user data
                 navigate('/');
             } else {
-                setError(data.error || 'Invalid OTP');
+                dispatch(setError(data.error || 'Invalid OTP'));
             }
         } catch (error) {
-            setError('Failed to verify OTP');
+            dispatch(setError('Failed to verify OTP. Please try again later.'));
+            console.error('Error during OTP verification:', error);
         }
     };
 
@@ -113,7 +88,7 @@ const LoginWithEmail = () => {
                     <h2 className="login-title-email">Login Form</h2>
                     {error && <p className="error-email">{error}</p>}
 
-                    <form onSubmit={isOtpSent ? handleLogin : handleUserCheck}>
+                    <form onSubmit={isOtpSent ? handleLogin : sendOtp}>
                         <label htmlFor="email" className="label-email">
                             Email:
                             <input
@@ -143,8 +118,9 @@ const LoginWithEmail = () => {
                                 <br />
                             </>
                         )}
-                        <i> <a onClick={() => navigate('/login/mobile')}>Login With Mobile </a></i>
-                        <br /><i><a onClick={() => navigate('/sstudent-or-trainer/sigunup')}>Don't have an account Signup </a></i>
+                        <i><a onClick={() => navigate('/login/mobile')}>Login With Mobile</a></i>
+                        <br />
+                        <i><a onClick={() => navigate('/student-or-trainer/sigunup')}>Don't have an account? Sign Up</a></i>
 
                         <button type="submit" className="login-btn-email">
                             {isOtpSent ? 'Login' : 'Get OTP'}
@@ -153,7 +129,6 @@ const LoginWithEmail = () => {
                         {isOtpSent && timeRemaining > 0 && (
                             <p>Resend OTP in {timeRemaining} seconds</p>
                         )}
-
                     </form>
 
                     {userExists && userData && (

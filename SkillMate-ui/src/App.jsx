@@ -13,7 +13,6 @@ import Subscription from './components/subscription/Subscription';
 import Live from './components/subscription/Live';
 import DeleteProfile from './components/profile/DeleteProfile';
 import Profile from './components/profile/Profile';
-import AdminSignUp from './components/auth/AdminSiginUp';
 import OurTopCourses from './components/courses/OurTopCourses';
 import ExploreAllCourses from './components/courses/ExploreAllCourses';
 import TopTrainers from './components/trainer/TopTrainers';
@@ -38,6 +37,7 @@ import RatingCard from './components/rating-review/RatingCard';
 import LoginWithEmail from './components/auth/LoginWithEmail';
 import LoginWithMobile from './components/auth/LoginWithMobile';
 import Student_Or_Trainer_signup from './components/auth/Student_Or_Trainer_signup';
+import AdminLogin from './components/auth/AdminLogin';
 
 
 function App() {
@@ -80,7 +80,7 @@ function App() {
         <Route path="/login/mobile" element={<LoginWithMobile />} />
         <Route path="/student-signup" element={<StudentSignUp />} />
         <Route path="/trainer-signup" element={<TrainerSignUp />} />
-        <Route path="/admin-signup" element={<AdminSignUp />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/student-or-trainer/sigunup" element={<Student_Or_Trainer_signup />} />
         <Route path="/reviews-section" element={<ReviewsSection />} />
         <Route path="/community" element={<Community />} />

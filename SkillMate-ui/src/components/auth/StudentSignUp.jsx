@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import './StudentSignUp.css';
-import { GlobalContext } from '../context/GlobalContext';
+// import { GlobalContext } from '../context/GlobalContext';
 import { Link } from 'react-router-dom';
 
 const StudentSignUp = () => {
@@ -13,7 +13,7 @@ const StudentSignUp = () => {
     const [resume, setResume] = useState(null);
     const [workStatus, setWorkStatus] = useState('');
     const [error, setError] = useState(null);
-    const { setUserData } = useContext(GlobalContext);
+    // const { setUserData } = useContext(GlobalContext);
 
     const handleProfilePicChange = (e) => {
         const file = e.target.files[0];
@@ -87,7 +87,7 @@ const StudentSignUp = () => {
             })
             .then((data) => {
                 if (data) {
-                    setUserData(data);
+                    // setUserData(data);
                     setName('');
                     setMobile('');
                     setEmail('');
@@ -217,7 +217,7 @@ const StudentSignUp = () => {
                 </form>
                 <Link to="/login/mobile">
                     Have a account? plz Login
-             </Link>
+                </Link>
             </div>
         </div>
 
