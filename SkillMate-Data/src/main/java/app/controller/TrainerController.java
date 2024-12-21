@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import app.jwt.JwtResponse;
 
-//import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,23 +20,17 @@ public class TrainerController {
     @Autowired
     private TrainerService trainerService;
 
-    // Create a new Trainer and return the JWT token
     @PostMapping("/create")
     public ResponseEntity<Object> createTrainer(@Valid @RequestBody Trainer trainer) {
         try {
-            // Create trainer and generate JWT token
             String jwtToken = trainerService.createTrainer(trainer);
-            // Return response with the JWT token
             return new ResponseEntity<>(new JwtResponse(jwtToken), HttpStatus.CREATED);
         } catch (Exception e) {
-            // Handle exception
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
-    // Get all Trainers
     @GetMapping("/fetch")
     public ResponseEntity<List<Trainer>> getAllTrainers() {
         try {
@@ -49,7 +42,6 @@ public class TrainerController {
         }
     }
 
-    // Get a Trainer by ID
     @GetMapping("/fetch/{id}")
     public ResponseEntity<Trainer> getTrainerById(@PathVariable("id") Long id) {
         Optional<Trainer> trainerData = trainerService.getTrainerById(id);
@@ -60,7 +52,6 @@ public class TrainerController {
         }
     }
 
-    // Update a Trainer
     @PutMapping("/update/{id}")
     public ResponseEntity<Trainer> updateTrainer(@PathVariable("id") Long id, @Valid @RequestBody Trainer trainer) {
         Optional<Trainer> existingTrainer = trainerService.getTrainerById(id);
@@ -74,7 +65,6 @@ public class TrainerController {
         }
     }
 
-    // Delete a Trainer
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteTrainer(@PathVariable("id") Long id) {
         try {

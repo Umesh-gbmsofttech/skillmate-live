@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 	 Optional<Trainer> findByFullName(String fullName);
 	 Optional<Trainer> findByMobileNumber(String fullName);
+	 Optional<Trainer> findByEmail(String email);
 }

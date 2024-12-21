@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 	 Optional<Student> findByFullName(String fullName);
 	 Optional<Student> findByMobileNumber(String fullName);
+	Optional<Student> findByEmail(String email);
 }

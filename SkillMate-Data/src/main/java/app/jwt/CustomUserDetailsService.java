@@ -1,6 +1,7 @@
 package app.jwt;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,8 +25,8 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-	private Logger logger;
-	
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
     @Autowired
     private TrainerRepository trainerRepository;
 
@@ -48,7 +49,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = trainer.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(Collectors.toList());
-        return new User(trainer.getFullName(), "", authorities); // No password for OTP-based login
+        logger.info("Trainer found: {}", trainer);
+        logger.info("Trainer authorities: {}", authorities);
+
+        return new User(trainer.getEmail(), "", authorities);
     }
 
     private UserDetails mapStudentToUserDetails(Student student) {
@@ -58,80 +62,33 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = student.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(Collectors.toList());
-        return new User(student.getFullName(), "", authorities); // No password for OTP-based login
+        logger.info("Student found: {}", student);
+        logger.info("Student authorities: {}", authorities);
+
+        return new User(student.getEmail(), "", authorities);
     }
-
-    public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
-        Optional<Trainer> trainer = trainerRepository.findByMobileNumber(mobile);
-        if (trainer.isPresent()) {
-            return mapTrainerToUserDetails(trainer.get());
-        }
-
-        Optional<Student> student = studentRepository.findByMobileNumber(mobile);
-        if (student.isPresent()) {
-            return mapStudentToUserDetails(student.get());
-        }
-
-        throw new UsernameNotFoundException("User not found with mobile: " + mobile);
-    }
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        // Log for debugging
-//        logger.info("Attempting to load user by username: {}", username);
-//
-//        // Check for admin user
-//        if (username.equals(adminUsername)) {
-//            logger.info("Admin user loaded");
-//            return User.builder()
-//                    .username(adminUsername)
-//                    .password(passwordEncoder.encode(adminPassword))
-//                    .roles("ADMIN")
-//                    .build();
-//        }
-//
-//        // Find Trainer by full name
-//        Trainer trainer = trainerRepository.findByFullName(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("Trainer not found with username: " + username));
-//
-//        logger.info("Trainer found: {}", trainer.getFullName());
-//
-//        // Map roles to GrantedAuthorities
-//        List<GrantedAuthority> authorities = trainer.getRoles().stream()
-//                .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // Spring Security expects ROLE_ prefix
-//                .collect(Collectors.toList());
-//
-//        // Return UserDetails object
-//        return new org.springframework.security.core.userdetails.User(
-//                trainer.getFullName(),
-//                "", // Password is not used in this flow
-//                authorities
-//        );
-//    }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Check for admin
-        if (username.equals(adminUsername)) {
-        	logger.info("Admin user loaded");
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        if (email.equals(adminUsername)) {
+            logger.info("Admin user loaded: {}", email);
             return User.builder()
                     .username(adminUsername)
                     .password(passwordEncoder.encode(adminPassword))
                     .roles("ADMIN")
                     .build();
-            
         }
 
-        // Check for Trainer or Student
-        Optional<Trainer> trainer = trainerRepository.findByFullName(username);
+        Optional<Trainer> trainer = trainerRepository.findByEmail(email);
         if (trainer.isPresent()) {
             return mapTrainerToUserDetails(trainer.get());
         }
 
-        Optional<Student> student = studentRepository.findByFullName(username);
+        Optional<Student> student = studentRepository.findByEmail(email);
         if (student.isPresent()) {
             return mapStudentToUserDetails(student.get());
         }
 
-        throw new UsernameNotFoundException("User not found with username: " + username);
+        throw new UsernameNotFoundException("User not found with email: " + email);
     }
 }

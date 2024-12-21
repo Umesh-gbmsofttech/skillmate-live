@@ -31,10 +31,10 @@ public class TrainerService {
 
         // Generate JWT token for the saved trainer using AuthService
         return authService.generateToken(new org.springframework.security.core.userdetails.User(
-                savedTrainer.getFullName(), 
+                savedTrainer.getEmail(), 
                 "", // Empty password as you might not be using passwords for trainers
                 savedTrainer.getRoles().stream()
-                    .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority(role.name()))
+                    .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role.name()))
                     .collect(Collectors.toList())
         ));
     }

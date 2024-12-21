@@ -22,7 +22,12 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Student {
-    @Id
+    public Student() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String profilePic;

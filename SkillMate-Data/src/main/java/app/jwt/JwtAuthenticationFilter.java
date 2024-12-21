@@ -11,14 +11,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 @Component
@@ -33,22 +29,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Lazy
     private UserDetailsService userDetailsService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String requestHeader = request.getHeader("Authorization");
-        logger.info("Authorization Header: {}", requestHeader);
-
-        String mobile = null;
+        String email = null;
         String token = null;
 
         if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
             token = requestHeader.substring(7);
             try {
-                mobile = jwtHelper.getUsernameFromToken(token); // Now getting mobile
-                logger.info("Mobile extracted from token: {}", mobile);
+                email = jwtHelper.getUsernameFromToken(token);
+                logger.info("Email extracted from token: {}", email);
             } catch (Exception e) {
                 logger.error("JWT parsing error", e);
             }
@@ -56,13 +49,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.warn("JWT token does not begin with Bearer String");
         }
 
-        if (mobile != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(mobile);  // Load by mobile
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
             boolean isTokenValid = jwtHelper.validateToken(token, userDetails);
 
             if (isTokenValid) {
-                logger.info("JWT token is valid");
-
+                logger.info("JWT token is valid. Authorities: {}", userDetails.getAuthorities());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

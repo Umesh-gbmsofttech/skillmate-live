@@ -40,9 +40,6 @@ public class AuthService {
     @Value("${app.admin.password}")
     private String adminPassword;
 
-    /**
-     * Validates admin credentials and generates a JWT token for the admin.
-     */
     public String isAdmin(String username, String password) {
         if (username.equals(adminUsername) && password.equals(adminPassword)) {
             UserDetails adminUser = User.builder()
@@ -55,9 +52,6 @@ public class AuthService {
         throw new RuntimeException("Invalid admin credentials");
     }
 
-    /**
-     * Retrieves UserDetails from a JWT token.
-     */
     public UserDetails getUserDetailsFromToken(String token) {
         String username = jwtHelper.getUsernameFromToken(token);
         if (username != null) {
@@ -66,30 +60,7 @@ public class AuthService {
         return null;
     }
 
-    /**
-     * Generates a JWT token for a given UserDetails object.
-     */
     public String generateToken(UserDetails userDetails) {
         return jwtHelper.generateToken(userDetails);
     }
-
-    /**
-     * Registers a new Trainer or Student.
-     * This method determines the type of user (Trainer/Student) and saves it to the corresponding repository.
-     */
-//    public void registerUser(Object user) {
-//        if (user instanceof Trainer) {
-//            Trainer trainer = (Trainer) user;
-//            trainer.setPassword(passwordEncoder.encode(trainer.getPassword()));
-//            trainer.setRoles(new HashSet<>()); // Initialize roles, if needed
-//            trainerRepository.save(trainer);
-//        } else if (user instanceof Student) {
-//            Student student = (Student) user;
-//            student.setPassword(passwordEncoder.encode(student.getPassword()));
-//            student.setRoles(new HashSet<>()); // Initialize roles, if needed
-//            studentRepository.save(student);
-//        } else {
-//            throw new IllegalArgumentException("Invalid user type. Only Trainer and Student are supported.");
-//        }
-//    }
 }
