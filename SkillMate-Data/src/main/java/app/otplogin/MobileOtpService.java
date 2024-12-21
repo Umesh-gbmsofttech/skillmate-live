@@ -11,150 +11,96 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
 import app.repository.StudentRepository;
 import app.repository.TrainerRepository;
-
+import app.otplogin.MobileOtpConfig;
 @Service
 public class MobileOtpService {
 
+   
+    @Autowired
+    private  StudentRepository studentRepository;
+    
+    @Autowired
+    private TrainerRepository trainerRepository;
+    
+    @Autowired
+    private MobileOtpConfig mobileOtpConfig; 
+    
+    
     private final Map<String, String> otpMap = new HashMap<>();
     private final Map<String, Long> otpExpiryMap = new HashMap<>();
     
-    @Autowired
-    private  StudentRepository studentRepository;
-    private final TrainerRepository trainerRepository;
 
-    // Constructor
-    public MobileOtpService(StudentRepository studentRepository, TrainerRepository trainerRepository) {
-        this.studentRepository = studentRepository;
-        this.trainerRepository = trainerRepository;
-    }
-
-    // Inner Class for Request
-    public static class OTPRequest {
-        private String mobileNumber;
-        private String otp;
-
-       
-        public OTPRequest() {}
-
-        public OTPRequest(String mobileNumber, String otp) {
-            this.mobileNumber = mobileNumber;
-            this.otp = otp;
-        }
-
-    
-        public String getMobileNumber() {
-            return mobileNumber;
-        }
-
-        public void setMobileNumber(String mobileNumber) {
-            this.mobileNumber = mobileNumber;
-        }
-
-        public String getOtp() {
-            return otp;
-        }
-
-        public void setOtp(String otp) {
-            this.otp = otp;
-        }
-    }
-
-    
-    public static class OTPResponse {
-        private String message;
-        private boolean success;
-
-        // Constructors
-        public OTPResponse() {}
-
-        public OTPResponse(String message, boolean success) {
-            this.message = message;
-            this.success = success;
-        }
-
-        
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public boolean isSuccess() {
-            return success;
-        }
-
-        public void setSuccess(boolean success) {
-            this.success = success;
-        }
-    }
-
-    // Send OTP
-    public OTPResponse sendOtpToPhone(OTPRequest otpRequest) {
-        String mobileNumber = otpRequest.getMobileNumber();
-
+    public String sendOtpToPhone(String mobileNumber) {
         // Check if the mobile number exists in either the student or trainer table
         boolean existsInStudent = studentRepository.existsByMobileNumber(mobileNumber);
         boolean existsInTrainer = trainerRepository.existsByMobileNumber(mobileNumber);
 
+        System.out.println("Exists in Student: " + existsInStudent);
+        System.out.println("Exists in Trainer: " + existsInTrainer);
+
         if (!existsInStudent && !existsInTrainer) {
-            return new OTPResponse("Mobile number not found in student or trainer records!", false);
+            return "Mobile number not found in student or trainer records!";
         }
 
         String otp = generateOtp();
 
         try {
+            PhoneNumber recipientPhoneNumber = new PhoneNumber(mobileNumber);
+            PhoneNumber senderPhoneNumber = new PhoneNumber(mobileOtpConfig.getMobileNumber());
+            String msgBody = "Your one-time password is: " + otp;
+
+            Message message = Message.creator(recipientPhoneNumber, senderPhoneNumber, msgBody).create();
+
             otpMap.put(mobileNumber, otp);
             otpExpiryMap.put(mobileNumber, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5)); // OTP expires in 5 minutes
 
-            System.out.println("Generated OTP: " + otp); 
-            return new OTPResponse("OTP sent successfully!", true);
+            System.out.println("OTP sent to " + mobileNumber + ". OTP Map: " + otpMap);
+            System.out.println("Expiry time for OTP: " + otpExpiryMap.get(mobileNumber));
+            System.out.println("Generated OTP: " + otp);
+            System.out.println("OTP map after sending OTP: " + otpMap);
+
+            return "OTP sent successfully!";
         } catch (Exception e) {
-            return new OTPResponse("Error sending OTP: " + e.getMessage(), false);
+            System.err.println("Error sending OTP: " + e.getMessage());
+            return "Error sending OTP: " + e.getMessage();
         }
     }
 
-    // Validate OTP
-    public OTPResponse validateOtp(OTPRequest otpRequest) {
-        String mobileNumber = otpRequest.getMobileNumber();
-        String otp = otpRequest.getOtp();
+
+    public String generateOtp() {
+        int otp = (int) (Math.random() * 1000000); // Generate a random 6-digit OTP
+        return String.format("%06d", otp);
+    }
+
+    
+    //validate otp
+    public String validateOtp(String mobileNumber, String otp) {
+        System.out.println("Received OTP: " + otp);
+        System.out.println("Stored OTP for number " + mobileNumber + ": " + otpMap.get(mobileNumber));
 
         if (!otpMap.containsKey(mobileNumber)) {
-            return new OTPResponse("No OTP sent to this number!", false);
+            return "No OTP sent to this number!";
         }
 
         String storedOtp = otpMap.get(mobileNumber);
         long expiryTime = otpExpiryMap.get(mobileNumber);
 
         if (System.currentTimeMillis() > expiryTime) {
-            otpMap.remove(mobileNumber);
+            otpMap.remove(mobileNumber); 
             otpExpiryMap.remove(mobileNumber);
-            return new OTPResponse("OTP has expired!", false);
+            return "OTP has expired!";
         }
 
         if (storedOtp.equals(otp)) {
-            otpMap.remove(mobileNumber);
+            otpMap.remove(mobileNumber); 
             otpExpiryMap.remove(mobileNumber);
-            return new OTPResponse("OTP validated successfully!", true);
+            return "OTP validated successfully!";
         } else {
-            return new OTPResponse("Incorrect OTP!", false);
+            return "Incorrect OTP!";
         }
-    }
-
-    // Generate a 6-digit OTP
-    private String generateOtp() {
-        int otp = (int) (Math.random() * 1000000); 
-        return String.format("%06d", otp);
-    }
-
-
-
-
-    }
-
-
-
-
+    }}
