@@ -23,7 +23,8 @@ public class TrainerController {
     @PostMapping("/create")
     public ResponseEntity<Object> createTrainer(@Valid @RequestBody Trainer trainer) {
         try {
-            String jwtToken = trainerService.createTrainer(trainer);
+            String jwtToken = trainerService.createTrainer(trainer);          
+            // Return response with the JWT token
             return new ResponseEntity<>(new JwtResponse(jwtToken), HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();

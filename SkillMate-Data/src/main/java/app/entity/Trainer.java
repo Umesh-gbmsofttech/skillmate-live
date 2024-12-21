@@ -1,5 +1,6 @@
 package app.entity;
 
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
@@ -245,6 +246,17 @@ public class Trainer {
 		this.ratingReviews = ratingReviews;
 		this.batch = batch;
 		this.roles = roles;
+	}
+
+	@Override
+	public String toString() {
+		return "Trainer [id=" + id + ", profilePic=" + Arrays.toString(profilePic) + ", fullName=" + fullName
+				+ ", mobileNumber=" + mobileNumber + ", email=" + email + ", workingStatus=" + workingStatus
+				+ ", experience=" + experience + ", companyName=" + companyName + ", address=" + address
+				+ ", qualification=" + qualification + ", technologies=" + technologies + ", resume="
+				+ Arrays.toString(resume) + ", students=" + students + ", courses=" + courses + ", attendance="
+				+ attendance + ", meetings=" + meetings + ", ratingReviews=" + ratingReviews + ", batch=" + batch
+				+ ", roles=" + roles + "]";
 	}
 
 

@@ -40,7 +40,7 @@ public class StudentController {
     @GetMapping("/fetch")
     public ResponseEntity<List<Student>> getAllStudents() {
         try {
-            List<Student> students = studentService.getAllStudents();
+            List<Student> students =studentService.getAllStudents();
             return students.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
                     : new ResponseEntity<>(students, HttpStatus.OK);
         } catch (Exception e) {

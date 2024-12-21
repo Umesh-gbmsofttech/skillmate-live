@@ -1,12 +1,12 @@
-package app.otpwithemail;
+package app.otplogin;
 
-public class OtpVerificationRequest {
+public class EmailOtpVerifiy {
     private String email;
     private String otp;
 
-    public OtpVerificationRequest() {}
+    public EmailOtpVerifiy() {}
 
-    public OtpVerificationRequest(String email, String otp) {
+    public EmailOtpVerifiy(String email, String otp) {
         this.email = email;
         this.otp = otp;
     }

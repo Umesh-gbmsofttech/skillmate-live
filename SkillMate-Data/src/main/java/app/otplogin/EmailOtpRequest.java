@@ -1,11 +1,11 @@
-package app.otpwithemail;
+package app.otplogin;
 
-public class OtpRequest {
+public class EmailOtpRequest {
     private String email;
 
-    public OtpRequest() {}
+    public EmailOtpRequest() {}
 
-    public OtpRequest(String email) {
+    public EmailOtpRequest(String email) {
         this.email = email;
     }
 

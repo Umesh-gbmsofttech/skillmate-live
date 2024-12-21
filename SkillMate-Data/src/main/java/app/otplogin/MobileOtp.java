@@ -1,4 +1,4 @@
-package app.otpconfig;
+package app.otplogin;
 
 
 import jakarta.persistence.Entity;
@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class StudentOpt {
+public class MobileOtp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +41,7 @@ public class StudentOpt {
         this.mobile = mobile;
     }
     
-    public StudentOpt() {
+    public MobileOtp() {
     	
     }
 }

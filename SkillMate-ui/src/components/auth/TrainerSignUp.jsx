@@ -245,7 +245,7 @@ const TrainerSignUp = () => {
                 </label>
 
                 <div className="selected-technologies">
-                    <h4>Selected Technologies:</h4>
+                    <h5>Selected Technologies:</h5>
                     <div className="technologies-display">
                         {technologies.map((tech, index) => (
                             <span key={index} className="technology-tag">

@@ -1,11 +1,11 @@
-package app.otpconfig;
+package app.otplogin;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "twilio")
-public class OtpConfig {
+public class MobileOtpConfig {
     
  private String accountSID;
  private String authToken;
@@ -25,7 +25,7 @@ public void setAuthToken(String authToken) {
 }
 
 
-public OtpConfig(){
+public MobileOtpConfig(){
 
 }
 public String getMobile() {
@@ -38,7 +38,7 @@ public void setMobile(String mobile) {
 public String toString() {
 	return "OtpConfig [accountSID=" + accountSID + ", authToken=" + authToken + ", mobile=" + mobile + "]";
 }
-public OtpConfig(String accountSID, String authToken, String mobile) {
+public MobileOtpConfig(String accountSID, String authToken, String mobile) {
 	super();
 	this.accountSID = accountSID;
 	this.authToken = authToken;

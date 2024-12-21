@@ -1,4 +1,4 @@
-package app.otpconfig;
+package app.otplogin;
 
 
 	import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,11 +6,11 @@ package app.otpconfig;
 
 
 	@Repository
-	public  interface StudentOtpRepository extends JpaRepository<StudentOpt, Long> {
+	public  interface MobiletOtpRepo extends JpaRepository<MobileOtp, Long> {
 	    
 		boolean existsByMobile(String mobile); // Query to check if a mobile number exists
 
-		StudentOpt save(StudentOpt student);
+		public MobileOtp save(MobileOtp mobileOtp);
 		
-		StudentOpt findByMobile(String mobile);
+		MobileOtp findByMobile(String mobile);
 	}

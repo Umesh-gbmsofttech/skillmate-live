@@ -97,7 +97,7 @@
 
 
 
-package app.otpconfig;
+package app.otplogin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -108,24 +108,25 @@ import org.springframework.stereotype.Service;
 
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import app.otplogin.MobiletOtpRepo;
 
 
 
 @Service
-public class OtpService {
+public class MobileOtpService {
 
     @Autowired
-    private OtpConfig otpConfig;
+    private MobileOtpConfig otpConfig;
 
     @Autowired
-    private StudentOtpRepository studentOtpRepository; // Inject the repository to access the student table
+    private MobiletOtpRepo mobiletOtpRepo;; 
 
     private Map<String, String> otpMap = new HashMap<>();
     private Map<String, Long> otpExpiryMap = new HashMap<>();
 
     public String sendOtpToPhone(String mobile) {
-        // Check if the mobile number exists in the student table
-        boolean exists = studentOtpRepository.existsByMobile(mobile);
+    
+        boolean exists = mobiletOtpRepo.existsByMobile(mobile);
         if (!exists) {
             return "Mobile number not found in student records!";
         }

@@ -1,4 +1,4 @@
-package app.otpwithemail;
+package app.otplogin;
 
 import java.util.Optional;
 
@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmailRepository extends JpaRepository<EmailOtp, Long>{
 
-	Optional<EmailOtp> findByEmail(String email);
+	boolean existsByEmail(String email);
+    Optional<EmailOtp> findByEmail(String email);
+	
 }

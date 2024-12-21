@@ -22,10 +22,7 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Student {
-    public Student() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -201,6 +198,10 @@ public class Student {
 		this.ratingReviews = ratingReviews;
 		this.batch = batch;
 		this.roles = roles;
+	}
+	
+	public Student() {
+		super();
 	}
 
 	

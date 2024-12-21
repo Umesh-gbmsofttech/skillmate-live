@@ -1,4 +1,4 @@
-package app.otpconfig;
+package app.otplogin;
 
 
 
@@ -13,20 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import app.entity.Student;
-import jakarta.validation.Valid;
-
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 
 @RequestMapping("/otp")
 @RestController
-public class OtpController {
+public class MobileOtpController {
 
     @Autowired
-    private OtpService otpService;
+    private MobileOtpService otpService;
     
     @Autowired 
     private StudentOtpService studentOtpService;
@@ -52,7 +47,6 @@ public class OtpController {
     String result = otpService.validateOtp(mobile, otp);
 
     if ("OTP validated successfully!".equals(result)) {
-    	//here need to implement find the user which has this mobile number
         return ResponseEntity.ok(result);
     } else {
         return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(result);
@@ -61,8 +55,8 @@ public class OtpController {
     
     
     @PostMapping("/save")
-	public ResponseEntity<StudentOpt> savestudents(@RequestBody StudentOpt studentOpt){
-		StudentOpt savestudents = studentOtpService.saveMechanic(studentOpt);
+	public ResponseEntity<MobileOtp> savestudents(@RequestBody MobileOtp studentOpt){
+		MobileOtp savestudents = studentOtpService.saveMechanic(studentOpt);
 		return ResponseEntity.ok().body(savestudents);
 	}
 
@@ -72,8 +66,8 @@ public class OtpController {
 	
 
 	@GetMapping("/get/{id}")
-	public ResponseEntity<StudentOpt> getStudentById(@PathVariable("id") Long id) {
-		StudentOpt getMechanic = studentOtpService.getStudentOptById(id);
+	public ResponseEntity<MobileOtp> getStudentById(@PathVariable("id") Long id) {
+		MobileOtp getMechanic = studentOtpService.getStudentOptById(id);
 		return ResponseEntity.ok().body(getMechanic);
 	}
 	
@@ -85,7 +79,7 @@ public class OtpController {
 
 	    if (studentExists) {
 	        
-	        StudentOpt student = studentOtpService.findUserByMobile(mobile); 
+	        MobileOtp student = studentOtpService.findUserByMobile(mobile); 
 	        return ResponseEntity.ok(student); 
 	    } else {
 	        return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("User not found");

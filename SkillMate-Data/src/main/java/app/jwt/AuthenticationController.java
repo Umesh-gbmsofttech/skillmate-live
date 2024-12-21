@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import app.entity.Role;
 import app.entity.Trainer;
+import app.otplogin.MobileOtpService;
 import app.entity.Student;
-import app.otpconfig.OtpService;
-import app.otpwithemail.EmailServiceImp;
+import app.otplogin.EmailServiceImp;
 import app.repository.TrainerRepository;
 import app.repository.StudentRepository;
 
@@ -31,7 +31,7 @@ public class AuthenticationController {
     private JwtHelper jwtHelper;
 
     @Autowired
-    private OtpService otpService;
+    private MobileOtpService mobileOtpService;
 
     @Autowired
     private EmailServiceImp emailServiceImp;
@@ -49,22 +49,31 @@ public class AuthenticationController {
     private String adminPassword;
 
     @PostMapping("/otp/mobile")
-    public ResponseEntity<String> generateOtp(@RequestParam String mobile) {
-        String otp = otpService.generateOtp();
-        // Logic to send OTP to the mobile number
-        return ResponseEntity.ok("OTP Sent");
+    public ResponseEntity<String> generateOtp(@RequestBody String mobile) {
+       try {
+        mobileOtpService.sendOtpToPhone(mobile);
+
+        return ResponseEntity.ok("OTP sent successfully to " + mobile);
+       } catch(Exception e){
+        return ResponseEntity.status(500).body("Failed to send OTP. Please try again.");
+       }
     }
 
     @PostMapping("/otp/email")
-    public ResponseEntity<String> generateOtpEmail(@RequestParam String email) {
-        String otp = emailServiceImp.generateOtp(email);
-        // Logic to send OTP to the email address
-        return ResponseEntity.ok("OTP Sent");
+public ResponseEntity<String> generateOtpEmail(@RequestParam String email) {
+    try {
+         emailServiceImp.generateAndSendOtp(email);
+
+        return ResponseEntity.ok("OTP sent successfully to " + email);
+    } catch (Exception e) {
+        
+        return ResponseEntity.status(500).body("Failed to send OTP. Please try again.");
     }
+}
 
     @PostMapping("/verifyOtp/mobile")
     public ResponseEntity<?> verifyOtpMobile(@RequestParam String mobile, @RequestParam String otp) {
-        if ("OTP validated successfully!".equals(otpService.validateOtp(mobile, otp))) {
+        if ("OTP validated successfully!".equals(mobileOtpService.validateOtp(mobile, otp))) {
             Trainer trainer = trainerRepository.findAll().stream()
                 .filter(t -> t.getMobileNumber().equals(mobile))
                 .findFirst()
@@ -157,3 +166,5 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid OTP");
     }
 }
+
+
