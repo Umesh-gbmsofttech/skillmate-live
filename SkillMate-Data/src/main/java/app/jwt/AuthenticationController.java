@@ -13,11 +13,14 @@ import app.entity.Role;
 import app.entity.Trainer;
 import app.otplogin.MobileOtpService;
 import app.entity.Student;
+import app.otplogin.EmailOtpRequest;
+import app.otplogin.EmailService;
 import app.otplogin.EmailServiceImp;
 import app.repository.TrainerRepository;
 import app.repository.StudentRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,7 +37,7 @@ public class AuthenticationController {
     private MobileOtpService mobileOtpService;
 
     @Autowired
-    private EmailServiceImp emailServiceImp;
+    private EmailService emailService;
 
     @Autowired
     private TrainerRepository trainerRepository;
@@ -48,29 +51,46 @@ public class AuthenticationController {
     @Value("${app.admin.password}")
     private String adminPassword;
 
-    @PostMapping("/otp/mobile")
-    public ResponseEntity<String> generateOtp(@RequestBody String mobile) {
-       try {
-        mobileOtpService.sendOtpToPhone(mobile);
+//    @PostMapping("/otp/mobile")
+//    public ResponseEntity<String> generateOtp(@RequestBody String mobileNumber) {
+//       try {
+//        mobileOtpService.sendOtpToPhone(mobileNumber);
+//
+//        return ResponseEntity.ok("OTP sent successfully to " + mobileNumber);
+//       } catch(Exception e){
+//        return ResponseEntity.status(500).body("Failed to send OTP. Please try again.");
+//       }
+//    }
+    
+//    @PostMapping("/otp/mobile")
+//    public String sendOtp(@RequestBody Map<String, String> payload) {
+//    String mobile = payload.get("mobileNumber");
+//    return mobileOtpService.sendOtpToPhone(mobileNumber);
+//    }
 
-        return ResponseEntity.ok("OTP sent successfully to " + mobile);
-       } catch(Exception e){
-        return ResponseEntity.status(500).body("Failed to send OTP. Please try again.");
-       }
-    }
+//    @PostMapping("/otp/email")
+//public ResponseEntity<String> generateOtpEmail(@RequestParam String email) {
+//    try {
+//         emailServiceImp.generateAndSendOtp(email);
+//
+//        return ResponseEntity.ok("OTP sent successfully to " + email);
+//    } catch (Exception e) {
+//        
+//        return ResponseEntity.status(500).body("Failed to send OTP. Please try again.");
+//    }
+//}
 
     @PostMapping("/otp/email")
-public ResponseEntity<String> generateOtpEmail(@RequestParam String email) {
-    try {
-         emailServiceImp.generateAndSendOtp(email);
-
-        return ResponseEntity.ok("OTP sent successfully to " + email);
-    } catch (Exception e) {
-        
-        return ResponseEntity.status(500).body("Failed to send OTP. Please try again.");
+    public ResponseEntity<String> sendOtp(@RequestBody EmailOtpRequest request) {
+        try {
+            String response = emailService.generateAndSendOtp(request.getEmail());
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send OTP. Please try again.");
+        }
     }
-}
-
     @PostMapping("/verifyOtp/mobile")
     public ResponseEntity<?> verifyOtpMobile(@RequestParam String mobile, @RequestParam String otp) {
         if ("OTP validated successfully!".equals(mobileOtpService.validateOtp(mobile, otp))) {
@@ -125,7 +145,7 @@ public ResponseEntity<String> generateOtpEmail(@RequestParam String email) {
             );
             String token = jwtHelper.generateToken(adminDetails);
             return ResponseEntity.ok(new JwtResponse(token));
-        } else if (emailServiceImp.verifyOtp(email, otp)) {
+        } else if (emailService.verifyOtp(email, otp)) {
             Trainer trainer = trainerRepository.findAll().stream()
                 .filter(t -> t.getEmail().equals(email))
                 .findFirst()

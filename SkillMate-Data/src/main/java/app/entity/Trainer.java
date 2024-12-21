@@ -43,22 +43,22 @@ public class Trainer {
     @Lob
     private byte[] resume;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<Course> courses;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<Attendance> attendance;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<Meeting> meetings;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<RatingReviews> ratingReviews;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<Batch> batch;
 
     @ElementCollection(fetch = FetchType.EAGER)

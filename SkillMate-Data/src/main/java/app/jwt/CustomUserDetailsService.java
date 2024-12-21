@@ -49,7 +49,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = trainer.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(Collectors.toList());
-        logger.info("Trainer found: {}", trainer);
+        logger.info("Trainer found:", trainer);
+        System.out.println(trainer);
         logger.info("Trainer authorities: {}", authorities);
 
         return new User(trainer.getEmail(), "", authorities);

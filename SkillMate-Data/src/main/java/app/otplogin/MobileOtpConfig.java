@@ -9,7 +9,7 @@ public class MobileOtpConfig {
     
  private String accountSID;
  private String authToken;
- private String mobile;
+ private String mobileNumber;
  
 public String getAccountSID() {
     return accountSID;
@@ -28,21 +28,22 @@ public void setAuthToken(String authToken) {
 public MobileOtpConfig(){
 
 }
-public String getMobile() {
-	return mobile;
+
+public String getMobileNumber() {
+	return mobileNumber;
 }
-public void setMobile(String mobile) {
-	this.mobile = mobile;
+public void setMobileNumber(String mobileNumber) {
+	this.mobileNumber = mobileNumber;
 }
 @Override
 public String toString() {
-	return "OtpConfig [accountSID=" + accountSID + ", authToken=" + authToken + ", mobile=" + mobile + "]";
+	return "OtpConfig [accountSID=" + accountSID + ", authToken=" + authToken + ", mobile=" + mobileNumber + "]";
 }
 public MobileOtpConfig(String accountSID, String authToken, String mobile) {
 	super();
 	this.accountSID = accountSID;
 	this.authToken = authToken;
-	this.mobile = mobile;
+	this.mobileNumber = mobile;
 }
 
 
