@@ -39,12 +39,13 @@ public void setMobileNumber(String mobileNumber) {
 public String toString() {
 	return "OtpConfig [accountSID=" + accountSID + ", authToken=" + authToken + ", mobile=" + mobileNumber + "]";
 }
-public MobileOtpConfig(String accountSID, String authToken, String mobile) {
+public MobileOtpConfig(String accountSID, String authToken, String mobileNumber) {
 	super();
 	this.accountSID = accountSID;
 	this.authToken = authToken;
-	this.mobileNumber = mobile;
+	this.mobileNumber = mobileNumber;
 }
+ 
 
 
 }

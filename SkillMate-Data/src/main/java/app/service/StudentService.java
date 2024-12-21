@@ -4,6 +4,7 @@ import app.entity.Role;
 import app.entity.Student;
 import app.entity.Trainer;
 import app.jwt.AuthService;
+import app.otplogin.MobileOtpService;
 import app.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class StudentService {
 	
     @Autowired
     private AuthService authService;  // Inject AuthService
+    
+    
+    
 
     @Autowired
     private StudentRepository studentRepository;
@@ -63,4 +67,17 @@ public class StudentService {
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
     }
+    
+//  public boolean findByMobile(String mobileNumber) {
+//		
+//		
+//		return studentRepository.existsByMobileNumber(mobileNumber);
+//	}
+//	
+//
+//	public Optional<Student> findUserByMobile(String mobileNumber) {
+//	    return studentRepository.findByMobileNumber(mobileNumber); // Fetch user details by mobile
+//	}
+    
+    
 }

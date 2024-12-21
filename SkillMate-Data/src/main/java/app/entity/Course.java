@@ -120,6 +120,6 @@ public class Course {
 		this.ratingReviews = ratingReviews;
 	}
     
-    
+    public Course() {}
 
 }
