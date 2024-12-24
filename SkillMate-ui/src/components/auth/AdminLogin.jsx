@@ -50,7 +50,8 @@ const AdminLogin = () => {
 
     return (
         <div className="admin-overlay">
-            {error && <p className="error-message">{error}</p>}
+           <div>
+           {error && <p className="error-message">{error}</p>}
             <form onSubmit={handleSubmit} className="admin-sign-up-container">
                 <h2>Admin Login</h2>
 
@@ -76,6 +77,7 @@ const AdminLogin = () => {
 
                 <button type="submit">Submit</button>
             </form>
+           </div>
         </div>
     );
 };

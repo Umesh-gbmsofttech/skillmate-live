@@ -8,7 +8,7 @@
     border-radius: 15px;
     background-color: #ffffff;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f0f0f0;
+    border: 1px solid blue;
     z-index: 2;
     display: flex;
     flex-direction: column;
@@ -19,6 +19,10 @@
 .login-container-email,
 .login-container-mobile a {
     font-size: 14px;
+}
+.login-container-form{
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .login-container-email,
