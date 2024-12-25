@@ -5,9 +5,12 @@ import editIcon from '../../assets/editIcon.png';
 import hideEye from '../../assets/hide-eye.png';
 import viewEye from '../../assets/view-eye.png';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 
 function TrainerProfile() {
     const [showProfile, setShowProfile] = useState(true);
+    const userData = useSelector((state) => state.auth.userData);  // Fetch user data from Redux store
 
     const location = useLocation();
     const { username } = location.state || { username: 'Admin' };
@@ -36,7 +39,10 @@ function TrainerProfile() {
         <div className="trainer-profile">
             <div className="trainer-header">
                 <img className="trainer-header__picture" src={user.profilePic} alt="Profile" />
-                <h1 className="trainer-header__welcome">Welcome, {username}</h1>
+                <h1 className="trainer-header__welcome">
+                    Welcome,
+                    {userData?.roles[0] !== 'TRAINER' && 'STUDENT' ? username : userData.fullName}
+                </h1>
                 <div className="trainer-header__actions">
                     <img
                         src={showProfile ? hideEye : viewEye}

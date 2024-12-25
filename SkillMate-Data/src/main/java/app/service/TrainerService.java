@@ -5,6 +5,7 @@ import app.entity.Trainer;
 import app.entity.TrainerProfileDeleted;
 import app.entity.TrainerProfileUpdated;
 import app.jwt.AuthService;
+import app.jwt.JwtResponse;
 import app.repository.TrainerProfileDeletedRepository;
 import app.repository.TrainerProfileUpdatedRepository;
 import app.repository.TrainerRepository;
@@ -33,23 +34,23 @@ public class TrainerService {
     @Autowired
     private TrainerProfileDeletedRepository trainerProfileDeletedRepository;
 
-    // Create a new Trainer with role
-    public String createTrainer(Trainer trainer) {
-        if (trainer.getRoles() == null) {
-            trainer.setRoles(new HashSet<>());
-        }
-        trainer.getRoles().add(Role.TRAINER);
-        Trainer savedTrainer = trainerRepository.save(trainer);
-
-        // Generate JWT token for the saved trainer using AuthService
-        return authService.generateToken(new org.springframework.security.core.userdetails.User(
-                savedTrainer.getEmail(), 
-                "", // Empty password as you might not be using passwords for trainers
-                savedTrainer.getRoles().stream()
-                    .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role.name()))
-                    .collect(Collectors.toList())
-        ));
-    }
+ // Create a new Trainer with role and return JWT token and user details
+    public JwtResponse createTrainer(Trainer trainer) { 
+    	if (trainer.getRoles() == null) {
+    		trainer.setRoles(new HashSet<>()); 
+    		}
+    	trainer.getRoles().add(Role.TRAINER); 
+    	Trainer savedTrainer = trainerRepository.save(trainer); 
+    	// Generate JWT token for the saved trainer using AuthService
+    	String token = authService.generateToken(authService.getTrainerUserDetails(savedTrainer)); 
+    	// Return JWT token and user details 
+    	return JwtResponse.builder() 
+    			.token(token) 
+    			.userData(savedTrainer) 
+    			.build(); 
+    	}
+    
+  
 
     // Get all Trainers
     public List<Trainer> getAllTrainers() {

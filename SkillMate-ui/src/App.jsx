@@ -38,7 +38,7 @@ import LoginWithEmail from './components/auth/LoginWithEmail';
 import LoginWithMobile from './components/auth/LoginWithMobile';
 import Student_Or_Trainer_signup from './components/auth/Student_Or_Trainer_signup';
 import AdminLogin from './components/auth/AdminLogin';
-import LoginProfile from './components/auth/Profile';
+// import LoginProfile from './components/auth/Profile';
 
 
 function App() {
@@ -82,14 +82,14 @@ function App() {
         <Route path="/student-signup" element={<StudentSignUp />} />
         <Route path="/trainer-signup" element={<TrainerSignUp />} />
         <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/student-or-trainer/sigunup" element={<Student_Or_Trainer_signup />} />
+        <Route path="/student-or-trainer/signup" element={<Student_Or_Trainer_signup />} />
         <Route path="/reviews-section" element={<ReviewsSection />} />
         <Route path="/community" element={<Community />} />
         <Route path="/subscriptions" element={<Subscription />} />
         <Route path="/live" element={<Live />} />
         <Route path="/about" element={<Footer />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/student-profile-check" element={<StudentProfile username />} />
+        <Route path="/student-profile" element={<StudentProfile username />} />
         <Route path="/student-profile-update" element={<StudentProfileUpdate username />} />
         <Route path="/trainer-profile" element={<TrainerProfile username />} />
         <Route path="/trainer-profile-update" element={<TrainerProfileUpdate username />} />
@@ -105,7 +105,7 @@ function App() {
         <Route path="/rating-reviews/page" element={<LeaveRatingReview />} />
         <Route path="/rating-reviews/page/card" element={<RatingCard />} />
 
-        <Route path="/login-profile" element={<LoginProfile />} />
+        {/* <Route path="/login-profile" element={<LoginProfile />} /> */}
 
       </Routes>
       <Footer />

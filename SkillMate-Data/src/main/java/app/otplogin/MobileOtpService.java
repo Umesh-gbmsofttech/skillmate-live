@@ -50,7 +50,7 @@ public class MobileOtpService {
         String otp = generateOtp();
 
         try {
-            PhoneNumber recipientPhoneNumber = new PhoneNumber(mobileNumber);
+            PhoneNumber recipientPhoneNumber = new PhoneNumber("+91"+mobileNumber);
             PhoneNumber senderPhoneNumber = new PhoneNumber(mobileOtpConfig.getMobileNumber());
             String msgBody = "Your one-time password is: " + otp;
 

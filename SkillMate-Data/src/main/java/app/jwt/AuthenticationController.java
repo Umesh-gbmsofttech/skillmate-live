@@ -4,15 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import app.entity.Role;
-import app.entity.Trainer;
 import app.otplogin.MobileOtpService;
-import app.entity.Student;
 import app.otplogin.EmailOtpRequest;
 import app.otplogin.EmailService;
 import app.repository.TrainerRepository;
@@ -20,15 +16,12 @@ import app.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtHelper jwtHelper;
@@ -45,30 +38,26 @@ public class AuthenticationController {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private AuthService authService;
+
     @Value("${app.admin.username}")
     private String adminUsername;
 
     @Value("${app.admin.password}")
     private String adminPassword;
 
-//    
-//    @PostMapping("/otp/mobile")
-//    public ResponseEntity<MobileOtp> sendOtp(@RequestBody String mobilenumber) {
-//        MobileOtp response = mobileOtpService.sendOtpToPhone(mobileNumber);
-//        return ResponseEntity.ok(response);  
-//    }
-
     @PostMapping("/otp/mobile")
-    public String sendOtp(@RequestBody Map<String, String> payload) {
-    String mobile = payload.get("mobileNumber");
-    return mobileOtpService.sendOtpToPhone(mobile);
-  }
-
-
-
+    public ResponseEntity<String> sendOtpToMobile(@RequestBody Map<String, String> payload) {
+        String mobile = payload.get("mobileNumber");
+        if (mobile == null || mobile.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mobile number is required.");
+        }
+        return ResponseEntity.ok(mobileOtpService.sendOtpToPhone(mobile));
+    }
 
     @PostMapping("/otp/email")
-    public ResponseEntity<String> sendOtp(@RequestBody EmailOtpRequest request) {
+    public ResponseEntity<String> sendOtpToEmail(@RequestBody EmailOtpRequest request) {
         try {
             String response = emailService.generateAndSendOtp(request.getEmail());
             return ResponseEntity.ok(response);
@@ -78,150 +67,47 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send OTP. Please try again.");
         }
     }
-    @PostMapping("/verifyOtp/mobile")
-    public ResponseEntity<?> verifyOtpMobile(@RequestParam String mobileNumber, @RequestParam String otp) {
-        if ("OTP validated successfully!".equals(mobileOtpService.validateOtp(mobileNumber, otp))) {
-            Trainer trainer = trainerRepository.findAll().stream()
-                .filter(t -> t.getMobileNumber().equals(mobileNumber))
-                .findFirst()
-                .orElse(null);
 
-            if (trainer != null) {
-                UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                        trainer.getEmail(), // Use email as the username
-                        "", // Password is not needed for OTP flow
-                        trainer.getRoles().stream()
-                                .map(role -> new SimpleGrantedAuthority(role.name()))
-                                .collect(Collectors.toList())
-                );
-                String token = jwtHelper.generateToken(userDetails);
-                return ResponseEntity.ok(new JwtResponse(token));
-            }
-
-            // Check if it's a student
-            Student student = studentRepository.findAll().stream()
-                .filter(s -> s.getMobileNumber().equals(mobileNumber))
-                .findFirst()
-                .orElse(null);
-
-            if (student != null) {
-                UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                        student.getEmail(), // Use email as the username
-                        "", // Password is not needed for OTP flow
-                        student.getRoles().stream()
-                                .map(role -> new SimpleGrantedAuthority(role.name()))
-                                .collect(Collectors.toList())
-                );
-                String token = jwtHelper.generateToken(userDetails);
-                return ResponseEntity.ok(new JwtResponse(token));
-            }
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found");
+    @PostMapping("/verifyOtp")
+    public ResponseEntity<?> verifyOtp(@RequestParam String identifier, @RequestParam String otp, @RequestParam String type) {
+        boolean isOtpValid = validateOtp(identifier, otp, type);
+        if (!isOtpValid) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid OTP.");
         }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid OTP");
+        // Check for Admin authentication
+        if (identifier.equals(adminUsername) && otp.equals(adminPassword)) {
+            UserDetails adminUser = authService.getAdminUserDetails();
+            return generateTokenResponse(adminUser.getUsername(), List.of(new SimpleGrantedAuthority("ROLE_ADMIN")), adminUser);
+        }
+
+        // Fetch and check user data (Trainer or Student)
+        Optional<Object> userDetails = authService.findUserDetailsByIdentifier(type, identifier);
+        if (userDetails.isPresent()) {
+            Object user = userDetails.get();
+            UserDetails springUser = authService.getUserDetailsByObject(user);
+
+            // Generate token and return response
+            return generateTokenResponse(springUser.getUsername(), springUser.getAuthorities().stream()
+                    .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+                    .collect(Collectors.toList()), user);
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found.");
     }
-    
-//    @PostMapping("/verifyOtp/mobile")
-//    public ResponseEntity<?> verifyOtpMobile(@RequestBody OTPRequest otpRequest) {
-//        OTPResponse otpResponse = mobileOtpService.validateOtp(otpRequest);
-//
-//        if (otpResponse.isSuccess()) {
-//            String mobileNumber = otpRequest.getMobileNumber();
-//
-//            // Check if it's a Trainer
-//            Trainer trainer = trainerRepository.findAll().stream()
-//                .filter(t -> t.getMobileNumber().equals(mobileNumber))
-//                .findFirst()
-//                .orElse(null);
-//
-//            if (trainer != null) {
-//                UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-//                    trainer.getEmail(),  // Use email as the username
-//                    "",  // Password is not needed for OTP flow
-//                    trainer.getRoles().stream()
-//                        .map(role -> new SimpleGrantedAuthority(role.name()))
-//                        .collect(Collectors.toList())
-//                );
-//                String token = jwtHelper.generateToken(userDetails);
-//                return ResponseEntity.ok(new JwtResponse(token));
-//            }
-//
-//            // Check if it's a Student
-//            Student student = studentRepository.findAll().stream()
-//                .filter(s -> s.getMobileNumber().equals(mobileNumber))
-//                .findFirst()
-//                .orElse(null);
-//
-//            if (student != null) {
-//                UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-//                    student.getEmail(),  // Use email as the username
-//                    "",  // Password is not needed for OTP flow
-//                    student.getRoles().stream()
-//                        .map(role -> new SimpleGrantedAuthority(role.name()))
-//                        .collect(Collectors.toList())
-//                );
-//                String token = jwtHelper.generateToken(userDetails);
-//                return ResponseEntity.ok(new JwtResponse(token));
-//            }
-//
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found");
-//        }
-//
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid OTP");
-//    }
 
-
-    @PostMapping("/verifyOtp/email")
-    public ResponseEntity<?> verifyOtpEmail(@RequestParam String email, @RequestParam String otp) {
-        if (email.equals(adminUsername) && otp.equals(adminPassword)) {
-            UserDetails adminDetails = new org.springframework.security.core.userdetails.User(
-                    adminUsername,
-                    adminPassword,
-                    List.of(new SimpleGrantedAuthority(Role.ADMIN.name()))
-            );
-            String token = jwtHelper.generateToken(adminDetails);
-            return ResponseEntity.ok(new JwtResponse(token));
-        } else if (emailService.verifyOtp(email, otp)) {
-            Trainer trainer = trainerRepository.findAll().stream()
-                .filter(t -> t.getEmail().equals(email))
-                .findFirst()
-                .orElse(null);
-
-            if (trainer != null) {
-                UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                        trainer.getEmail(),
-                        "", // Password is not needed for OTP flow
-                        trainer.getRoles().stream()
-                                .map(role -> new SimpleGrantedAuthority(role.name()))
-                                .collect(Collectors.toList())
-                );
-                String token = jwtHelper.generateToken(userDetails);
-                return ResponseEntity.ok(new JwtResponse(token));
-            }
-
-            Student student = studentRepository.findAll().stream()
-                .filter(s -> s.getEmail().equals(email))
-                .findFirst()
-                .orElse(null);
-
-            if (student != null) {
-                UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                        student.getEmail(),
-                        "", // Password is not needed for OTP flow
-                        student.getRoles().stream()
-                                .map(role -> new SimpleGrantedAuthority(role.name()))
-                                .collect(Collectors.toList())
-                );
-                String token = jwtHelper.generateToken(userDetails);
-                return ResponseEntity.ok(new JwtResponse(token));
-            }
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not found");
+    private boolean validateOtp(String identifier, String otp, String type) {
+        if ("mobile".equalsIgnoreCase(type)) {
+            return "OTP validated successfully!".equals(mobileOtpService.validateOtp(identifier, otp));
+        } else if ("email".equalsIgnoreCase(type)) {
+            return emailService.verifyOtp(identifier, otp);
         }
+        return false;
+    }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid OTP");
+
+    private ResponseEntity<?> generateTokenResponse(String username, List<SimpleGrantedAuthority> authorities, Object userData) {
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(username, "", authorities);
+        String token = jwtHelper.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token, userData));
     }
 }
-
-

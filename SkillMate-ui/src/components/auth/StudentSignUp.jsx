@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import './StudentSignUp.css';
-// import { GlobalContext } from '../context/GlobalContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/authSlice';
 
 const StudentSignUp = () => {
     const [fullName, setFullName] = useState('');
@@ -13,9 +14,9 @@ const StudentSignUp = () => {
     const [resume, setResume] = useState(null);
     const [workingStatus, setWorkingStatus] = useState('');
     const [error, setError] = useState(null);
-    // const { setUserData } = useContext(GlobalContext);
 
-    let navigate=useNavigate();
+    const dispatch = useDispatch();
+    let navigate = useNavigate();
 
     const handleProfilePicChange = (e) => {
         const file = e.target.files[0];
@@ -89,7 +90,8 @@ const StudentSignUp = () => {
             })
             .then((data) => {
                 if (data) {
-                    // setUserData(data);
+                    // Dispatch user data to Redux store
+                    dispatch(setUserData(userData = data.userData));
                     setFullName('');
                     setMobileNumber('');
                     setEmail('');
@@ -216,14 +218,13 @@ const StudentSignUp = () => {
                         />
                     </label>
 
-                    <button type="submit" >Submit</button>
+                    <button type="submit">Submit</button>
                 </form>
                 <Link to="/login/mobile">
-                    Have a account? plz Login
+                    Have an account? Please Login
                 </Link>
             </div>
         </div>
-
     );
 };
 

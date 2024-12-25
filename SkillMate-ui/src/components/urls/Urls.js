@@ -4,8 +4,10 @@ const urls = {
     login: {
         sendOtpNumber: `${baseUrl}/auth/otp/mobile`,
         sendOtpEmail: `${baseUrl}/auth/otp/email`,
-        verifyOtpNumber: `${baseUrl}/auth/verifyOtp/mobile`,
-        verifyOtpEmail: `${baseUrl}/auth/verifyOtp/email`,
+        verifyOtpNumber: `${baseUrl}/auth/verifyOtp`,
+        verifyOtpEmail: `${baseUrl}/auth/verifyOtp`,
+        // verifyOtpNumber: `${baseUrl}/auth/verifyOtp/mobile`,
+        // verifyOtpEmail: `${baseUrl}/auth/verifyOtp/email`,
         getDetails: `${baseUrl}/users/getdetails`,
     },
     admin: {

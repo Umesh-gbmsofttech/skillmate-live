@@ -18,68 +18,67 @@ import java.util.Optional;
 @RequestMapping("/trainers")
 public class TrainerController {
 
-    @Autowired
-    private TrainerService trainerService;
+	@Autowired
+	private TrainerService trainerService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Object> createTrainer(@Valid @RequestBody Trainer trainer) {
-        try {
-            String jwtToken = trainerService.createTrainer(trainer);          
-            // Return response with the JWT token
-            return new ResponseEntity<>(new JwtResponse(jwtToken), HttpStatus.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//	create trainer and return jwt token and user data
+	@PostMapping("/create")
+	public ResponseEntity<Object> createTrainer(@Valid @RequestBody Trainer trainer) {
+		try {
+			JwtResponse jwtResponse = trainerService.createTrainer(trainer);
+			return new ResponseEntity<>(jwtResponse, HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @GetMapping("/fetch")
-    public ResponseEntity<List<Trainer>> getAllTrainers() {
-        try {
-            List<Trainer> trainers = trainerService.getAllTrainers();
-            return trainers.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                    : new ResponseEntity<>(trainers, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@GetMapping("/fetch")
+	public ResponseEntity<List<Trainer>> getAllTrainers() {
+		try {
+			List<Trainer> trainers = trainerService.getAllTrainers();
+			return trainers.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+					: new ResponseEntity<>(trainers, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @GetMapping("/fetch/{id}")
-    public ResponseEntity<Trainer> getTrainerById(@PathVariable("id") Long id) {
-        Optional<Trainer> trainerData = trainerService.getTrainerById(id);
-        if (trainerData.isPresent()) {
-            return new ResponseEntity<>(trainerData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+	@GetMapping("/fetch/{id}")
+	public ResponseEntity<Trainer> getTrainerById(@PathVariable("id") Long id) {
+		Optional<Trainer> trainerData = trainerService.getTrainerById(id);
+		if (trainerData.isPresent()) {
+			return new ResponseEntity<>(trainerData.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<TrainerProfileUpdated> updateTrainerProfile(
-            @PathVariable("id") Long id, 
-            @Valid @RequestBody Trainer trainer) {
+	@PutMapping("/update/{id}")
+	public ResponseEntity<TrainerProfileUpdated> updateTrainerProfile(@PathVariable("id") Long id,
+			@Valid @RequestBody Trainer trainer) {
 
-        Optional<Trainer> existingTrainer = trainerService.getTrainerById(id);
+		Optional<Trainer> existingTrainer = trainerService.getTrainerById(id);
 
-        if (existingTrainer.isPresent()) {
-           
-            TrainerProfileUpdated updatedProfile = trainerService.updateTrainerWithHistory(id, trainer);
-            return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
-        } else {
-           
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+		if (existingTrainer.isPresent()) {
 
-    // Delete a Trainer
-    @DeleteMapping("/delete/{id}")
-    
-    public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
-        try {
-            trainerService.deleteTrainer(id);
-            return ResponseEntity.ok("trainer profile deleted successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
+			TrainerProfileUpdated updatedProfile = trainerService.updateTrainerWithHistory(id, trainer);
+			return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
+		} else {
+
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// Delete a Trainer
+	@DeleteMapping("/delete/{id}")
+
+	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
+		try {
+			trainerService.deleteTrainer(id);
+			return ResponseEntity.ok("trainer profile deleted successfully");
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(404).body(e.getMessage());
+		}
+	}
 }
