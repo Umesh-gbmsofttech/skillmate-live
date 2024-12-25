@@ -1,19 +1,21 @@
 import React, { useContext, useState } from 'react';
 import './StudentSignUp.css';
 // import { GlobalContext } from '../context/GlobalContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const StudentSignUp = () => {
-    const [name, setName] = useState('');
-    const [mobile, setMobile] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [qualification, setQualification] = useState('');
     const [profilePic, setProfilePic] = useState(null);
     const [resume, setResume] = useState(null);
-    const [workStatus, setWorkStatus] = useState('');
+    const [workingStatus, setWorkingStatus] = useState('');
     const [error, setError] = useState(null);
     // const { setUserData } = useContext(GlobalContext);
+
+    let navigate=useNavigate();
 
     const handleProfilePicChange = (e) => {
         const file = e.target.files[0];
@@ -57,18 +59,18 @@ const StudentSignUp = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!name || !mobile || !email || !address || !qualification || !profilePic || !resume || !workStatus) {
+        if (!fullName || !mobileNumber || !email || !address || !qualification || !profilePic || !resume || !workingStatus) {
             setError('Please fill in all fields and upload a profile picture and resume.');
             return;
         }
 
         const phoneRegex = /^[0-9]{10}$/;
-        if (!phoneRegex.test(mobile)) {
+        if (!phoneRegex.test(mobileNumber)) {
             setError('Please enter a valid 10-digit mobile number.');
             return;
         }
 
-        const studentData = { name, mobile, email, address, qualification, profilePic, resume, workStatus };
+        const studentData = { fullName, mobileNumber, email, address, qualification, profilePic, resume, workingStatus };
 
         fetch('http://localhost:8080/students/create', {
             method: 'POST',
@@ -88,17 +90,18 @@ const StudentSignUp = () => {
             .then((data) => {
                 if (data) {
                     // setUserData(data);
-                    setName('');
-                    setMobile('');
+                    setFullName('');
+                    setMobileNumber('');
                     setEmail('');
                     setAddress('');
                     setQualification('');
                     setProfilePic(null);
                     setResume(null);
-                    setWorkStatus('');
+                    setWorkingStatus('');
                     setError(null);
 
                     alert('Student data submitted successfully!');
+                    navigate("login/mobile");
                 }
             })
             .catch((error) => {
@@ -142,8 +145,8 @@ const StudentSignUp = () => {
                         Name:
                         <input
                             type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
                             required
                         />
                     </label>
@@ -152,8 +155,8 @@ const StudentSignUp = () => {
                         Mobile:
                         <input
                             type="tel"
-                            value={mobile}
-                            onChange={(e) => setMobile(e.target.value)}
+                            value={mobileNumber}
+                            onChange={(e) => setMobileNumber(e.target.value)}
                             required
                         />
                     </label>
@@ -181,8 +184,8 @@ const StudentSignUp = () => {
                     <label>
                         Current Work Status:
                         <select
-                            value={workStatus}
-                            onChange={(e) => setWorkStatus(e.target.value)}
+                            value={workingStatus}
+                            onChange={(e) => setWorkingStatus(e.target.value)}
                             required
                         >
                             <option value="">Select</option>

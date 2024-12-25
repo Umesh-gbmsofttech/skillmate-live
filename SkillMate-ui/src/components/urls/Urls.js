@@ -6,6 +6,7 @@ const urls = {
         sendOtpEmail: `${baseUrl}/auth/otp/email`,
         verifyOtpNumber: `${baseUrl}/auth/verifyOtp/mobile`,
         verifyOtpEmail: `${baseUrl}/auth/verifyOtp/email`,
+        getDetails: `${baseUrl}/users/getdetails`,
     },
     admin: {
         login: `${baseUrl}/admin/login`,
