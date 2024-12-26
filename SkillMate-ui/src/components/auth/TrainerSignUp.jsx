@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react';
 import './TrainerSignUp.css';
 import { GlobalContext } from '../context/GlobalContext';
 import { Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useDispatch } from 'react-redux'; // Import useDispatch from Redux
 import { setUserData } from '../redux/authSlice'; // Import the setUserData action
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './StudentSignUp.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { setUserData } from '../redux/authSlice';
 
 const StudentSignUp = () => {

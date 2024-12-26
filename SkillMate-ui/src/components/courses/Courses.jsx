@@ -191,3 +191,130 @@ export default Courses;
 // }
 
 // export default Courses;
+
+
+
+
+
+
+
+// import React, { useEffect, useState, useRef } from 'react';
+// import './Courses.css';
+// import logo from '../../assets/skillmate.jpg';
+// import referAndEarn from '../../assets/refer-earn.png';
+// import { useNavigate } from 'react-router-dom';
+// import Search from '../Search';
+// import editIcon from '../../assets/editIcon.png'; // Corrected import for edit icon
+// import axios from 'axios';  
+// import urls from '../urls/Urls';
+
+// const baseUrl = 'YOUR_BACKEND_BASE_URL';  // Set your backend base URL here
+
+// function Courses() {
+//   const navigate = useNavigate();
+
+//   const handleCourseEditClick = () => {
+//     navigate('/admin-profile/edit-courses');
+//   }
+
+//   const handleCotactUsClick = () => {
+//     navigate('/contact');
+//   };
+
+//   const handleBuyNowClick = () => {
+//     navigate('/subscriptions');
+//   };
+
+//   const handleReferNowClick = () => {
+//     alert('Thanks your credit points added to your account');
+//   };
+
+//   // Initialize state for courses
+//   const [courses, setCourses] = useState([]);
+//   const [loading, setLoading] = useState(true);  // To track loading state
+//   const [error, setError] = useState(null);  // To track any error
+
+//   const courseRefs = useRef([]);
+
+//   useEffect(() => {
+//     // Fetch courses data from the backend when the component mounts
+//     axios.get(urls.course.get)  // Adjust the endpoint as needed
+//       .then((response) => {
+//         setCourses(response.data);  // Set the fetched data to the courses state
+//         setLoading(false);  // Set loading to false once data is fetched
+//       })
+//       .catch((err) => {
+//         setError('Failed to load courses');
+//         setLoading(false);  // Set loading to false even in case of error
+//       });
+
+//     // IntersectionObserver setup
+//     courseRefs.current = courseRefs.current.slice(0, courses.length);
+//     const observer = new IntersectionObserver((entries) => {
+//       entries.forEach((entry) => {
+//         if (entry.isIntersecting) {
+//           entry.target.classList.add('visible');
+//         }
+//       });
+//     }, { threshold: 0.5 });
+
+//     // Observe each course element using ref
+//     courseRefs.current.forEach((course) => {
+//       if (course) observer.observe(course);
+//     });
+
+//     return () => observer.disconnect();
+//   }, [courses.length]);
+
+//   if (loading) {
+//     return <p>Loading courses...</p>;  // Show loading message while fetching data
+//   }
+
+//   if (error) {
+//     return <p>{error}</p>;  // Show error message if there's an issue
+//   }
+
+//   return (
+//     <>
+//       <div className='list-of-courses-container'>
+//         <h1 className='list-of-courses-container-heading'>
+//           Explore a wide range of courses designed to help you succeed in the tech industry
+//         </h1>
+//         <Search />
+//         <div className="courses-card-container">
+//           {courses.map((course, index) => (
+//             <div
+//               key={course.id}
+//               ref={(el) => (courseRefs.current[index] = el)}
+//               className="course-card"
+//             >
+//               <div className="course-image-container">
+//                 <img src={logo} alt="course-logo" />
+//                 <span className="course-rating">{course.rating}</span>
+//               </div>
+//               <div className="courses-card-container-courses-buttons">
+//                 <button onClick={handleCotactUsClick} className="courses-card-container-courses-contact-us-button">Contact Us</button>
+//                 <button onClick={handleBuyNowClick} className="courses-card-container-courses-buy-now-button">BUY NOW</button>
+//               </div>
+//               <img onClick={handleCourseEditClick} src={editIcon} alt="edit" className="edit-icon-a" />
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+
+//       <div className="refer-and-earn-section">
+//         <div className="data">
+//           <h2 className="refer-and-earn-section-heading">Refer and Earn</h2>
+//           <p className="refer-and-earn-section-description">
+//             Earn extra money by referring your friends and family to SkillMate. Share your referral link and get 10% off your first purchase.
+//           </p>
+//           <button onClick={handleReferNowClick} className="refer-and-earn-section-button">Refer Now</button>
+//         </div>
+//         <img src={referAndEarn} alt="Refer and Earn" />
+//       </div>
+//     </>
+//   );
+// }
+
+// export default Courses;
+

@@ -39,8 +39,9 @@ const urls = {
         delete: (id) => `${baseUrl}/ContactUs/delete/${id}`,
     },
     course: {
-        save: `${baseUrl}/course/save`,
-        get: (id) => `${baseUrl}/course/get/${id}`,
+        save: `${baseUrl}/courses/create`,
+        get:  `${baseUrl}/courses/fetch`,
+        getid: (id) => `${baseUrl}/courses/fetch/${id}`,
         getList: `${baseUrl}/course/getList`,
         update: (id) => `${baseUrl}/course/update/${id}`,
         delete: (id) => `${baseUrl}/course/delete/${id}`,
