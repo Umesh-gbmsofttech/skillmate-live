@@ -42,6 +42,7 @@ import AddCourseForm from './components/courses/AddCourseForm';
 import BuyCourse from './components/subscription/BuyCourse';
 import MyCourses from './components/courses/MyCourses';
 import { CourseProvider } from './components/context/CourseContext';
+import AddTrainerForm from './components/trainer/AddTrainerForm';
 // import LoginProfile from './components/auth/Profile';
 
 
@@ -101,9 +102,10 @@ function App() {
         <Route path="/trainer-profile-update" element={<TrainerProfileUpdate username />} />
         <Route path="/admin-profile" element={<AdminProfile username />} />
         <Route path="/admin-profile/manage-trainers" element={<ManageTrainersList />} />
-        <Route path="/admin-profile/edit-trainers" element={<AdEditTrainer />} />
+        <Route path="/admin-profile/edit-trainers/:trainerId" element={<AdEditTrainer />} />
+        <Route path='/admin-add-trainer' element={<AddTrainerForm />} />
         <Route path="/admin-profile/manage-students" element={<ManageStudentsList />} />
-        <Route path="/admin-profile/edit-students" element={<AdEditStudent />} />
+        <Route path="/admin-profile/edit-stude/:studentId" element={<AdEditStudent />} />
         <Route path="/admin-profile/edit-courses" element={<AdEditCourse />} />
         <Route path="/admin-profile/manage-courses" element={<ManageCoursesList />} />
         <Route path="/delete-profile" element={<DeleteProfile />} />

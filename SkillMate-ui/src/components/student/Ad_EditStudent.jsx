@@ -1,71 +1,138 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 import './Ad_EditStudent.css';
-import profilePic from '../../assets/profilePic.jpg';
 
-function AdEditStudent() {
-    const [showProfile, setShowProfile] = useState(true);
+function EditStudents() {
+    const [student, setStudent] = useState(null);
+    const [formData, setFormData] = useState({
+        fullName: '',
+        Technologies: '',
+        attendanceByDays: '',
+        attendanceAverage: '',
+        remarkByTrainer: ''
+    });
+    const [loading, setLoading] = useState(true);
 
-    const user = {
-        name: 'John Doe',
-        email: 'johndoe@example.com',
-        mobile: '+1 123-456-7890',
-        address: '123 Main St, City, State, Zip',
-        qualification: 'Master of Science, Computer Science',
-        workStatus: 'Freelancer',
-        profilePic,
-        resume: 'resume.pdf',
+    const { studentId } = useParams();  
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchStudentData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/students/fetch/${studentId}`);
+                setStudent(response.data); 
+                setFormData({
+                    fullName: response.data.fullName,
+                    Technologies: response.data.Technologies,
+                    attendanceByDays: response.data.attendanceByDays,
+                    attendanceAverage: response.data.attendanceAverage,
+                    remarkByTrainer: response.data.remarkByTrainer
+                });
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+                setLoading(false);
+            }
+        };
+
+        if (studentId) {
+            fetchStudentData();
+        } else {
+            navigate('/admin-dashboard');
+        }
+    }, [studentId, navigate]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
     };
 
-    const handleSubmitClick = () => {
-        console.log('Account has been updated successfully.');
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.put(`http://localhost:8080/students/update/${studentId}`, formData);
+            if (response.status === 200) {
+                alert('Student updated successfully!');
+                navigate('/admin-profile/manage-students'); // Redirect to the dashboard after successful update
+            } else {
+                alert('Failed to update student data. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error updating student data:', error);
+            alert('An error occurred while updating the student data.');
+        }
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        console.log(file);
-    };
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="admin__edit-student-container">
-            <div className="ad__-student-header">
-                <h1 className="ad__-student-header__welcome">Edit Student</h1>
-            </div>
-
-            <div className="ad__-student-details">
-                <div className="ad__-student-header__profile-container">
-                    <img className="ad__-student-header__picture" src={user.profilePic} alt="Profile" />
-                    <div className="ad__-student-header__file-upload">
-                        <input
-                            type="file"
-                            id="ad__st-profile-image"
-                            className="ad__-student-header__file-input"
-                            onChange={handleFileChange}
+            <h2>Edit Student Information</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="ad__-student-details">
+                    <div className="ad__-student-details__item">
+                        <label>Full Name:</label>
+                        <input 
+                            type="text" 
+                            name="fullName" 
+                            value={formData.fullName} 
+                            onChange={handleChange} 
+                            placeholder="Enter full name"
                         />
-                        <button
-                            className="ad__-student-header__file-button"
-                            onClick={() => document.getElementById('ad__st-profile-image').click()}
-                        >
-                            Choose Profile Image
-                        </button>
+                    </div>
+                    <div className="ad__-student-details__item">
+                        <label>Technologies:</label>
+                        <input 
+                            type="text" 
+                            name="Technologies" 
+                            value={formData.Technologies} 
+                            onChange={handleChange} 
+                            placeholder="Enter technologies"
+                        />
+                    </div>
+                    <div className="ad__-student-details__item">
+                        <label>Attendance (Days):</label>
+                        <input 
+                            type="text" 
+                            name="attendanceByDays" 
+                            value={formData.attendanceByDays} 
+                            onChange={handleChange} 
+                            placeholder="Enter attendance days"
+                        />
+                    </div>
+                    <div className="ad__-student-details__item">
+                        <label>Attendance Average:</label>
+                        <input 
+                            type="text" 
+                            name="attendanceAverage" 
+                            value={formData.attendanceAverage} 
+                            onChange={handleChange} 
+                            placeholder="Enter attendance average"
+                        />
+                    </div>
+                    <div className="ad__-student-details__item">
+                        <label>Remark by Trainer:</label>
+                        <input 
+                            type="text" 
+                            name="remarkByTrainer" 
+                            value={formData.remarkByTrainer} 
+                            onChange={handleChange} 
+                            placeholder="Enter remark by trainer"
+                        />
                     </div>
                 </div>
-
-                <p className="ad__-student-details__item">Name: {user.name}</p>
-                <p className="ad__-student-details__item">Phone: {user.mobile}</p>
-                <p className="ad__-student-details__item">Email: {user.email}</p>
-                <p className="ad__-student-details__item">Address: {user.address}</p>
-                <p className="ad__-student-details__item">Education: {user.qualification}</p>
-                <p className="ad__-student-details__item">Work Status: {user.workStatus}</p>
-                <p className="ad__-student-details__item">Resume: {user.resume}</p>
-            </div>
-
-            <div className="ad__-student-actions">
-                <button className="ad__-student-actions__submit" onClick={handleSubmitClick}>
-                    Submit
-                </button>
-            </div>
+                <div className="ad__-student-actions">
+                    <button className="ad__-student-actions__submit" type="submit">Update Student</button>
+                </div>
+            </form>
         </div>
     );
 }
 
-export default AdEditStudent;
+export default EditStudents;

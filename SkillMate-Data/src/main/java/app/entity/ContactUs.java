@@ -25,7 +25,7 @@ public class ContactUs {
     private String email;
 
     @NotNull(message = "Contact number is required")
-    private String contactNumber; // Changed to String to handle international phone formats better
+    private String contactNumber; // Using String to handle international phone formats better
 
     @NotEmpty(message = "Qualification is required")
     @Size(min = 3, max = 100, message = "Qualification must be between 3 and 100 characters")
@@ -37,6 +37,15 @@ public class ContactUs {
 
     // Default no-arg constructor
     public ContactUs() {
+    }
+
+    // Constructor without validation annotations
+    public ContactUs(String fullName, String email, String contactNumber, String qualification, String query) {
+        this.fullName = fullName;
+        this.email = email;
+        this.contactNumber = contactNumber;
+        this.qualification = qualification;
+        this.query = query;
     }
 
     // Getters and Setters

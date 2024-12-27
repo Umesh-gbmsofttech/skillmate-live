@@ -68,10 +68,10 @@ function BuyCourse() {
   const token = useSelector((state) => state.auth.token);
   const courses = useSelector((state) => state.courses.courses);
 
-  // Find course with ID = 1
+
   const courseData = courses.find(course => course._id === '1');
 
-  // Dispatch action to fetch courses (if not already in state)
+ 
   useEffect(() => {
     if (!courses.length) {
       dispatch(fetchCoursesSuccess([{
@@ -85,21 +85,21 @@ function BuyCourse() {
     }
   }, [dispatch, courses.length]);
 
-  // Handle buying the course
+  
   const handleBuyCourse = () => {
-    // Ensure the user is authenticated by checking the token
+    
     if (!token) {
-      // If no token, redirect to login page or show an error
+     
       navigate('/login');
       return;
     }
 
-    // Add the course to 'myCourses' in Redux (Authenticated)
+    
     dispatch(addToMyCourses(courseData));
     navigate('/my-courses');
   };
 
-  // Handle rate us click
+
   const handleRateUsClick = () => {
     navigate('/rating-reviews/page/card');
   };

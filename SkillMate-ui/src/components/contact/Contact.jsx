@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import Footer from '../home/Footer';
 import Navbar from '../home/Navbar';
 import logo from '../../assets/skillmate.jpg';
@@ -8,18 +9,46 @@ import ReviewsSection from '../rating-review/ReviewsSection';
 import EnquiryForm from './EnquiryForm';
 import writeIcon from '../../assets/writeIcon.png';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import axios to make HTTP requests
 
 function Contact() {
     const navigate = useNavigate();
 
+    const [formData, setFormData] = useState({
+        query: '',
+        selectedOption: '',
+    });
+
     const alt = 'https://via.placeholder.com/300';
+
     const handleWhatsAppClick = () => {
         alert('opening whatsapp');
         window.open(`https://api.whatsapp.com/send?phone=+919226224019&text=Hi, I'm interested in enrolling in your React js course. Please let me know your availability.`);
     };
+
     const handleRateUsClick = () => {
-        navigate('/rating-reviews/page/card')
-    }
+        navigate('/rating-reviews/page/card');
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Send form data to Spring Boot backend
+        axios.post('http://localhost:8080/sendEmail', formData)
+            .then(response => {
+                alert('Query submitted successfully!');
+            })
+            .catch(error => {
+                alert('Error submitting query!');
+                console.error(error);
+            });
+    };
+
     return (
         <div className="contact-us-container">
             <div className="contact-us-course-section">
@@ -32,12 +61,12 @@ function Contact() {
                     <p className="contact-us-course-period">Period: 180 days</p>
                     <div className="contact-us-course-options">
                         <label>Select Query:</label>
-                        <select>
-                            <option>op 1</option>
-                            <option>op 2</option>
-                            <option>op 3</option>
-                            <option>op 4</option>
-                            <option>op 5</option>
+                        <select name="selectedOption" value={formData.selectedOption} onChange={handleInputChange}>
+                            <option value="">Select an option</option>
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Course Details">Course Details</option>
+                            <option value="Enrollment Process">Enrollment Process</option>
+                            <option value="Payment Issues">Payment Issues</option>
                         </select>
                     </div>
 
@@ -45,15 +74,23 @@ function Contact() {
                         <summary>See the full details of this course ...</summary>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit ad placeat at exercitationem molestias odio tempore sapiente modi distinctio, ut nostrum ullam, laboriosam dolore vitae temporibus voluptates similique quas corrupti.</p>
                     </details>
+
                     <div className="email-us-section">
                         <div className="email-us-section__email">
-                            <textarea name="query" placeholder="Enter your detailed query here..." required></textarea>
-                            <button className="contact-us-course-button">Submit</button>
+                            <textarea 
+                                name="query" 
+                                placeholder="Enter your detailed query here..." 
+                                required 
+                                value={formData.query} 
+                                onChange={handleInputChange}
+                            ></textarea>
+                            <button className="contact-us-course-button" onClick={handleSubmit}>Submit</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="leave__a-rating-review" onClick={handleRateUsClick} >
+
+            <div className="leave__a-rating-review" onClick={handleRateUsClick}>
                 <h2>Leave a Rating and Review <img src={writeIcon} alt="Rate Us" /></h2>
             </div>
 

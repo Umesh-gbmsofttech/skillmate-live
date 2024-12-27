@@ -1,104 +1,68 @@
-.admin__edit-student-container {
+
+body {
     font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; 
 }
 
-/* Header for Edit Student Section */
-.ad__-student-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #f3f3f3;
-    padding: 20px;
+/* Container for the Form */
+.admin__edit-student-container {
+    background-color: #fff;
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; 
+    margin: auto;
+    box-sizing: border-box;
+    margin-top: 50px; 
+    margin-bottom: 50px; 
+}
+
+/* Header Styling */
+h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
     margin-bottom: 20px;
 }
 
-/* Profile Picture */
-.ad__-student-header__picture {
-    width: 200px;
-    height: 200px;
-    border-radius: 24%;
-    object-fit: cover;
-}
-
-/* Header Text */
-.ad__-student-header__welcome {
-    flex: 1;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-}
-
-/* Profile Picture and File Input container */
-.ad__-student-header__profile-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: end;
-    gap: 20px;
-    margin-bottom: 60px;
-}
-
-/* File input section */
-.ad__-student-header__file-upload {
+/* Form Fields Container */
+.ad__-student-details {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 15px;
 }
 
-.ad__-student-header__file-input {
-    display: none;
-    /* Hide the default file input */
-}
-
-/* Button to trigger file input */
-.ad__-student-header__file-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #e5e5e7;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.ad__-student-header__file-button:hover {
-    background-color: #0056b3;
-}
-
-/* Student Details Section */
-.ad__-student-details {
-    background-color: #fff;
-    padding: 20px 30px;
-    border-radius: 10px;
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-    margin: 20px 0;
-}
-
+/* Form Field Styling */
 .ad__-student-details__item {
-    width: 70%;
-    margin: 10px 0;
-    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ad__-student-details__item input {
     padding: 10px;
-    background-color: #f1f0f0;
+    font-size: 16px;
     border: 1px solid #d6d6d6;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin: 1% 13%;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
 }
 
-/* Actions Section */
-.ad__-student-actions {
-    text-align: center;
-    margin-top: 20px;
+.ad__-student-details__item input:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #f0f8ff;
 }
 
-/* Submit Button */
+/* Submit Button Styling */
 .ad__-student-actions__submit {
     padding: 12px 30px;
     font-size: 16px;
@@ -107,47 +71,33 @@
     border-radius: 5px;
     background-color: #007bff;
     color: white;
+    width: 100%;
     transition: background-color 0.3s ease;
+    margin-top: 20px;
 }
 
 .ad__-student-actions__submit:hover {
     background-color: #0056b3;
 }
 
-/* Hover Effect for Input Fields */
-.ad__-student-details__item:hover {
-    background-color: #e3e3e3;
-}
-
-/* Responsive Design */
+/* Responsive Design for Mobile */
 @media (max-width: 768px) {
-    .ad__-student-header {
-        flex-direction: column;
-        align-items: center;
+    .admin__edit-student-container {
+        padding: 20px;
+        width: 90%;
     }
 
-    .ad__-student-header__picture {
-        width: 120px;
-        height: 120px;
-    }
-
-    .ad__-student-header__welcome {
+    h2 {
         font-size: 20px;
     }
 
-    .ad__-student-details__item {
-        font-size: 16px;
+    .ad__-student-details__item input {
+        font-size: 14px;
         padding: 8px;
     }
 
     .ad__-student-actions__submit {
         font-size: 14px;
-        padding: 8px 16px;
-    }
-
-    /* Responsive for profile container and file input */
-    .ad__-student-header__profile-container {
-        flex-direction: column;
-        align-items: center;
+        padding: 10px 20px;
     }
 }
