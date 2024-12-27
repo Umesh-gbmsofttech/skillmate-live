@@ -3,11 +3,13 @@ package app.entity;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -19,7 +21,8 @@ public class Course {
     private Long id;
 
     private String courseName;
-    private String coverImage;
+  private String coverImage;
+    
     private Double price;
     private String description;
     private String days;
@@ -50,13 +53,7 @@ public class Course {
 		this.courseName = courseName;
 	}
 
-	public String getCoverImage() {
-		return coverImage;
-	}
-
-	public void setCoverImage(String coverImage) {
-		this.coverImage = coverImage;
-	}
+	
 
 	public Double getPrice() {
 		return price;
@@ -106,6 +103,9 @@ public class Course {
 		this.ratingReviews = ratingReviews;
 	}
 
+	
+    
+    
 	public Course(Long id, String courseName, String coverImage, Double price, String description, String days,
 			Trainer trainer, List<Student> students, List<RatingReviews> ratingReviews) {
 		super();
@@ -119,7 +119,18 @@ public class Course {
 		this.students = students;
 		this.ratingReviews = ratingReviews;
 	}
-    
-    public Course() {}
 
+	public Course() {}
+
+	public String getCoverImage() {
+		return coverImage;
+	}
+
+	public void setCoverImage(String coverImage) {
+		this.coverImage = coverImage;
+	}
+
+	
+
+    
 }

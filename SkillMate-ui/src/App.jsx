@@ -38,6 +38,10 @@ import LoginWithEmail from './components/auth/LoginWithEmail';
 import LoginWithMobile from './components/auth/LoginWithMobile';
 import Student_Or_Trainer_signup from './components/auth/Student_Or_Trainer_signup';
 import AdminLogin from './components/auth/AdminLogin';
+import AddCourseForm from './components/courses/AddCourseForm';
+import BuyCourse from './components/subscription/BuyCourse';
+import MyCourses from './components/courses/MyCourses';
+import { CourseProvider } from './components/context/CourseContext';
 // import LoginProfile from './components/auth/Profile';
 
 
@@ -52,6 +56,8 @@ function App() {
   return (
     // debouncing throatling
     //rahulrathod2002
+    
+    
 
     <Router>
       {/* <Profile /> */}
@@ -104,12 +110,17 @@ function App() {
 
         <Route path="/rating-reviews/page" element={<LeaveRatingReview />} />
         <Route path="/rating-reviews/page/card" element={<RatingCard />} />
+        <Route path="/admin-profile/edit-course" element={<AddCourseForm />} />
+
+        <Route path="/buy-course" element={<BuyCourse />} />
+        <Route path="/my-courses" element={<MyCourses />} />
 
         {/* <Route path="/login-profile" element={<LoginProfile />} /> */}
 
       </Routes>
       <Footer />
     </Router>
+   
   );
 }
 

@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 // import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +22,7 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    // Create a new Course
+     //Create a new Course
     @PostMapping("/create")
     public ResponseEntity<Course> createCourse(@Valid @RequestBody Course course) {
         try {
@@ -31,6 +33,8 @@ public class CourseController {
         }
     }
 
+    
+ 
     // Get all Courses
     @GetMapping("/fetch")
     public ResponseEntity<List<Course>> getAllCourses() {
@@ -53,6 +57,9 @@ public class CourseController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
+  
+
 
     // Update a Course
     @PutMapping("/update/{id}")

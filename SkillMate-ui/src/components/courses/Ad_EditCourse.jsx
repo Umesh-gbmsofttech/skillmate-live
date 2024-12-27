@@ -78,6 +78,7 @@ import profilePic from '../../assets/profilePic.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';  // Import useDispatch to dispatch actions
 import { updateCourse } from '../redux/courseActions'; // Import the updateCourse action
+import axios from 'axios';
 
 function AdEditCourse() {
     const [courseName, setCourseName] = useState('');
@@ -102,25 +103,41 @@ function AdEditCourse() {
         }
     }, [courseData]);
 
-    const handleSubmitClick = () => {
-        // Handle updating the course
+    const handleSubmitClick = async () => {
         const updatedCourse = {
             ...courseData,
             courseName,
-            days,
+            days, // Ensure the field matches the backend schema
             time,
             price,
             description,
-            coverImage: profilePic,  // If profilePic is changed, update it
+            coverImage: profilePic,
         };
-
-        // Dispatch action to update the course in Redux
-        dispatch(updateCourse(updatedCourse));
-
-        // Navigate back to the course list after updating
-        navigate('/admin-profile/manage-courses');
+    
+        try {
+            // Make an API call to update the course
+            const response = await axios.put(
+                `http://localhost:8080/courses/update/${courseData.id}`, // Ensure this matches your backend route
+                updatedCourse
+            );
+    
+            if (response.status === 200) {
+                // Update course in Redux after a successful API response
+                dispatch(updateCourse(updatedCourse));
+    
+                // Navigate back to the course list
+                navigate('/admin-profile/manage-courses');
+            } else {
+                console.error('Failed to update course:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating course:', error.message);
+        }
     };
     
+
+        // Dispatch action to update the course in Redux
+       
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -190,7 +207,7 @@ function AdEditCourse() {
                 </div>
                 <div className="ad__-course-ed-details__item">
                     <label>Description:</label>
-                    <textarea
+                    <input
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
