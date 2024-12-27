@@ -11,7 +11,6 @@ import store from './components/redux/store.js';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-    
       <App />
     </Provider>
   </StrictMode>,

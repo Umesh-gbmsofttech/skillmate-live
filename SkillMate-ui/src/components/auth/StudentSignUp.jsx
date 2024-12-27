@@ -114,43 +114,20 @@ const StudentSignUp = () => {
     };
 
     return (
-        <div className="student-overlay">
+        <div className="bootstrap-scope student-overlay">
             <div className="student-signup-form-container">
                 <form className="student-signup-form" onSubmit={handleSubmit}>
                     <h2>Student Sign Up</h2>
+                    {error && <p className="alert alert-danger">{error}</p>}
 
-                    {error && <p className="error-message">{error}</p>}
-
-                    <div className="profile-pic-container">
-                        {profilePic ? (
-                            <div className="profile-pic-preview">
-                                <img
-                                    className="profile-pic"
-                                    src={`data:image/jpeg;base64,${profilePic}`}
-                                    alt="Profile Preview"
-                                />
-                            </div>
-                        ) : (
-                            <div className="profile-pic-placeholder">No Image Uploaded</div>
-                        )}
-                    </div>
-
-                    <label>
-                        Profile Picture:
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleProfilePicChange}
-                            required
-                        />
-                    </label>
-
+                    {/* Form Fields */}
                     <label>
                         Name:
                         <input
                             type="text"
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
+                            className="form-control"
                             required
                         />
                     </label>
@@ -161,6 +138,7 @@ const StudentSignUp = () => {
                             type="tel"
                             value={mobileNumber}
                             onChange={(e) => setMobileNumber(e.target.value)}
+                            className="form-control"
                             required
                         />
                     </label>
@@ -171,6 +149,7 @@ const StudentSignUp = () => {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            className="form-control"
                             required
                         />
                     </label>
@@ -181,31 +160,7 @@ const StudentSignUp = () => {
                             type="text"
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
-                            required
-                        />
-                    </label>
-
-                    <label>
-                        Current Work Status:
-                        <select
-                            value={workingStatus}
-                            onChange={(e) => setWorkingStatus(e.target.value)}
-                            required
-                        >
-                            <option value="">Select</option>
-                            <option value="full-time">Full-time</option>
-                            <option value="part-time">Part-time</option>
-                            <option value="freelance">Freelance</option>
-                            <option value="un-employeed">Unemployed</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        Resume (PDF):
-                        <input
-                            type="file"
-                            accept="application/pdf"
-                            onChange={handleResumeChange}
+                            className="form-control"
                             required
                         />
                     </label>
@@ -216,13 +171,16 @@ const StudentSignUp = () => {
                             type="text"
                             value={qualification}
                             onChange={(e) => setQualification(e.target.value)}
+                            className="form-control"
                             required
                         />
                     </label>
 
-                    <button type="submit">Submit</button>
+                    <button type="submit" className="btn btn-primary">
+                        Submit
+                    </button>
                 </form>
-                <Link to="/login/mobile">
+                <Link to="/login/mobile" className="btn btn-link">
                     Have an account? Please Login
                 </Link>
             </div>

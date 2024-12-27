@@ -22,6 +22,7 @@
   position: relative;
 }
 
+/* Edit icon on course card */
 .courses-card-container .edit-icon-a {
   width: 40px;
   height: 40px;
@@ -29,12 +30,15 @@
   position: absolute;
   top: 85%;
   left: 87%;
+  z-index: 10;
+  /* Ensure it is above other elements */
 }
 
 /* Individual course card */
 .course-card {
   width: 500px;
-  background-color: #fff;
+  background-color: #fff !important;
+  /* Override Bootstrap's background */
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -48,6 +52,7 @@
 .course-card.visible {
   opacity: 1;
   transform: translateY(0);
+  transition: opacity 0.5s;
 }
 
 /* Image inside course card */
@@ -85,7 +90,6 @@
   padding: 14px 17px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
   width: 80%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.5s ease, opacity 1s ease, background-color 0.5s ease;
@@ -93,11 +97,11 @@
 
 /* Specific button styles */
 .courses-card-container-courses-contact-us-button {
-  background-color: #FF8F5F;
+  background-color: #ff8f5f;
 }
 
 .courses-card-container-courses-buy-now-button {
-  background-color: #42A4FF;
+  background-color: #42a4ff;
 }
 
 /* Hover effects for buttons */

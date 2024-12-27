@@ -1,11 +1,10 @@
 .student-overlay {
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    overflow-y: auto; 
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,16 +12,12 @@
 }
 
 .student-signup-form-container {
-    padding: 30px 20px; 
-    background-color: #ffffff; 
+    background: white;
+    padding: 20px;
     border-radius: 10px;
-    max-width: 1000px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-height: calc(100% - 40px); 
-    margin: 20px auto; 
-    overflow-y: scroll;
-    scrollbar-width: none; 
-    
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
 }
 
 .student-signup-form-container h2 {
@@ -65,7 +60,7 @@ button[type="submit"]:hover {
 .error-message {
     color: red;
     font-size: 14px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .profile-pic-container {

@@ -1,3 +1,59 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
+import './MyCourses.css';
+import logo from '../../assets/skillmate.jpg';
+
+function MyCourses() {
+    // Access purchased courses from Redux store
+    const token = useSelector((state) => state.auth.token);
+    const courses = useSelector((state) => state.courses.courses);
+
+    const myCourses = [
+        {
+            title: "Introduction to React",
+            date: "November 1, 2024",
+            duration: "1 hour",
+            imageUrl: logo,
+            alt: "https://via.placeholder.com/300",
+        },
+        {
+            title: "Advanced JavaScript",
+            date: "November 3, 2024",
+            duration: "2 hours",
+            imageUrl: logo,
+            alt: "https://via.placeholder.com/300",
+        },
+        {
+            title: "CSS Grid and Flexbox",
+            date: "November 5, 2024",
+            duration: "1.5 hours",
+            imageUrl: logo,
+            alt: "https://via.placeholder.com/300",
+        },
+    ];
+
+    return (
+        <div className="my-courses-container">
+            <h1>My Courses</h1>
+            {myCourses.length > 0 ? (
+                myCourses.map((course) => (
+                    <div key={course._id} className="course-item">
+                        <img src={course.imageUrl} alt={course.alt} />
+                        <div className="course-details">
+                            <h2>{course.name}</h2>
+                            <p>{course.price}</p>
+                            <p>{course.duration}</p>
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <p>No courses purchased yet.</p>
+            )}
+        </div>
+    );
+}
+
+export default MyCourses;
 // import React from 'react';
 // import './MyCourses.css';
 // import logo from '../../assets/skillmate.jpg';
@@ -55,35 +111,3 @@
 
 
 
-import React from 'react';
-import { useSelector } from 'react-redux';
-import './MyCourses.css';
-
-function MyCourses() {
-  // Access purchased courses from Redux store
- const token = useSelector((state) => state.auth.token);
-     const courses = useSelector((state) => state.courses.courses); 
- 
-
-  return (
-    <div className="my-courses-container">
-      <h1>My Courses</h1>
-      {myCourses.length > 0 ? (
-        myCourses.map((course) => (
-          <div key={course._id} className="course-item">
-            <img src={course.imageUrl} alt={course.alt} />
-            <div className="course-details">
-              <h2>{course.name}</h2>
-              <p>{course.price}</p>
-              <p>{course.duration}</p>
-            </div>
-          </div>
-        ))
-      ) : (
-        <p>No courses purchased yet.</p>
-      )}
-    </div>
-  );
-}
-
-export default MyCourses;
