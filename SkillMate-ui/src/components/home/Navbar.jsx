@@ -12,6 +12,7 @@ function Navbar() {
   const username = useSelector((state) => state.auth.username); // for admin only
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
+
   // Log user data for debugging (optional)
   useEffect(() => {
     if (userData) {

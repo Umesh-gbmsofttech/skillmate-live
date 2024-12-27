@@ -120,7 +120,28 @@ const StudentSignUp = () => {
                     <h2>Student Sign Up</h2>
                     {error && <p className="alert alert-danger">{error}</p>}
 
-                    {/* Form Fields */}
+                    <div className="profile-pic-container">
+                        {profilePic ? (
+                            <div className="profile-pic-preview">
+                                <img
+                                    className="profile-pic"
+                                    src={`data:image/jpeg;base64,${profilePic}`}
+                                    alt="Profile Preview"
+                                />
+                            </div>
+                        ) : (
+                            <div className="profile-pic-placeholder">No Image Uploaded</div>
+                        )}
+                    </div>
+                    <label>
+                        Profile Picture:
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleProfilePicChange}
+                            required
+                        />
+                    </label>
                     <label>
                         Name:
                         <input
@@ -164,7 +185,22 @@ const StudentSignUp = () => {
                             required
                         />
                     </label>
+                    <label>
+                        Current Work Status:
+                        <select
+                            name="workingStatus"
+                            value={workingStatus}
+                            onChange={(e) => setWorkingStatus(e.target.value)}
+                            required
+                        >
+                            <option value="">Select</option>
+                            <option value="full-time">Full-time</option>
+                            <option value="part-time">Part-time</option>
+                            <option value="freelance">Freelance</option>
+                            <option value="un-employed">Unemployed</option>
+                        </select>
 
+                    </label>
                     <label>
                         Qualification:
                         <input
@@ -175,6 +211,16 @@ const StudentSignUp = () => {
                             required
                         />
                     </label>
+                    <label>
+                        Resume (PDF):
+                        <input
+                            type="file"
+                            accept="application/pdf"
+                            onChange={handleResumeChange}
+                            required
+                        />
+                    </label>
+
 
                     <button type="submit" className="btn btn-primary">
                         Submit

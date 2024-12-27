@@ -18,16 +18,16 @@ function Courses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const handleCourseEditClick = () => {
-    navigate('/admin-profile/edit-courses');
+  const handleCourseEditClick = (course) => {
+    navigate('/admin-profile/edit-courses', { state: { course } });
   };
 
   const handleContactUsClick = () => {
     navigate('/contact');
   };
 
-  const handleBuyNowClick = () => {
-    navigate('/subscriptions');
+  const handleBuyNowClick = (course) => {
+    navigate('/subscriptions', { state: { course } });
   };
 
   const handleReferNowClick = () => {
@@ -75,6 +75,8 @@ function Courses() {
     return () => observer.disconnect(); // Clean up the observer on unmount
   }, [courses]); // Runs when `courses` state changes
 
+
+  // console.log(courses)
   return (
     <div>
       <div className="list-of-courses-container">
@@ -95,16 +97,25 @@ function Courses() {
                 ref={(el) => (courseRefs.current[index] = el)} // Assigning ref to each course card
               >
                 <div className="course-image-container">
-                  <img src={logo} alt="course-logo" />
+                  {/* Render the course image using Base64 encoding if required */}
+                  <img
+                    src={course.coverImage.startsWith('data:image') ? course.coverImage : `data:image/jpeg;base64,${course.coverImage}`}
+                    alt={course.courseName || 'Course Image'}
+                  />
                   <span className="course-rating">{course.courseName}</span>
                   <span className="course-rating">{course.days}</span>
                   <span className="course-rating">{course.rating}</span>
                 </div>
                 <div className="courses-card-container-courses-buttons">
-                  <button onClick={handleContactUsClick} className="courses-card-container-courses-contact-us-button">Contact Us</button>
-                  <button onClick={handleBuyNowClick} className="courses-card-container-courses-buy-now-button">BUY NOW</button>
+                  <button onClick={handleContactUsClick} className="courses-card-container-courses-contact-us-button">
+                    Contact Us
+                  </button>
+                  <button onClick={() => handleBuyNowClick(course)} className="courses-card-container-courses-buy-now-button">
+                    BUY NOW
+                  </button>
                 </div>
-                <img onClick={handleCourseEditClick} src={editIcon} alt="edit" className="edit-icon-a" />
+                {/* <img onClick={handleCourseEditClick(course)} src={editIcon} alt="edit" className="edit-icon-a" /> */}
+                <img onClick={() => handleCourseEditClick(course)} src={editIcon} alt="edit" className="edit-icon-a" />
               </div>
             ))}
           </div>
@@ -119,7 +130,9 @@ function Courses() {
           <p className="refer-and-earn-section-description">
             Earn extra money by referring your friends and family to SkillMate. Share your referral link and get 10% off your first purchase.
           </p>
-          <button onClick={handleReferNowClick} className="refer-and-earn-section-button">Refer Now</button>
+          <button onClick={handleReferNowClick} className="refer-and-earn-section-button">
+            Refer Now
+          </button>
         </div>
         <img src={referAndEarn} alt="Refer and Earn" />
       </div>
@@ -128,6 +141,7 @@ function Courses() {
 }
 
 export default Courses;
+
 
 // import React, { useEffect, useState, useRef } from 'react';
 // import './Courses.css';

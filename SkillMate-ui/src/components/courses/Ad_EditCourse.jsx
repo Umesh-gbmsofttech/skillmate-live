@@ -91,6 +91,7 @@ function AdEditCourse() {
     const navigate = useNavigate();  // Initialize useNavigate hook
     const location = useLocation();
     const courseData = location.state?.course; // Get course data passed via state
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (courseData) {
@@ -113,18 +114,18 @@ function AdEditCourse() {
             description,
             coverImage: profilePic,
         };
-    
+
         try {
             // Make an API call to update the course
             const response = await axios.put(
                 `http://localhost:8080/courses/update/${courseData.id}`, // Ensure this matches your backend route
                 updatedCourse
             );
-    
+
             if (response.status === 200) {
                 // Update course in Redux after a successful API response
                 dispatch(updateCourse(updatedCourse));
-    
+
                 // Navigate back to the course list
                 navigate('/admin-profile/manage-courses');
             } else {
@@ -134,10 +135,10 @@ function AdEditCourse() {
             console.error('Error updating course:', error.message);
         }
     };
-    
 
-        // Dispatch action to update the course in Redux
-       
+
+    // Dispatch action to update the course in Redux
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -145,7 +146,10 @@ function AdEditCourse() {
     };
 
     if (!courseData) {
-        return <div>Loading course details...</div>;
+        return <div style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', marginBlock: '20%' }}>Loading course details...</div>;
+    }
+    if (error) {
+        return <div>Failed to load course details...</div>;
     }
 
     return (
@@ -156,7 +160,7 @@ function AdEditCourse() {
 
             <div className="ad__-course-ed-details">
                 <div className="ad__-course-ed-header__profile-container">
-                    <img className="ad__-course-ed-header__picture" src={profilePic} alt="Course Cover" />
+                    <img className="ad__-course-ed-header__picture" src={`data:image/jpeg;base64,${courseData.coverImage}`} alt="Course Cover" />
                     <div className="ad__-course-ed-header__file-upload">
                         <input
                             type="file"

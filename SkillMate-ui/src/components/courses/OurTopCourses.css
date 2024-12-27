@@ -22,6 +22,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     min-width: 350px;
+    max-width: 350px;
     border-radius: 10px;
     overflow: hidden;
     transition: transform 1.8s ease, opacity 1.8s ease;

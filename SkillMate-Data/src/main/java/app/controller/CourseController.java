@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 // import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -22,27 +23,19 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-     //Create a new Course
+    // Create a new Course
     @PostMapping("/create")
-    public ResponseEntity<Course> createCourse(@Valid @RequestBody Course course) {
+    public ResponseEntity<Course> createCourse(@RequestParam("courseName") String courseName,
+                                               @RequestParam("days") String days,
+                                               @RequestParam("price") String price,
+                                               @RequestParam("description") String description,
+                                               @RequestParam("coverImage") MultipartFile coverImage) {
         try {
+            String coverImageBase64 = encodeToBase64(coverImage);
+            Course course = new Course(courseName, days, price, description, coverImageBase64);
             Course createdCourse = courseService.createCourse(course);
             return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    
- 
-    // Get all Courses
-    @GetMapping("/fetch")
-    public ResponseEntity<List<Course>> getAllCourses() {
-        try {
-            List<Course> courses = courseService.getAllCourses();
-            return courses.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                    : new ResponseEntity<>(courses, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (IOException e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -57,10 +50,24 @@ public class CourseController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
-  
 
+    // Convert MultipartFile to Base64 string
+    private String encodeToBase64(MultipartFile file) throws IOException {
+        byte[] bytes = file.getBytes();
+        return Base64.getEncoder().encodeToString(bytes);
+    }
 
+	// Get all Courses
+	@GetMapping("/fetch")
+	public ResponseEntity<List<Course>> getAllCourses() {
+		try {
+			List<Course> courses = courseService.getAllCourses();
+			return courses.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+					: new ResponseEntity<>(courses, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
     // Update a Course
     @PutMapping("/update/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable("id") Long id, @Valid @RequestBody Course course) {

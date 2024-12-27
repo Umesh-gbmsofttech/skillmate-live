@@ -1,8 +1,12 @@
 package app.controller;
 
+import app.entity.Course;
 import app.entity.Student;
 import app.entity.StudentProfileUpdated;
+import app.exception.EntityNotFoundException;
 import app.jwt.JwtResponse;
+import app.repository.CourseRepository;
+import app.repository.StudentRepository;
 import app.service.StudentService;
 import jakarta.validation.Valid;
 
@@ -20,6 +24,12 @@ import java.util.Optional;
 public class StudentController {
 
 	@Autowired
+	StudentRepository studentRepository;
+	
+	@Autowired
+	CourseRepository courseRepository;
+	
+	@Autowired
 	private StudentService studentService;
 
 	//create student and return jwt token and user data
@@ -33,8 +43,28 @@ public class StudentController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	@PutMapping("/students/{id}/add-course")
+    public ResponseEntity<?> addCourseToStudent(@PathVariable Long id, @RequestBody Long courseId) {
+        Student student = studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Student not found"));
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException("Course not found"));
+        student.getCourses().add(course);
+        studentRepository.save(student);
+        return ResponseEntity.ok("Course added to student");
+    }
 
-
+    // Get all courses for a student
+    @GetMapping("/fetch/my-courses/{id}")
+    public ResponseEntity<List<Course>> getAllMyCourses(@PathVariable Long id) {
+        try {
+            Student student = studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Student not found"));
+            List<Course> courses = student.getCourses();
+            return courses.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                    : new ResponseEntity<>(courses, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
 	// Get all Students
 	@GetMapping("/fetch")
 	public ResponseEntity<List<Student>> getAllStudents() {

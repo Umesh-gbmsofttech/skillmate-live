@@ -16,26 +16,56 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Course {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String courseName;
-  private String coverImage;
-    
-    private Double price;
-    private String description;
-    private String days;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT") 
+	private String coverImage;
+	private String courseName;
 
-    @ManyToOne
-    @JoinColumn(name = "trainer_id")
-    private Trainer trainer;
+	private String price;
+	private String description;
+	private String days;
 
-    @ManyToMany(mappedBy = "courses")
-    private List<Student> students;
+	@ManyToOne
+	@JoinColumn(name = "trainer_id")
+	private Trainer trainer;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<RatingReviews> ratingReviews;
+	@ManyToMany(mappedBy = "courses")
+	private List<Student> students;
+
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+	private List<RatingReviews> ratingReviews;
+
+	public Course(String courseName, String days, String price, String description, String coverImage) {
+		super();
+		this.courseName = courseName;
+		this.days = days;
+		this.price = price;
+		this.description = description;
+		this.coverImage = coverImage; // Assign Base64 string
+	}
+
+	public Course() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Course(Long id, String coverImage, String courseName, String price, String description, String days,
+			Trainer trainer, List<Student> students, List<RatingReviews> ratingReviews) {
+		super();
+		this.id = id;
+		this.coverImage = coverImage;
+		this.courseName = courseName;
+		this.price = price;
+		this.description = description;
+		this.days = days;
+		this.trainer = trainer;
+		this.students = students;
+		this.ratingReviews = ratingReviews;
+	}
 
 	public Long getId() {
 		return id;
@@ -43,6 +73,14 @@ public class Course {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getCoverImage() {
+		return coverImage;
+	}
+
+	public void setCoverImage(String coverImage) {
+		this.coverImage = coverImage;
 	}
 
 	public String getCourseName() {
@@ -53,13 +91,11 @@ public class Course {
 		this.courseName = courseName;
 	}
 
-	
-
-	public Double getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 
@@ -103,34 +139,4 @@ public class Course {
 		this.ratingReviews = ratingReviews;
 	}
 
-	
-    
-    
-	public Course(Long id, String courseName, String coverImage, Double price, String description, String days,
-			Trainer trainer, List<Student> students, List<RatingReviews> ratingReviews) {
-		super();
-		this.id = id;
-		this.courseName = courseName;
-		this.coverImage = coverImage;
-		this.price = price;
-		this.description = description;
-		this.days = days;
-		this.trainer = trainer;
-		this.students = students;
-		this.ratingReviews = ratingReviews;
-	}
-
-	public Course() {}
-
-	public String getCoverImage() {
-		return coverImage;
-	}
-
-	public void setCoverImage(String coverImage) {
-		this.coverImage = coverImage;
-	}
-
-	
-
-    
 }
