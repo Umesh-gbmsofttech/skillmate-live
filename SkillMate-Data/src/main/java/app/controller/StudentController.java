@@ -1,10 +1,12 @@
 package app.controller;
 
+import app.entity.Attendance;
 import app.entity.Course;
 import app.entity.Student;
 import app.entity.StudentProfileUpdated;
 import app.exception.EntityNotFoundException;
 import app.jwt.JwtResponse;
+import app.repository.AttendanceRepository;
 import app.repository.CourseRepository;
 import app.repository.StudentRepository;
 import app.service.StudentService;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 //import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +28,9 @@ public class StudentController {
 
 	@Autowired
 	StudentRepository studentRepository;
+	
+	@Autowired
+	private AttendanceRepository attendanceRepository;
 	
 	@Autowired
 	CourseRepository courseRepository;
@@ -108,5 +114,41 @@ public class StudentController {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
 	}
+//	@PutMapping("/students/{studentId}")
+//	public ResponseEntity<Attendance> updateStudentAttendanceDetails(
+//	    @PathVariable Long studentId, 
+//	    @RequestBody Map<String, Object> updatedFields) {
+//	    
+//	    // Step 1: Retrieve the student from the repository (if needed for validation)
+//	    Student student = studentRepository.findById(studentId)
+//	        .orElseThrow(); 
+//	    // Step 2: Retrieve the attendance record for the student
+//	    Attendance attendance = attendanceRepository.findByStudent(student)
+//	        .orElseThrow();
+//
+//	    // Step 3: Update the attendance fields based on the input
+//	    updatedFields.forEach((key, value) -> {
+//	        switch (key) {
+//	            case "inTime":
+//	                attendance.setOutTime((String) value);
+//	                break;
+//	            case "outTime":
+//	                attendance.setOutTime((String) value);
+//	                break;
+//	            case "remark":
+//	                attendance.setRemark((String) value);
+//	                break;
+//	            default:
+//	                break;
+//	        }
+//	    });
+//	    
+//	    // Step 4: Save the updated attendance record
+//	    attendanceRepository.save(attendance);
+//	    
+//	    // Step 5: Return the updated attendance record
+//	    return ResponseEntity.ok(attendance);
+//	}
+
 
 }

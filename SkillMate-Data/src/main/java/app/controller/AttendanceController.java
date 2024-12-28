@@ -48,4 +48,7 @@ public class AttendanceController {
     public List<Attendance> getAttendancesByStudentId(@PathVariable("studentId") Long studentId) {
         return attendanceService.getAttendancesByStudentId(studentId);
     }
+    
+   
+
 }

@@ -1,6 +1,9 @@
 package app.controller;
 
+import app.dto.StudentAttendanceDTO;
+import app.entity.Attendance;
 import app.entity.Course;
+import app.entity.Student;
 import app.entity.Trainer;
 import app.entity.TrainerProfileUpdated;
 import app.exception.EntityNotFoundException;
@@ -13,9 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import app.jwt.JwtResponse;
+import app.repository.AttendanceRepository;
 import app.repository.CourseRepository;
 import app.repository.TrainerRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +33,9 @@ public class TrainerController {
 	
 	@Autowired
 	CourseRepository courseRepository;
+	
+	@Autowired
+	private AttendanceRepository attendanceRepository;
 
 	@Autowired
 	private TrainerService trainerService;
@@ -101,4 +109,32 @@ public class TrainerController {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
 	}
+	
+//	@GetMapping("/trainers/{trainerId}/students")
+//	public List<StudentAttendanceDTO> getStudentsWithAttendance(@PathVariable Long trainerId, @RequestParam String batch) {
+//	    // Step 1: Retrieve the trainer entity using the trainerId
+//	    Trainer trainer = trainerRepository.findById(trainerId)
+//	        .orElseThrow();
+//
+//	    // Step 2: Fetch attendance records for the specified batch
+//	    List<Attendance> attendanceList = attendanceRepository.findByTrainerAndBatch(trainer, batch);
+//
+//	    // Step 3: Transform attendance data to DTO
+//	    List<StudentAttendanceDTO> studentAttendanceDTOList = new ArrayList<>();
+//	    for (Attendance attendance : attendanceList) {
+//	        Student student = attendance.getStudent();  // Assuming Attendance has a reference to Student
+//	        StudentAttendanceDTO dto = new StudentAttendanceDTO(
+//	            student.getId(),
+//	            student.getFullName(),
+//	            student.getEmail(),
+//	            attendance.getTotalAttendance(),
+//	            attendance.getRemark()
+//	        );
+//	        studentAttendanceDTOList.add(dto);
+//	    }
+//
+//	    // Return the DTO list
+//	    return studentAttendanceDTOList;
+//	}
+
 }
