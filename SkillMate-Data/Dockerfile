@@ -4,9 +4,10 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --FROM=build /target/SkillMate-Data-0.0.1-SNAPSHOT.jar SkillMate-Data.jar
+COPY --from=build /target/SkillMate-Data-0.0.1-SNAPSHOT.jar SkillMate-Data.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "SkillMate-Data.jar"]
+
 # # Set the working directory inside the container
 # WORKDIR /app
 
