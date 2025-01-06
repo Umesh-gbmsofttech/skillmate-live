@@ -16,7 +16,7 @@ public class EmailContactController  {
 
     @PostMapping
     public String sendEmail(@RequestBody ContactForm contactForm) {
-        String recipient = "shubhamadmane0530@gmail.com";
+        String recipient = "rrboyking9923@gmail.com";
         String subject = "New Query from Contact Us Form";
         String messageBody = "Query: " + contactForm.getQuery() + "\n\n" +
                              "Selected Option: " + contactForm.getSelectedOption();

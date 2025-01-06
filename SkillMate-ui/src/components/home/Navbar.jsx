@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './Navbar.css';
 import logo from '../../assets/skillmate1.jpg';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../redux/authSlice';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userData = useSelector((state) => state.auth.userData);
   const username = useSelector((state) => state.auth.username); // for admin only
@@ -15,17 +17,24 @@ function Navbar() {
 
   // Log user data for debugging (optional)
   useEffect(() => {
+    if (username) {
+      console.log(username);
+    }
     if (userData) {
       console.log(userData.fullName);
       console.log(userData.roles);
     }
-  }, [userData]);
+  }, [userData, username]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleNavigation = (route) => {
+    navigate(route);
+  };
+  const handleLogout = (route) => {
+    dispatch(logout());
     navigate(route);
   };
 
@@ -35,13 +44,18 @@ function Navbar() {
     : logo; // Fallback to the logo if no profile picture
 
   const handleProfileClick = () => {
-    if (userData && userData.roles) {
-      if (userData.roles[0] === 'TRAINER') {
-        handleNavigation('/trainer-profile');
-      } else if (userData.roles[0] === 'STUDENT') {
-        handleNavigation('/student-profile');
-      } else if (userData.roles[0] === 'ADMIN') {
+    console.log('profiel click', username)
+    if (username || userData) {
+      if (username === 'ADMIN') {
         handleNavigation('/admin-profile');
+      }
+
+      if (userData.roles) {
+        if (userData.roles[0] === 'TRAINER') {
+          handleNavigation('/trainer-profile');
+        } else if (userData.roles[0] === 'STUDENT') {
+          handleNavigation('/student-profile');
+        }
       }
     }
   };
@@ -59,6 +73,7 @@ function Navbar() {
         <li onClick={() => handleNavigation('/resources')}>Resources</li>
         <li onClick={() => handleNavigation('/subscriptions')}>Subscription</li>
         <li onClick={() => handleNavigation('/contact')}>Contact</li>
+        <li onClick={() => handleLogout('/')}>Logout</li>
         <button className="notification-btn">🔔</button>
       </ul>
 

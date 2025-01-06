@@ -1,68 +1,140 @@
 package app.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Batch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(JsonResoponse_View.BasicView.class)
     private Long id;
 
-    @JsonIgnore
-    @ManyToOne
-    private Student student;  // Reference to Student
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+    		name="batch_trainers",
+    		joinColumns = @JoinColumn(name="batch_id"),
+    		inverseJoinColumns = @JoinColumn(name="trainer_id")
+    		)
+    @JsonView(JsonResoponse_View.DetailedView.class)
+//    @JsonBackReference
+    private List<Trainer> trainer;
 
-    @JsonIgnore
-    @ManyToOne
-    private Trainer trainer;
+    @ManyToMany(mappedBy = "batches", fetch = FetchType.EAGER)
+//    @JsonView(JsonResoponse_View.DetailedView.class)
+    private List<Student> students = new ArrayList<>();
 
-    @JsonIgnore
-    @ManyToOne
-    private Attendance attendance;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "batch_courses",
+            joinColumns = @JoinColumn(name = "batch_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+        )
+    @JsonView(JsonResoponse_View.DetailedView.class)
+    private Course course;
 
-    public Student getStudent() {
-        return student;
-    }
+//    @OneToMany(mappedBy = "batch", cascade = {CascadeType.MERGE, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY, orphanRemoval = true)
+////    @JsonView(BatchViews.DetailedView.class)
+//    @JsonView(JsonResoponse_View.BasicView.class)
+//    private List<Attendance> attendance = new ArrayList<>();
+    @OneToMany
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private List<Attendance> attendance = new ArrayList<>();
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public Trainer getTrainer() {
-        return trainer;
-    }
-
-    public void setTrainer(Trainer trainer) {
-        this.trainer = trainer;
-    }
-
-    public Attendance getAttendance() {
-        return attendance;
-    }
-
-    public void setAttendance(Attendance attendance) {
-        this.attendance = attendance;
-    }
-
-    public Batch(Long id, Student student, Trainer trainer, Attendance attendance) {
-        this.id = id;
-        this.student = student;
-        this.trainer = trainer;
-        this.attendance = attendance;
-    }
 }
+
+
+
+
+//package app.entity;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//import com.fasterxml.jackson.annotation.JsonBackReference;
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.fasterxml.jackson.annotation.JsonManagedReference;
+//
+//import jakarta.persistence.CascadeType;
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.FetchType;
+//import jakarta.persistence.GeneratedValue;
+//import jakarta.persistence.GenerationType;
+//import jakarta.persistence.Id;
+//import jakarta.persistence.JoinColumn;
+//import jakarta.persistence.JoinTable;
+//import jakarta.persistence.ManyToMany;
+//import jakarta.persistence.ManyToOne;
+//import jakarta.persistence.OneToMany;
+//
+//import lombok.AllArgsConstructor;
+//import lombok.Getter;
+//import lombok.NoArgsConstructor;
+//import lombok.Setter;
+//
+//@Entity
+//@Getter
+//@Setter
+//@NoArgsConstructor
+//@AllArgsConstructor
+//public class Batch {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "trainer_id")
+//    @JsonIgnore
+//    private Trainer trainer;
+//
+//    @ManyToMany
+//    @JoinTable(
+//        name = "batch_students",
+//        joinColumns = @JoinColumn(name = "batch_id"),
+//        inverseJoinColumns = @JoinColumn(name = "student_id")
+//    )
+//    private List<Student> students = new ArrayList<>();
+//
+//
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "course_id")
+//    @JsonIgnore
+//    private Course course;
+//
+//    @OneToMany(mappedBy = "batch", cascade = {CascadeType.MERGE, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JsonIgnore
+//    private List<Attendance> attendance = new ArrayList<>();
+//
+//}

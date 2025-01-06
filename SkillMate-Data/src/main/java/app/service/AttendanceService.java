@@ -3,9 +3,10 @@ package app.service;
 import app.entity.Attendance;
 import app.repository.AttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -15,24 +16,22 @@ public class AttendanceService {
     @Autowired
     private AttendanceRepository attendanceRepository;
 
-    // Create or Update Attendance
-    public Attendance createOrUpdateAttendance(Attendance attendance) {
+    // Create Attendance
+    public ResponseEntity<Attendance> createAttendance(Attendance attendance) {
         try {
-            return attendanceRepository.save(attendance);
+            Attendance savedAttendance = attendanceRepository.save(attendance);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedAttendance);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to save attendance record: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);  // Or you can return an error message
         }
     }
 
     // Get Attendance by ID
     public ResponseEntity<Attendance> getAttendanceById(Long id) {
         Optional<Attendance> attendance = attendanceRepository.findById(id);
-        if (attendance.isPresent()) {
-            return ResponseEntity.ok(attendance.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(null);
-        }
+        return attendance.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     // Get All Attendances
@@ -42,26 +41,40 @@ public class AttendanceService {
 
     // Delete Attendance by ID
     public ResponseEntity<String> deleteAttendance(Long id) {
-        try {
-            if (attendanceRepository.existsById(id)) {
-                attendanceRepository.deleteById(id);
-                return ResponseEntity.ok("Attendance record deleted successfully.");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Attendance record not found.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to delete attendance record: " + e.getMessage());
+        if (attendanceRepository.existsById(id)) {
+            attendanceRepository.deleteById(id);
+            return ResponseEntity.ok("Attendance record deleted successfully.");
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Attendance record not found.");
+    }
+
+    // Update Attendance by ID
+    public ResponseEntity<Attendance> updateAttendance(Long id, Attendance newAttendance) {
+        Optional<Attendance> existingAttendanceOpt = attendanceRepository.findById(id);
+        if (existingAttendanceOpt.isPresent()) {
+            Attendance existingAttendance = existingAttendanceOpt.get();
+            updateAttendanceFields(existingAttendance, newAttendance);
+            Attendance updatedAttendance = attendanceRepository.save(existingAttendance);
+            return ResponseEntity.ok(updatedAttendance);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    private void updateAttendanceFields(Attendance existingAttendance, Attendance newAttendance) {
+        if (newAttendance.getInTime() != null) existingAttendance.setInTime(newAttendance.getInTime());
+        if (newAttendance.getOutTime() != null) existingAttendance.setOutTime(newAttendance.getOutTime());
+        if (newAttendance.getTotalAttendance() != null) existingAttendance.setTotalAttendance(newAttendance.getTotalAttendance());
+        if (newAttendance.getRemark() != null) existingAttendance.setRemark(newAttendance.getRemark());
+        if (newAttendance.getTrainer() != null) existingAttendance.setTrainer(newAttendance.getTrainer());
+        if (newAttendance.getStudent() != null) existingAttendance.setStudent(newAttendance.getStudent());
+        if (newAttendance.getCourse() != null) existingAttendance.setCourse(newAttendance.getCourse());
+        if (newAttendance.getBatch() != null) existingAttendance.setBatch(newAttendance.getBatch());
     }
 
     // Get Attendance by Student ID
     public List<Attendance> getAttendancesByStudentId(Long studentId) {
-        // Custom query can be added here if needed for retrieving by student ID
-        // For now, we assume a method in the repository exists that fetches attendances
-        // by student ID.
-        // return attendanceRepository.findByStudentId(studentId);
+        // You can create a custom query in your repository to fetch by studentId
         return attendanceRepository.findAll(); // Placeholder
     }
 }

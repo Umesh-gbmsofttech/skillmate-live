@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -28,19 +29,43 @@ public class RatingReviewService {
 	@Autowired
 	private StudentService studentService;
 
-	// Get reviews for a student
-	public List<RatingReviews> getReviewsForStudent(Long studentId) {
-		return ratingReviewsRepository.findByStudentId(studentId);
+	// Get reviews for a Course
+	public List<RatingReviews> getReviewsForCourse(Long courseId) {
+		return ratingReviewsRepository.findByCourseId(courseId);
 	}
 
-	// Get reviews for a trainer
+	// Get reviews for a Trainer
 	public List<RatingReviews> getReviewsForTrainer(Long trainerId) {
 		return ratingReviewsRepository.findByTrainerId(trainerId);
 	}
 
-	// Get reviews for a course
-	public List<RatingReviews> getReviewsForCourse(Long courseId) {
-		return ratingReviewsRepository.findByCourseId(courseId);
+	// Get reviews for a Student
+	public List<RatingReviews> getReviewsForStudent(Long studentId) {
+		return ratingReviewsRepository.findByStudentId(studentId);
+	}
+
+	// Create a Rating for a Course
+	public RatingReviews createCourseRating(Long courseId, RatingReviews ratingReview) {
+		Course course = courseService.getCourseById(courseId).get();
+		logger.info("course found is: " + course);
+		ratingReview.setCourse(course);
+		return ratingReviewsRepository.save(ratingReview);
+	}
+
+	// Create a Rating for a Trainer
+	public RatingReviews createTrainerRating(Long trainerId, RatingReviews ratingReview) {
+		Trainer trainer = trainerService.getTrainerById(trainerId).get();
+		logger.info("trainer found is: " + trainer);
+		ratingReview.setTrainer(trainer);
+		return ratingReviewsRepository.save(ratingReview);
+	}
+
+	// Create a Rating for a Student
+	public RatingReviews createStudentRating(Long studentId, RatingReviews ratingReview) {
+		Student student = studentService.getStudentById(studentId).get();
+		logger.info("student found is: " + student);
+		ratingReview.setStudent(student);
+		return ratingReviewsRepository.save(ratingReview);
 	}
 
 	// Create an admin review for a trainer or course
@@ -49,7 +74,7 @@ public class RatingReviewService {
 		RatingReviews review = new RatingReviews();
 
 		review.setReview(reviewText); // Set the review text
-		review.setReviewDate(new Date(System.currentTimeMillis())); // Set current date
+//		review.setReviewDate(new LocalDate(System.currentTimeMillis())); // Set current date
 		review.setGivenByAdmin(true); // Set the "isGivenByAdmin" flag to true
 
 		if (studentId != null) {
@@ -85,4 +110,59 @@ public class RatingReviewService {
 
 		return ratingReviewsRepository.save(review);
 	}
+
+	public RatingReviews createRating(RatingReviews ratinReview) {
+		return ratingReviewsRepository.save(ratinReview);
+	}
+
+	public List<RatingReviews> fetchAllRatingReviews() {
+		return ratingReviewsRepository.findAll();
+	}
+
+	public List<RatingReviews> getReviewsWithStudent() {
+		return ratingReviewsRepository.findByStudentIsNotNull();
+	}
+
+	public List<RatingReviews> getReviewsWithTrainer() {
+		return ratingReviewsRepository.findByTrainerIsNotNull();
+	}
+
+	public List<RatingReviews> getReviewsWithCourse() {
+		return ratingReviewsRepository.findByCourseIsNotNull();
+	}
+	
+	// Get all RatingReviews where 'isGivenToTrainer' is true
+    public List<RatingReviews> getReviewsByTrainer(boolean isGivenToTrainer) {
+        return ratingReviewsRepository.findByIsGivenToTrainer(isGivenToTrainer);
+    }
+
+    // Get all RatingReviews where 'isGivenToStudent' is true
+    public List<RatingReviews> getReviewsByStudent(boolean isGivenToStudent) {
+        return ratingReviewsRepository.findByIsGivenToStudent(isGivenToStudent);
+    }
+
+    // Get all RatingReviews where 'isGivenToCourse' is true
+    public List<RatingReviews> getReviewsByCourse(boolean isGivenToCourse) {
+        return ratingReviewsRepository.findByIsGivenToCourse(isGivenToCourse);
+    }
+
+    // Get all RatingReviews where 'isGivenByAdmin' is true
+    public List<RatingReviews> getReviewsByAdmin(boolean isGivenByAdmin) {
+        return ratingReviewsRepository.findByIsGivenByAdmin(isGivenByAdmin);
+    }
+
+    // Get all RatingReviews where 'isGivenToTrainer' is true and filter by trainerId
+    public List<RatingReviews> getReviewsByTrainerAndId(boolean isGivenToTrainer, Long trainerId) {
+        return ratingReviewsRepository.findByIsGivenToTrainerAndTrainerId(isGivenToTrainer, trainerId);
+    }
+
+    // Get all RatingReviews where 'isGivenToStudent' is true and filter by studentId
+    public List<RatingReviews> getReviewsByStudentAndId(boolean isGivenToStudent, Long studentId) {
+        return ratingReviewsRepository.findByIsGivenToStudentAndStudentId(isGivenToStudent, studentId);
+    }
+
+    // Get all RatingReviews where 'isGivenToCourse' is true and filter by courseId
+    public List<RatingReviews> getReviewsByCourseAndId(boolean isGivenToCourse, Long courseId) {
+        return ratingReviewsRepository.findByIsGivenToCourseAndCourseId(isGivenToCourse, courseId);
+    }
 }

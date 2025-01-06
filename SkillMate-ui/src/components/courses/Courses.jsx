@@ -8,6 +8,7 @@ import editIcon from '../../assets/editIcon.png';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCourses } from '../redux/courseActions';
 import axios from 'axios';
+import userImage from '../../assets/skillmate.jpg';
 
 function Courses() {
   const navigate = useNavigate();
@@ -22,8 +23,8 @@ function Courses() {
     navigate('/admin-profile/edit-courses', { state: { course } });
   };
 
-  const handleContactUsClick = () => {
-    navigate('/contact');
+  const handleContactUsClick = (course) => {
+    navigate('/contact', { state: { course } });
   };
 
   const handleBuyNowClick = (course) => {
@@ -38,8 +39,11 @@ function Courses() {
     const fetchCourses = async () => {
       try {
         const response = await axios.get('http://localhost:8080/courses/fetch', {
+          // headers: {
+          //   Authorization: `Bearer ${token}`,
+          // },
           headers: {
-            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
           },
         });
         dispatch(setCourses(response.data));
@@ -76,7 +80,7 @@ function Courses() {
   }, [courses]); // Runs when `courses` state changes
 
 
-  // console.log(courses)
+  console.log(courses)
   return (
     <div>
       <div className="list-of-courses-container">
@@ -88,9 +92,9 @@ function Courses() {
           <p>Loading...</p>
         ) : error ? (
           <p>{error}</p>
-        ) : courses.length > 0 ? (
+        ) : courses?.length > 0 ? (
           <div className="courses-card-container">
-            {courses.map((course, index) => (
+            {courses?.map((course, index) => (
               <div
                 key={course.id}
                 className="course-card"
@@ -99,7 +103,8 @@ function Courses() {
                 <div className="course-image-container">
                   {/* Render the course image using Base64 encoding if required */}
                   <img
-                    src={course.coverImage.startsWith('data:image') ? course.coverImage : `data:image/jpeg;base64,${course.coverImage}`}
+                    // src={course.coverImage.startsWith('data:image') ? course.coverImage : `data:image/jpeg;base64,${course.coverImage}`}
+                    src={`data:image/jpeg;base64,${course?.coverImage}` || logo}
                     alt={course.courseName || 'Course Image'}
                   />
                   <span className="course-rating">{course.courseName}</span>
@@ -107,7 +112,7 @@ function Courses() {
                   <span className="course-rating">{course.rating}</span>
                 </div>
                 <div className="courses-card-container-courses-buttons">
-                  <button onClick={handleContactUsClick} className="courses-card-container-courses-contact-us-button">
+                  <button onClick={() => handleContactUsClick(course)} className="courses-card-container-courses-contact-us-button">
                     Contact Us
                   </button>
                   <button onClick={() => handleBuyNowClick(course)} className="courses-card-container-courses-buy-now-button">

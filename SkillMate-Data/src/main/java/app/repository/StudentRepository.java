@@ -1,5 +1,7 @@
 package app.repository;
 
+import app.entity.Attendance;
+import app.entity.Batch;
 import app.entity.Student;
 import app.otplogin.EmailOtp;
 
@@ -18,4 +20,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	 boolean existsByMobileNumber(String mobileNumber);
 	 
 	 boolean existsByEmail(String email);
+     List<Student> findAllByBatches(Batch batches);
+     List<Student> findByBatches_Id(Long batchId);
+
+	 
+//	Optional< List<Attendance>> getAttendancesByBatchId(Long batchId);
 }

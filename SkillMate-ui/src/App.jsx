@@ -43,6 +43,7 @@ import BuyCourse from './components/subscription/BuyCourse';
 import MyCourses from './components/courses/MyCourses';
 import { CourseProvider } from './components/context/CourseContext';
 import AddTrainerForm from './components/trainer/AddTrainerForm';
+import RatingForm from './components/rating-review/Rating_From';
 // import LoginProfile from './components/auth/Profile';
 
 
@@ -57,8 +58,8 @@ function App() {
   return (
     // debouncing throatling
     //rahulrathod2002
-    
-    
+
+
 
     <Router>
       {/* <Profile /> */}
@@ -116,13 +117,14 @@ function App() {
 
         <Route path="/buy-course" element={<BuyCourse />} />
         <Route path="/my-courses" element={<MyCourses />} />
+        <Route path="/rating_review_form" element={<RatingForm />} />
 
         {/* <Route path="/login-profile" element={<LoginProfile />} /> */}
 
       </Routes>
       <Footer />
     </Router>
-   
+
   );
 }
 

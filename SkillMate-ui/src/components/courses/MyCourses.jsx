@@ -2,56 +2,67 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import './MyCourses.css';
 import logo from '../../assets/skillmate.jpg';
+import axios from 'axios';
 
 function MyCourses() {
-    // Access purchased courses from Redux store
     const token = useSelector((state) => state.auth.token);
     const userData = useSelector((state) => state.auth.userData);
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
     const [myCourses, setMyCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Fetch courses when the component mounts
+    const fetchCourses = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/courses/student/${userData.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setMyCourses(response.data); // Store courses in state
+            console.log(response.data)
+        } catch (error) {
+            setError('Error fetching courses.');
+        } finally {
+            setLoading(false); // Stop loading when the request is done
+        }
+    };
+
+    //this function is to console the course details, it is working well for console the courses
+    useEffect(() => {
+        myCourses.forEach((course) => {
+            console.log('COURSES:')
+            console.log('course id: ' + course.id);
+            console.log('course cover image: ' + course.coverImage);
+            console.log('course name: ' + course.courseName);
+            console.log('course price: ' + course.price);
+            console.log('course description: ' + course.description);
+            console.log('course days: ' + course.days);
+        });
+    }, [token, isAuthenticated, userData.id]);
 
     useEffect(() => {
-        if (isAuthenticated && userData.id) {
-            const fetchCourses = async () => {
-                const url = `http://localhost:8080/students/fetch/my-courses/${userData.id}`;
-
-                try {
-                    const response = await fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch courses');
-                    }
-
-                    // Ensure response is not empty
-                    const responseText = await response.text();
-                    if (responseText === '') {
-                        throw new Error('Empty response from the server');
-                    }
-
-                    const data = JSON.parse(responseText); // Parse the response manually
-                    setMyCourses(data || []); // Assuming the response directly returns the courses array
-                } catch (error) {
-                    console.error('Error fetching courses:', error);
-                }
-            };
-
+        if (isAuthenticated) {
             fetchCourses();
         }
     }, [isAuthenticated, userData.id, token]);
 
+    if (loading) {
+        return <div>Loading courses...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
     return (
         <div className="my-courses-container">
             <h1>My Courses</h1>
-            <div className="my-courses-list">
-                {myCourses.length > 0 ? (
-                    myCourses.map((course, index) => (
-                        <div key={index} className="my-course-card">
+            <h1>{myCourses.forEach((course) => course.name)}</h1>
+            {myCourses.length > 0 ? (
+                <div className="my-courses-list">
+                    {myCourses.map((course) => (
+                        <div key={course.id} className="my-course-card">
                             <img
                                 src={course.coverImage ? `data:image/png;base64,${course.coverImage}` : logo}
                                 alt={course.courseName}
@@ -62,16 +73,15 @@ function MyCourses() {
                                 <h2 className="my-course-title">{course.courseName}</h2>
                                 <p className="my-course-price">Price: {course.price}</p>
                                 <p className="my-course-description">Description: {course.description}</p>
-                                <p className="my-course-students">
-                                    Students enrolled: {course.students.map(student => student.fullName).join(', ')}
-                                </p>
+                                <p className="my-course-days">Days: {course.days}</p>
+
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <p>No courses purchased yet.</p>
-                )}
-            </div>
+                    ))}
+                </div>
+            ) : (
+                <p>No courses purchased yet.</p>
+            )}
         </div>
     );
 }

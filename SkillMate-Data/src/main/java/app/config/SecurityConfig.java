@@ -18,47 +18,40 @@ import app.jwt.JwtAuthenticationFilter;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-                          JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
+	public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+			JwtAuthenticationFilter jwtAuthenticationFilter) {
+		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/auth/**", "/admin/login", "/trainers/**", "/students/**", "/payment/**", "/courses/**", "/contact-us/**", "/sendEmail","/contactUs/**").permitAll()
-                        .requestMatchers("/students/**").hasAnyRole("ADMIN", "STUDENT", "TRAINER")
-                        .requestMatchers("/trainers/**").hasAnyRole("ADMIN", "TRAINER")
-                        .requestMatchers("/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeHttpRequests(authorize -> authorize
+				.requestMatchers("/**", "/", "/auth/**", "/admin/login", "/trainers/**", "/students/**", "/payment/**",
+						"/courses/**", "/contact-us/**", "/sendEmail", "/contactUs/**", "/batches/**", "/meetings/**")
+				.permitAll().
+				requestMatchers("/students/**").hasAnyRole("ADMIN", "STUDENT", "TRAINER")
+				.requestMatchers("/trainers/**").hasAnyRole("ADMIN", "TRAINER").requestMatchers("/**")
+				.hasAnyRole("ADMIN", "TRAINER").requestMatchers("/**").hasRole("ADMIN").anyRequest().authenticated())
+				.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+		return http.build();
+	}
 }
-
-
-
-
-
-
-

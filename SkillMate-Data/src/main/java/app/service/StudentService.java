@@ -11,6 +11,7 @@ import app.otplogin.MobileOtpService;
 import app.repository.StudentProfileDeletedRepository;
 import app.repository.StudentProfileUpdatedRepository;
 import app.repository.StudentRepository;
+import app.repository.TrainerRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,9 @@ import java.util.stream.Collectors;
 public class StudentService {
 
 	@Autowired
-	private AuthService authService; // Inject AuthService
-
+	private AuthService authService; 
+	@Autowired
+	private TrainerRepository trainerRepository; 
 	@Autowired
 	private StudentRepository studentRepository;
 
@@ -43,12 +45,16 @@ public class StudentService {
 			student.setRoles(new HashSet<>());
 		}
 		student.getRoles().add(Role.STUDENT);
+//		student.setTrainer(trainerRepository.findById(student.getTrainer().getId());
 		Student savedStudent = studentRepository.save(student);
 		// Generate JWT token for the saved student using AuthService
 		String token = authService.generateToken(authService.getStudentUserDetails(savedStudent));
 		// Return JWT token and user details
 		return JwtResponse.builder().token(token).userData(savedStudent).build();
 	}
+
+
+
 
 	// Get all Students
 	public List<Student> getAllStudents() {
@@ -59,7 +65,10 @@ public class StudentService {
 	public Optional<Student> getStudentById(Long studentId) {
 		return studentRepository.findById(studentId);
 	}
-
+//	public Optional<List<Student>> getCoursesByStudentId(Long id) {
+//		return studentRepository;
+//	}
+//	
 	@Transactional
 	public StudentProfileUpdated updateStudentWithHistory(Long id, Student updatedStudent) {
 
@@ -120,5 +129,14 @@ public class StudentService {
 			studentRepository.deleteById(id);
 		}
 	}
+
+
+
+
+	public List<Student> getAllBatchesByBatchId(Long batchId) {
+		return studentRepository.findByBatches_Id(batchId);
+	}
+
+
 
 }

@@ -49,6 +49,8 @@ const TrainerSignUp = () => {
                 setProfilePic(reader.result.split(',')[1]);
             };
             reader.readAsDataURL(file);
+            console.log(file)
+            console.log(reader)
         }
     };
 
@@ -72,7 +74,7 @@ const TrainerSignUp = () => {
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target();
+        const { name, value } = e.target;
         console.log(`${name}: ${value}`);
         if (name === 'fullName') setFullName(value);
         if (name === 'mobileNumber') setMobileNumber(value);

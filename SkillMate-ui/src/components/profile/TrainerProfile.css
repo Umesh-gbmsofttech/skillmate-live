@@ -122,6 +122,36 @@
     color: #333;
 }
 
+.form-group-time {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    width: 90%;
+}
+
+.form-group-time span {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+}
+
+.form-group-time span input[type="time"] {
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+}
+
+.form-group-time span input[type="time"].hide-icon::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* Hide the default clock icon in Firefox */
+.form-group-time span input[type="time"].hide-icon::-moz-calendar-picker-indicator {
+    display: none;
+}
+
 .trainer-meeting__inputs {
     display: flex;
     flex-wrap: wrap;
@@ -141,6 +171,36 @@
 .trainer-meeting__input:focus {
     border-color: #007bff;
     outline: none;
+}
+
+.attendance-list input {
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+}
+
+.attendance-list .attendance-list-table {
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(97, 94, 94);
+    background-color: rgb(255, 255, 255) !important;
+}
+
+.attendance-list .attendance-list-table tr,
+td,
+th,
+thead {
+    align-items: center;
+    align-content: center;
+    align-self: center;
+    border: 1px solid rgb(97, 94, 94);
+}
+
+.attendance-list .attendance-list-table th,
+thead {
+    background-color: rgb(37, 103, 236);
 }
 
 .trainer-meeting__button {

@@ -9,5 +9,6 @@ export default defineConfig({
       usePolling: true
     },
     host: true,
+    hmr: { overlay: false, },
   }
 })

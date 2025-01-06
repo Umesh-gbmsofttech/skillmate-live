@@ -38,6 +38,8 @@ const StudentSignUp = () => {
             };
             reader.readAsDataURL(file);
         }
+        console.log(file)
+        console.log(reader)
     };
 
     const handleResumeChange = (e) => {
@@ -85,6 +87,7 @@ const StudentSignUp = () => {
             .then((response) => {
                 if (!response.ok) {
                     return response.text().then((text) => {
+                        console.log(text || response.text());
                         throw new Error(text || 'An error occurred on the server.');
                     });
                 }
@@ -93,7 +96,7 @@ const StudentSignUp = () => {
             .then((data) => {
                 if (data) {
                     // Dispatch user data to Redux store
-                    dispatch(setUserData(userData = data.userData));
+                    dispatch(setUserData(data.userData));
                     setFullName('');
                     setMobileNumber('');
                     setEmail('');

@@ -1,88 +1,136 @@
 package app.service;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.client.RestTemplate;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class RazerPayService {
 
-   @Value("${razerpay.api.url}")
-   private String razerPayApiUrl;
+	@Value("${razerpay.api.key.id}")
+	private String apiKey;
 
-   @Value("${razerpay.api.key.id}")
-   private String apiKey;
-   
-   @Value("${razerpay.api.key.secrete}")
-   private String apiKeySecrete;
+	@Value("${razerpay.api.key.secret}")
+	private String apiKeySecret;
 
-   private RestTemplate restTemplate;
-   private ObjectMapper objectMapper;
+	private final RestTemplate restTemplate;
 
-   public RazerPayService() {
-       this.restTemplate = new RestTemplate();
-       this.objectMapper = new ObjectMapper();
-   }
+	public RazerPayService(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
-   // Method to create a payment request
-   public String createPaymentRequest(double amount, String currency) {
-       String url = razerPayApiUrl + "/v1/orders";
+	private HttpHeaders getHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+		String authHeader = "Basic " + Base64.getEncoder().encodeToString((apiKey + ":" + apiKeySecret).getBytes());
+		headers.set("Authorization", authHeader);
+		headers.set("Content-Type", "application/json");
+		return headers;
+	}
 
-       // Define the headers
-       HttpHeaders headers = new HttpHeaders();
-       headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((apiKey + ":" + apiKeySecrete).getBytes()));
-       headers.set("Content-Type", "application/json");
+	public String createPaymentRequest(double amount, String currency) {
+		String url = "https://api.razorpay.com/v1/orders";
+		JSONObject body = new JSONObject();
+		body.put("amount", (int) (amount * 100)); // Convert amount to paisa
+		body.put("currency", currency);
+		body.put("receipt", "receipt#1");
 
-       // Define the body using a Map (for easier JSON conversion)
-       Map<String, Object> body = new HashMap<>();
-       body.put("amount", (int) (amount * 100)); // Razorpay expects amount in paisa
-       body.put("currency", currency);
-       body.put("receipt", "receipt#1"); // Example receipt
+		try {
+			HttpEntity<String> entity = new HttpEntity<>(body.toString(), getHeaders());
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-       try {
-           String jsonBody = objectMapper.writeValueAsString(body); // Convert the body map to a JSON string
+			if (response.getStatusCode() != HttpStatus.OK) {
+				return "Error: " + response.getBody();
+			}
 
-           // Make the HTTP POST request
-           ResponseEntity<String> response = restTemplate.exchange(
-               url, 
-               HttpMethod.POST, 
-               new HttpEntity<>(jsonBody, headers), 
-               String.class
-           );
+			JSONObject responseJson = new JSONObject(response.getBody());
+			return responseJson.getString("id"); // Return orderId to frontend
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Error creating payment request";
+		}
+	}
 
-           return response.getBody(); // Return the response body (payment details)
+	public String verifyPaymentById(String paymentId) {
+		String apiUrl = "https://api.razorpay.com/v1/payments/" + paymentId;
+		HttpHeaders headers = getHeaders();
 
-       } catch (Exception e) {
-           e.printStackTrace();
-           return "Error creating payment request";
-       }
-   }
+		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+		try {
+			ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, requestEntity,
+					String.class);
 
-   // Method to verify the payment after success
-   public String verifyPayment(String paymentId) {
-       String url = razerPayApiUrl + "/v1/payments/" + paymentId + "/verify";
+			if (response.getStatusCode() == HttpStatus.OK) {
+				JSONObject responseJson = new JSONObject(response.getBody());
+				String status = responseJson.getString("status");
 
-       // Define the headers
-       HttpHeaders headers = new HttpHeaders();
-       headers.set("Authorization", "Basic " + Base64.getEncoder().encodeToString((apiKey + ":" + apiKeySecrete).getBytes()));
+				if ("captured".equals(status)) {
+					return "Payment verified and captured successfully.";
+				} else {
+					return "Payment verification failed. Status: " + status;
+				}
+			} else {
+				return "Error retrieving payment status.";
+			}
+		} catch (Exception e) {
+			return "Error verifying payment status: " + e.getMessage();
+		}
+	}
 
-       // Make the HTTP GET request
-       ResponseEntity<String> response = restTemplate.exchange(
-           url, 
-           HttpMethod.GET, 
-           new HttpEntity<>(headers), 
-           String.class
-       );
-       
-       return response.getBody();
-   }
+	// Method to verify the Razorpay payment signature
+	public boolean verifyPaymentSignature(String paymentId, String signature) {
+		try {
+			// Create the string to be signed: paymentId + "|" + apiKeySecret
+			String stringToSign = paymentId + "|" + apiKeySecret;
+			String generatedSignature = generateHmacSHA256Signature(stringToSign);
+
+			// Compare the generated signature with the one sent by Razorpay
+			return generatedSignature.equals(signature);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private String generateHmacSHA256Signature(String data) throws Exception {
+		// Create an HMACSHA256 signer
+		SecretKeySpec key = new SecretKeySpec(apiKeySecret.getBytes(), "HmacSHA256");
+		Mac mac = Mac.getInstance("HmacSHA256");
+		mac.init(key);
+
+		byte[] rawSignature = mac.doFinal(data.getBytes());
+		return Base64.getEncoder().encodeToString(rawSignature);
+	}
+
+	// Method to check the payment status from Razorpay after signature verification
+	public String checkPaymentStatus(String paymentId) {
+		String apiUrl = "https://api.razorpay.com/v1/payments/" + paymentId;
+		HttpHeaders headers = getHeaders();
+
+		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+		try {
+			ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, requestEntity,
+					String.class);
+
+			if (response.getStatusCode() == HttpStatus.OK) {
+				JSONObject responseJson = new JSONObject(response.getBody());
+				String status = responseJson.getString("status");
+
+				if ("captured".equals(status)) {
+					return "Payment verified and captured successfully.";
+				} else {
+					return "Payment verification failed. Status: " + status;
+				}
+			} else {
+				return "Error retrieving payment status.";
+			}
+		} catch (Exception e) {
+			return "Error verifying payment status: " + e.getMessage();
+		}
+	}
 }

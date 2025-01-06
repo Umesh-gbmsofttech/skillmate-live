@@ -11,7 +11,7 @@ function ManageTrainersList() {
     const navigate = useNavigate();
     const [trainers, setTrainers] = useState([]);
 
-    
+    // Fetch trainers data
     useEffect(() => {
         const fetchTrainers = async () => {
             try {
@@ -33,14 +33,15 @@ function ManageTrainersList() {
                 console.error('Error fetching trainers data:', error);
             }
         };
-    
+
         fetchTrainers();
     }, []);
-    
-    const handleDeleteCourse = async (trainerId) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this course?');
+
+    // Handle delete trainer
+    const handleDeleteTrainer = async (trainerId) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this trainer?');
         if (!confirmDelete) return;
-    
+
         try {
             const response = await axios.delete(`http://localhost:8080/trainers/delete/${trainerId}`);
             if (response.status === 200) {
@@ -54,17 +55,16 @@ function ManageTrainersList() {
             alert('An error occurred while trying to delete the trainer.');
         }
     };
-    
 
+    // Handle trainer edit click (navigate to the edit page with trainerId)
     const handleTrainerEditClick = (trainerId) => {
-        navigate(`/admin-profile/edit-trainers/${trainerId}`)
+        navigate(`/admin-profile/edit-trainers/${trainerId}`); // Passing trainerId as a URL parameter
     };
 
+    // Handle adding new trainer
     const handleTrainerAddClick = () => {
         navigate('/admin-add-trainer', { state: { trainerId: null } });
     };
-    
-
 
     return (
         <div className="trainers-list-container">
@@ -82,19 +82,30 @@ function ManageTrainersList() {
                 {trainers.length > 0 ? (
                     trainers.map((trainer, index) => (
                         <div key={index} className="ad__trainer-list-card">
-                            <img className="trainer-profile" src={trainer.profileImage} alt={`${trainer.name} profile`} />
+                            <img
+                                className="trainer-profile"
+                                src={trainer.profileImage}
+                                alt={`${trainer.name} profile`}
+                            />
                             <div className="trainer-details-data">
                                 <h3>{trainer.name}</h3>
                                 <p>Experience: {trainer.experience}</p>
                                 <p>Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}</p>
                                 <p>Technologies: {trainer.technologies}</p>
+                                <p>Trainer ID: {trainer.id}</p>
                             </div>
-                            <button onClick={() => handleTrainerEditClick(index)} className="ad_edit_tr-btn">
+                            <button
+                                onClick={() => handleTrainerEditClick(trainer.id)}
+                                className="ad_edit_tr-btn"
+                            >
                                 <img src={editIcon} alt="edit" />
                             </button>
-                            <button onClick={() => handleDeleteCourse(trainer.id)} className="ad_delete_course-btn">
-                                                      <img src={deleteIcon} alt="delete" />
-                          </button>
+                            <button
+                                onClick={() => handleDeleteTrainer(trainer.id)}
+                                className="ad_delete_course-btn"
+                            >
+                                <img src={deleteIcon} alt="delete" />
+                            </button>
                         </div>
                     ))
                 ) : (

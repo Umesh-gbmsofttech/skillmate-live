@@ -35,8 +35,7 @@ const AdminLogin = () => {
                 console.log('JWT Token:', token);
                 if (token) {
                     alert('Admin login success!');
-                    const username = 'ADMIN';
-                    dispatch(loginSuccess({ token, username }));
+                    dispatch(loginSuccess({ token })); // Only pass the token, no userData for Admin
                     navigate('/admin-profile');
                 } else {
                     setError('Login failed. Please try again.');
@@ -50,34 +49,34 @@ const AdminLogin = () => {
 
     return (
         <div className="admin-overlay">
-           <div>
-           {error && <p className="error-message">{error}</p>}
-            <form onSubmit={handleSubmit} className="admin-sign-up-container">
-                <h2>Admin Login</h2>
+            <div>
+                {error && <p className="error-message">{error}</p>}
+                <form onSubmit={handleSubmit} className="admin-sign-up-container">
+                    <h2>Admin Login</h2>
 
-                <label>
-                    Username:
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </label>
+                    <label>
+                        Username:
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </label>
 
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </label>
+                    <label>
+                        Password:
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </label>
 
-                <button type="submit">Submit</button>
-            </form>
-           </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
         </div>
     );
 };

@@ -43,6 +43,9 @@ function Profile() {
     const handleRatingCardClick = () => {
         navigate('/rating-reviews/page/card', { state: { username: 'Umesh Mrugjale' } });
     };
+    const handleRatingReviewMainCardClick = () => {
+        navigate('/rating_review_form', { state: { username: 'Umesh Mrugjale' } });
+    };
 
     return (
         <div className='profile-container'>
@@ -58,6 +61,7 @@ function Profile() {
 
             <button onClick={handleRatingPageClick}>Rating Page</button>
             <button onClick={handleRatingCardClick}>Rating Card</button>
+            <button onClick={handleRatingReviewMainCardClick}>Rating review Main</button>
         </div>
     );
 }

@@ -1,142 +1,88 @@
 package app.entity;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Course {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	 @JsonView(JsonResoponse_View.BasicView.class)
+    private Long id;
 
     @Lob
-    @Column(columnDefinition = "LONGTEXT") 
-	private String coverImage;
-	private String courseName;
+    @Column(columnDefinition = "LONGTEXT")
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private String coverImage;
 
-	private String price;
-	private String description;
-	private String days;
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private String courseName;
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private String price;
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private String description;
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private String days;
 
-	@ManyToOne
-	@JoinColumn(name = "trainer_id")
-	private Trainer trainer;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private Trainer trainer;
 
-	@ManyToMany(mappedBy = "courses")
-	private List<Student> students;
+    @OneToMany
+    @JsonIgnore
+    List<Batch> batch;
+    
+    @ManyToMany
+    @JoinTable(name = "course_students",
+               joinColumns = @JoinColumn(name = "course_id"),
+               inverseJoinColumns = @JoinColumn(name = "student_id"))
+    private List<Student> students;
 
-	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-	private List<RatingReviews> ratingReviews;
-
-	public Course(String courseName, String days, String price, String description, String coverImage) {
-		super();
-		this.courseName = courseName;
-		this.days = days;
-		this.price = price;
-		this.description = description;
-		this.coverImage = coverImage; // Assign Base64 string
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Attendance> attendance;
+  
+    @OneToMany(mappedBy = "course", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+//    @JsonView(JsonResoponse_View.BasicView.class)
+    private List<RatingReviews> ratingReviews  = new ArrayList<>();
+    
+    @ManyToMany(mappedBy = "courses", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private List<Meeting> meetings = new ArrayList<>();
+    
+    public Course(String coverImageBase64, String courseName, String price, String description, String days) {
+		this.coverImage=coverImageBase64;
+		this.courseName=courseName;
+		this.price=price;
+		this.description=description;
+		this.days=days;
 	}
-
-	public Course() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Course(Long id, String coverImage, String courseName, String price, String description, String days,
-			Trainer trainer, List<Student> students, List<RatingReviews> ratingReviews) {
-		super();
-		this.id = id;
-		this.coverImage = coverImage;
-		this.courseName = courseName;
-		this.price = price;
-		this.description = description;
-		this.days = days;
-		this.trainer = trainer;
-		this.students = students;
-		this.ratingReviews = ratingReviews;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getCoverImage() {
-		return coverImage;
-	}
-
-	public void setCoverImage(String coverImage) {
-		this.coverImage = coverImage;
-	}
-
-	public String getCourseName() {
-		return courseName;
-	}
-
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
-	}
-
-	public String getPrice() {
-		return price;
-	}
-
-	public void setPrice(String price) {
-		this.price = price;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getDays() {
-		return days;
-	}
-
-	public void setDays(String days) {
-		this.days = days;
-	}
-
-	public Trainer getTrainer() {
-		return trainer;
-	}
-
-	public void setTrainer(Trainer trainer) {
-		this.trainer = trainer;
-	}
-
-	public List<Student> getStudents() {
-		return students;
-	}
-
-	public void setStudents(List<Student> students) {
-		this.students = students;
-	}
-
-	public List<RatingReviews> getRatingReviews() {
-		return ratingReviews;
-	}
-
-	public void setRatingReviews(List<RatingReviews> ratingReviews) {
-		this.ratingReviews = ratingReviews;
-	}
-
 }

@@ -61,4 +61,8 @@ public class MeetingService {
     public List<Meeting> getMeetingsByTrainerId(Long trainerId) {
         return meetingRepository.findAll(); // Placeholder, can be updated with specific query if needed
     }
+
+	public List<Meeting> getMeetingsByStudentId(Long studentId) {
+		return meetingRepository.findAll();
+	}
 }

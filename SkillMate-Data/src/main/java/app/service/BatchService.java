@@ -1,64 +1,110 @@
 package app.service;
 
 import app.entity.Batch;
+import app.entity.Course;
+import app.entity.Student;
+import app.entity.Trainer;
+import app.entity.Attendance;
 import app.repository.BatchRepository;
+import app.repository.CourseRepository;
+import app.repository.StudentRepository;
+import app.repository.TrainerRepository;
+import app.repository.AttendanceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BatchService {
 
-    @Autowired
-    private BatchRepository batchRepository;
+	private static final Logger logger = LoggerFactory.getLogger(BatchService.class);
 
-    // Create or Update Batch
-    public Batch createOrUpdateBatch(Batch batch) {
-        try {
-            return batchRepository.save(batch);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to save batch record: " + e.getMessage());
-        }
-    }
+	@Autowired
+	private BatchRepository batchRepository;
 
-    // Get Batch by ID
-    public ResponseEntity<Batch> getBatchById(Long id) {
-        Optional<Batch> batch = batchRepository.findById(id);
-        if (batch.isPresent()) {
-            return ResponseEntity.ok(batch.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(null);
-        }
-    }
+	@Autowired
+	private AttendanceRepository attendanceRepository;
+	@Autowired
+	private TrainerRepository trainerRepository;
+	@Autowired
+	private StudentRepository studentRepository;
+	@Autowired
+	private CourseRepository courseRepository;
 
-    // Get All Batches
-    public List<Batch> getAllBatches() {
-        return batchRepository.findAll();
-    }
+	// Save or update Batch with Attendance management
+	@Transactional
+	public ResponseEntity<Batch> saveBatch(Batch batch) {
+		Batch savedBatch = batchRepository.save(batch);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedBatch);
+	}
 
-    // Delete Batch by ID
-    public ResponseEntity<String> deleteBatch(Long id) {
-        try {
-            if (batchRepository.existsById(id)) {
-                batchRepository.deleteById(id);
-                return ResponseEntity.ok("Batch record deleted successfully.");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Batch record not found.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to delete batch record: " + e.getMessage());
-        }
-    }
+	// Get Batch by ID
+	public ResponseEntity<Batch> getBatchById(Long id) {
+		Optional<Batch> batch = batchRepository.findById(id);
+		return batch.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+	}
 
-    // Get Batches by Trainer ID (Optional method based on requirements)
-    public List<Batch> getBatchesByTrainerId(Long trainerId) {
-        return batchRepository.findAll(); // Placeholder method
-    }
+	// Get All Batches with pagination
+	public List<Batch> getAllBatches(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return batchRepository.findAll(pageable).getContent();
+	}
+
+	// Delete Batch by ID
+	public ResponseEntity<String> deleteBatch(Long id) {
+		if (batchRepository.existsById(id)) {
+			batchRepository.deleteById(id);
+			logger.info("Batch with ID {} deleted successfully.", id);
+			return ResponseEntity.ok("Batch record deleted successfully.");
+		}
+		logger.warn("Batch with ID {} not found.", id);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Batch record not found.");
+	}
+
+	// Get Batches by Trainer ID
+	public List<Batch> getBatchesByTrainerId(Long trainerId) {
+		logger.info("Fetching batches for trainer ID: {}", trainerId);
+		return batchRepository.findByTrainerId(trainerId); // Fetch batches by trainer ID
+	}
+	// Get Batches by Student ID
+	public List<Batch> getBatchesStudentId(Long studentId) {
+		logger.info("Fetching batches for student ID: {}", studentId);
+		return batchRepository.findByStudentsId(studentId); // Fetch batches by student ID
+	}
+
+	// Update Batch by ID
+	public ResponseEntity<Batch> updateBatch(Long id, Batch newBatch) {
+		Optional<Batch> existingBatchOpt = batchRepository.findById(id);
+		if (existingBatchOpt.isPresent()) {
+			Batch existingBatch = existingBatchOpt.get();
+			updateBatchFields(existingBatch, newBatch);
+			Batch updatedBatch = batchRepository.save(existingBatch);
+			return ResponseEntity.ok(updatedBatch);
+		} else {
+			return ResponseEntity.notFound().build(); // Simplified response for not found
+		}
+	}
+
+	private void updateBatchFields(Batch existingBatch, Batch newBatch) {
+		if (newBatch.getTrainer() != null)
+			existingBatch.setTrainer(newBatch.getTrainer());
+		if (newBatch.getStudents() != null && !newBatch.getStudents().isEmpty())
+			existingBatch.setStudents(newBatch.getStudents());
+		if (newBatch.getCourse() != null)
+			existingBatch.setCourse(newBatch.getCourse());
+		if (newBatch.getAttendance() != null && !newBatch.getAttendance().isEmpty())
+			existingBatch.setAttendance(newBatch.getAttendance());
+	}
+
 }

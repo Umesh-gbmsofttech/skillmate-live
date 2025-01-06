@@ -1,11 +1,17 @@
 package app.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,411 +30,83 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-@Entity
-public class Student {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(JsonResoponse_View.BasicView.class)
     private Long id;
 
-    @JsonIgnore
     @Lob
     @Column(name = "profile_pic", columnDefinition = "LONGBLOB")
+    @JsonView(JsonResoponse_View.BasicView.class)
     private byte[] profilePic;
 
+    @JsonView(JsonResoponse_View.BasicView.class)
     private String fullName;
+    @JsonView(JsonResoponse_View.BasicView.class)
     private String mobileNumber;
+    @JsonView(JsonResoponse_View.BasicView.class)
     private String email;
+    @JsonView(JsonResoponse_View.BasicView.class)
     private String workingStatus;
+    @JsonView(JsonResoponse_View.BasicView.class)
     private String address;
+    @JsonView(JsonResoponse_View.BasicView.class)
     private String qualification;
 
-    @JsonIgnore
     @Lob
     private byte[] resume;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "trainer_id")
-    private Trainer trainer;
-
-    @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "student_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private List<Course> courses = new ArrayList<>();  // Initialize the list
+    @JoinTable(
+            name = "student_trainers",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "trainer_id")
+        )
+//    @JsonView(JsonResoponse_View.BasicView.class)
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//    @JsonManagedReference
+    private List<Trainer> trainer;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)  // Corrected mappedBy here
-    private List<Attendance> attendance = new ArrayList<>();  // Initialize the list
+    @ManyToMany(mappedBy = "students", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private List<Course> courses = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<RatingReviews> ratingReviews = new ArrayList<>();  // Initialize the list
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private List<Attendance> attendance = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<Batch> batch = new ArrayList<>();  // Initialize the list
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "batch_students",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "batch_id")
+    )
+    @JsonView(JsonResoponse_View.DetailedView.class)
+    private List<Batch> batches = new ArrayList<>();
+
+
+    @ManyToMany(mappedBy = "students", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private List<Meeting> meetings = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "student", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+//    @JsonView(JsonResoponse_View.BasicView.class)
+    private List<RatingReviews> ratingReviews  = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();  // Initialize the set
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getWorkingStatus() {
-        return workingStatus;
-    }
-
-    public void setWorkingStatus(String workingStatus) {
-        this.workingStatus = workingStatus;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getQualification() {
-        return qualification;
-    }
-
-    public void setQualification(String qualification) {
-        this.qualification = qualification;
-    }
-
-    public byte[] getResume() {
-        return resume;
-    }
-
-    public void setResume(byte[] resume) {
-        this.resume = resume;
-    }
-
-    public Trainer getTrainer() {
-        return trainer;
-    }
-
-    public void setTrainer(Trainer trainer) {
-        this.trainer = trainer;
-    }
-
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
-    public List<Attendance> getAttendance() {
-        return attendance;
-    }
-
-    public void setAttendance(List<Attendance> attendance) {
-        this.attendance = attendance;
-    }
-
-    public List<RatingReviews> getRatingReviews() {
-        return ratingReviews;
-    }
-
-    public void setRatingReviews(List<RatingReviews> ratingReviews) {
-        this.ratingReviews = ratingReviews;
-    }
-
-    public List<Batch> getBatch() {
-        return batch;
-    }
-
-    public void setBatch(List<Batch> batch) {
-        this.batch = batch;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public Student() {
-        super();
-    }
-
-    public byte[] getProfilePic() {
-        return profilePic;
-    }
-
-    public void setProfilePic(byte[] profilePic) {
-        this.profilePic = profilePic;
-    }
-
-    public Student(Long id, byte[] profilePic, String fullName, String mobileNumber, String email, String workingStatus,
-            String address, String qualification, byte[] resume, Trainer trainer, List<Course> courses,
-            List<Attendance> attendance, List<RatingReviews> ratingReviews, List<Batch> batch, Set<Role> roles) {
-        super();
-        this.id = id;
-        this.profilePic = profilePic;
-        this.fullName = fullName;
-        this.mobileNumber = mobileNumber;
-        this.email = email;
-        this.workingStatus = workingStatus;
-        this.address = address;
-        this.qualification = qualification;
-        this.resume = resume;
-        this.trainer = trainer;
-        this.courses = courses;
-        this.attendance = attendance;
-        this.ratingReviews = ratingReviews;
-        this.batch = batch;
-        this.roles = roles;
-    }
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private Set<Role> roles = new HashSet<>();
 }
-//package app.entity;
-//
-//import java.util.HashSet;
-//import java.util.List;
-//import java.util.Set;
-//
-//import jakarta.persistence.CascadeType;
-//import jakarta.persistence.Column;
-//import jakarta.persistence.ElementCollection;
-//import jakarta.persistence.Entity;
-//import jakarta.persistence.EnumType;
-//import jakarta.persistence.Enumerated;
-//import jakarta.persistence.FetchType;
-//import jakarta.persistence.GeneratedValue;
-//import jakarta.persistence.GenerationType;
-//import jakarta.persistence.Id;
-//import jakarta.persistence.JoinColumn;
-//import jakarta.persistence.JoinTable;
-//import jakarta.persistence.Lob;
-//import jakarta.persistence.ManyToMany;
-//import jakarta.persistence.ManyToOne;
-//import jakarta.persistence.OneToMany;
-//
-//@Entity
-//public class Student {
-//
-//
-//	@Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//	 @Lob
-//	   @Column(name="profile_pic",columnDefinition = "LONGBLOB")
-//      private byte[] profilePic;
-//    private String fullName;
-//    private String mobileNumber;
-//    private String email;
-//    private String workingStatus;
-//    private String address;
-//    private String qualification;
-//
-//    @Lob
-//    private byte[] resume;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "trainer_id")
-//    private Trainer trainer;
-//
-//    @ManyToMany
-//    @JoinTable(name = "student_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
-//    private List<Course> courses;
-//
-//    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL) // Corrected mappedBy here
-//    private List<Attendance> attendance;
-//
-//    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-//    private List<RatingReviews> ratingReviews;
-//
-//    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-//    private List<Batch> batch;
-//    
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @Enumerated(EnumType.STRING)
-//    private Set<Role> roles = new HashSet<>();  // This will initialize the Set
-//
-//	public Long getId() {
-//		return id;
-//	}
-//
-//	public void setId(Long id) {
-//		this.id = id;
-//	}
-//
-//	
-//
-//	public String getFullName() {
-//		return fullName;
-//	}
-//
-//	public void setFullName(String fullName) {
-//		this.fullName = fullName;
-//	}
-//
-//	public String getMobileNumber() {
-//		return mobileNumber;
-//	}
-//
-//	public void setMobileNumber(String mobileNumber) {
-//		this.mobileNumber = mobileNumber;
-//	}
-//
-//	public String getEmail() {
-//		return email;
-//	}
-//
-//	public void setEmail(String email) {
-//		this.email = email;
-//	}
-//
-//	public String getWorkingStatus() {
-//		return workingStatus;
-//	}
-//
-//	public void setWorkingStatus(String workingStatus) {
-//		this.workingStatus = workingStatus;
-//	}
-//
-//	public String getAddress() {
-//		return address;
-//	}
-//
-//	public void setAddress(String address) {
-//		this.address = address;
-//	}
-//
-//	public String getQualification() {
-//		return qualification;
-//	}
-//
-//	public void setQualification(String qualification) {
-//		this.qualification = qualification;
-//	}
-//
-//	public byte[] getResume() {
-//		return resume;
-//	}
-//
-//	public void setResume(byte[] resume) {
-//		this.resume = resume;
-//	}
-//
-//	public Trainer getTrainer() {
-//		return trainer;
-//	}
-//
-//	public void setTrainer(Trainer trainer) {
-//		this.trainer = trainer;
-//	}
-//
-//	public List<Course> getCourses() {
-//		return courses;
-//	}
-//
-//	public void setCourses(List<Course> courses) {
-//		this.courses = courses;
-//	}
-//
-//	public List<Attendance> getAttendance() {
-//		return attendance;
-//	}
-//
-//	public void setAttendance(List<Attendance> attendance) {
-//		this.attendance = attendance;
-//	}
-//
-//	public List<RatingReviews> getRatingReviews() {
-//		return ratingReviews;
-//	}
-//
-//	public void setRatingReviews(List<RatingReviews> ratingReviews) {
-//		this.ratingReviews = ratingReviews;
-//	}
-//
-//	public List<Batch> getBatch() {
-//		return batch;
-//	}
-//
-//	public void setBatch(List<Batch> batch) {
-//		this.batch = batch;
-//	}
-//
-//	public Set<Role> getRoles() {
-//		return roles;
-//	}
-//
-//	public void setRoles(Set<Role> roles) {
-//		this.roles = roles;
-//	}
-//	
-//	public Student() {
-//		super();
-//	}
-//
-//	public byte[] getProfilePic() {
-//		return profilePic;
-//	}
-//
-//	public void setProfilePic(byte[] profilePic) {
-//		this.profilePic = profilePic;
-//	}
-//
-//	public Student(Long id, byte[] profilePic, String fullName, String mobileNumber, String email, String workingStatus,
-//			String address, String qualification, byte[] resume, Trainer trainer, List<Course> courses,
-//			List<Attendance> attendance, List<RatingReviews> ratingReviews, List<Batch> batch, Set<Role> roles) {
-//		super();
-//		this.id = id;
-//		this.profilePic = profilePic;
-//		this.fullName = fullName;
-//		this.mobileNumber = mobileNumber;
-//		this.email = email;
-//		this.workingStatus = workingStatus;
-//		this.address = address;
-//		this.qualification = qualification;
-//		this.resume = resume;
-//		this.trainer = trainer;
-//		this.courses = courses;
-//		this.attendance = attendance;
-//		this.ratingReviews = ratingReviews;
-//		this.batch = batch;
-//		this.roles = roles;
-//	}
-//
-//	
-//    
-//}

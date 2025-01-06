@@ -51,12 +51,12 @@ function OurTopCourses() {
 
         return () => observer.disconnect();
     }, [courses]);
-
+    console.log(courses)
     return (
         <div className='ourTopCoursesContainer'>
             <h3 className='ourTopCoursesHeading'>Our Top Courses</h3>
             <div className="ourTopCoursesCardSection">
-                {courses.map((course, index) => (
+                {courses?.map((course, index) => (
                     <div
                         key={index}
                         ref={(el) => (cardRefs.current[index] = el)}
