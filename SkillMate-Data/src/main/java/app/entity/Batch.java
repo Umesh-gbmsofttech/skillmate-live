@@ -50,8 +50,16 @@ public class Batch {
     private List<Trainer> trainer;
 
     @ManyToMany(mappedBy = "batches", fetch = FetchType.EAGER)
-//    @JsonView(JsonResoponse_View.DetailedView.class)
+//    @JsonView(JsonResoponse_View.DetailedView.class) 
     private List<Student> students = new ArrayList<>();
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "batch_students",
+//            joinColumns = @JoinColumn(name = "batch_id"),
+//            inverseJoinColumns = @JoinColumn(name = "student_id")
+//        )
+//        @JsonView(JsonResoponse_View.BasicView.class)
+//    private List<Student> students = new ArrayList<>();
 
 
 

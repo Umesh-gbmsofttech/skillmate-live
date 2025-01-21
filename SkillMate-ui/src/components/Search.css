@@ -27,6 +27,7 @@
 
 .search__bar-container-menu_icon:hover {
     transform: scale(1.1);
+    background-color: transparent;
 }
 
 /* Search input field */
@@ -67,6 +68,10 @@
 /* Hover effect for the search button */
 .search__button:hover img {
     transform: scale(1.1);
+}
+
+.search__button:hover {
+    background-color: transparent;
 }
 
 /* Hover effect for the entire container */

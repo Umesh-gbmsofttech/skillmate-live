@@ -79,8 +79,7 @@ public class Trainer {
 	@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
 //    @JsonView(JsonResoponse_View.BasicView.class)
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-	@JsonView(JsonResoponse_View.BasicView.class)
-//	@JsonBackReference
+//	@JsonView(JsonResoponse_View.BasicView.class)
 	private List<Student> students;
 
 	@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -93,7 +92,8 @@ public class Trainer {
 
 //	@ManyToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@ManyToMany
-	@JsonView(JsonResoponse_View.DetailedView.class)
+//	@JsonView(JsonResoponse_View.DetailedView.class)
+	@JsonView(JsonResoponse_View.BasicView.class)
 //	@JsonIgnore
 	private List<Batch> batches;
 

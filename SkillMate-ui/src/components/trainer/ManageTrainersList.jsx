@@ -10,6 +10,7 @@ import axios from 'axios';
 function ManageTrainersList() {
     const navigate = useNavigate();
     const [trainers, setTrainers] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Fetch trainers data
     useEffect(() => {
@@ -18,7 +19,7 @@ function ManageTrainersList() {
                 const response = await axios.get('http://localhost:8080/trainers/fetch');
                 const fetchedTrainers = response.data.map((trainer) => ({
                     id: trainer.id,
-                    name: trainer.fullName,
+                    fullName: trainer.fullName,
                     experience: trainer.experience,
                     ratingsAverage: '4.5',
                     stars: '⭐⭐⭐⭐⭐',
@@ -36,6 +37,15 @@ function ManageTrainersList() {
 
         fetchTrainers();
     }, []);
+
+    // Filtered list based on search query
+    const filteredTrainers = trainers.filter(trainer =>
+        trainer.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        trainer.technologies?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        trainer.experience?.toString().includes(searchQuery)
+    );
+
+
 
     // Handle delete trainer
     const handleDeleteTrainer = async (trainerId) => {
@@ -73,14 +83,15 @@ function ManageTrainersList() {
                 <p>Trainer's List</p>
             </div>
 
-            <Search />
+            <Search onSearch={setSearchQuery} />
+
             <button onClick={handleTrainerAddClick} className="add__new-trainer-btn">
                 Add New Trainer
             </button>
 
             <div className="ad__trainers-list">
                 {trainers.length > 0 ? (
-                    trainers.map((trainer, index) => (
+                    filteredTrainers.map((trainer, index) => (
                         <div key={index} className="ad__trainer-list-card">
                             <img
                                 className="trainer-profile"
@@ -88,7 +99,7 @@ function ManageTrainersList() {
                                 alt={`${trainer.name} profile`}
                             />
                             <div className="trainer-details-data">
-                                <h3>{trainer.name}</h3>
+                                <h3>{trainer.fullName}</h3>
                                 <p>Experience: {trainer.experience}</p>
                                 <p>Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}</p>
                                 <p>Technologies: {trainer.technologies}</p>

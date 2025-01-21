@@ -9,6 +9,10 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.0",
+    "@mui/styled-engine-sc": "^6.4.0",
     "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
@@ -22,8 +26,10 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.0.2",
     "react-slick": "^0.30.2",
+    "react-virtuoso": "^4.12.3",
     "redux-thunk": "^3.1.0",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^6.1.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

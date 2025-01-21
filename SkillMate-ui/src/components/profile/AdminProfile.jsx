@@ -3,6 +3,8 @@ import './AdminProfile.css';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../../assets/skillmate.jpg';
+import UpdateBatch from '../admin/UpdateBatch';
+import ManageBatches from '../admin/ManageBatches';
 
 function AdminProfile() {
     const navigate = useNavigate();
@@ -35,6 +37,8 @@ function AdminProfile() {
                 <button className="admin-dashboard-button" onClick={handleManageCoursesClick}>Courses</button>
                 <button className="admin-dashboard-button">Messages</button>
             </div>
+            {/* <UpdateBatch /> */}
+            <ManageBatches />
         </div>
     );
 }

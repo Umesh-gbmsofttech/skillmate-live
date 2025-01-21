@@ -80,7 +80,7 @@ public class Student {
     private List<Trainer> trainer;
 
     @ManyToMany(mappedBy = "students", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JsonView(JsonResoponse_View.BasicView.class)
+//    @JsonView(JsonResoponse_View.BasicView.class)
     private List<Course> courses = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -93,7 +93,9 @@ public class Student {
         joinColumns = @JoinColumn(name = "student_id"),
         inverseJoinColumns = @JoinColumn(name = "batch_id")
     )
-    @JsonView(JsonResoponse_View.DetailedView.class)
+//    @JsonView(JsonResoponse_View.BasicView.class)
+//	@ManyToMany
+	@JsonView(JsonResoponse_View.DetailedView.class)
     private List<Batch> batches = new ArrayList<>();
 
 

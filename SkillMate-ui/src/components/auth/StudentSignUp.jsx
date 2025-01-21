@@ -38,8 +38,6 @@ const StudentSignUp = () => {
             };
             reader.readAsDataURL(file);
         }
-        console.log(file)
-        console.log(reader)
     };
 
     const handleResumeChange = (e) => {
