@@ -1,4 +1,4 @@
-.admin-dashboard-manage-courses-container {
+/* .admin-dashboard-manage-courses-container {
     padding: 20px;
     font-family: Arial, sans-serif;
     background-color: #EEEEEE;
@@ -92,7 +92,8 @@
     padding: 0 2% 2% 0;
     transition: transform 0.3s ease;
 }
-.ad_delete_course-btn{
+
+.ad_delete_course-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -106,7 +107,8 @@
     width: 30px;
     height: 30px;
 }
-.ad_delete_course-btn img{
+
+.ad_delete_course-btn img {
     width: 30px;
     height: 30px;
     margin-right: 40px;
@@ -135,4 +137,4 @@
     .courses-details-data p {
         font-size: 14px;
     }
-}
+} */

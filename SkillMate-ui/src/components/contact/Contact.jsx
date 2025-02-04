@@ -1,34 +1,29 @@
-
 import React, { useState } from 'react';
-import Footer from '../home/Footer';
-import Navbar from '../home/Navbar';
-import logo from '../../assets/skillmate.jpg';
-import whatsapp from '../../assets/whatsapp.png';
-import './Contact.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, Card, CardMedia, CardContent } from '@mui/material';
+import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import ReviewsSection from '../rating-review/ReviewsSection';
 import EnquiryForm from './EnquiryForm';
+import logo from '../../assets/skillmate.jpg';
+import whatsapp from '../../assets/whatsapp.png';
 import writeIcon from '../../assets/writeIcon.png';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios to make HTTP requests
 
 function Contact() {
     const navigate = useNavigate();
     const location = useLocation();
     const course = location.state?.course;
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-    const [formData, setFormData] = useState({
-        query: '',
-        selectedOption: '',
-    });
-
-    const alt = 'https://via.placeholder.com/300';
+    const [formData, setFormData] = useState({ query: '', selectedOption: '' });
 
     const handleWhatsAppClick = () => {
-        alert('opening whatsapp');
-        window.open(`https://api.whatsapp.com/send?phone=+919226224019&text=Hi, I'm interested in enrolling in your React js course. Please let me know your availability.`);
+        showSuccessToast('Opening WhatsApp');
+        window.open(`https://api.whatsapp.com/send?phone=+919226224019&text=Hi, I'm interested in enrolling in your React.js course. Please let me know your availability.`);
     };
 
-    const handleRateUsClick = (course) => {
+    const handleRateUsClick = () => {
         navigate('/rating-reviews/page/card', { state: { course } });
     };
 
@@ -39,79 +34,79 @@ function Contact() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        // Send form data to Spring Boot backend
         axios.post('http://localhost:8080/sendEmail', formData)
-            .then(response => {
-                alert('Query submitted successfully!');
-            })
-            .catch(error => {
-                alert('Error submitting query!');
-                console.error(error);
-            });
+            .then(() => showSuccessToast('Query submitted successfully!'))
+            .catch(() => showErrorToast('Error submitting query!'));
     };
 
     return (
-        <div className="contact-us-container">
-            {course ?
-                (
-                    <>
-                        <div className="contact-us-course-section">
-                            <div className="contact-us-course-image">
-                                <img src={course?.coverImage} alt={alt} />
-                            </div>
-                            <div className="contact-us-course-details">
-                                <h1 className="contact-us-course-heading">{course?.name}</h1>
-                                <h1 className="contact-us-course-prize">{course?.price}</h1>
-                                <p className="contact-us-course-period">{course?.duration} days</p>
-                                <div className="contact-us-course-options">
-                                    <label>Select Query:</label>
-                                    <select name="selectedOption" value={formData.selectedOption} onChange={handleInputChange}>
-                                        <option value="">Select an option</option>
-                                        <option value="General Inquiry">General Inquiry</option>
-                                        <option value="Course Details">Course Details</option>
-                                        <option value="Enrollment Process">Enrollment Process</option>
-                                        <option value="Payment Issues">Payment Issues</option>
-                                    </select>
-                                </div>
+        <Box sx={{ maxWidth: '100%', fontFamily: 'Arial, sans-serif', p: 2 }}>
+            {course && (
+                <>
+                    <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, maxWidth: 1200, m: '40px auto', p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+                        <CardMedia
+                            component="img"
+                            sx={{ width: { xs: '100%', md: '50%' }, borderRadius: 2 }}
+                            image={course?.coverImage ? `data:image/jpeg;base64,${course.coverImage}` : logo}
+                            alt="Course Image"
+                        />
+                        <CardContent sx={{ width: { xs: '100%', md: '50%' } }}>
+                            <Typography variant="h4" fontWeight="bold" mb={2}>Course: {course?.courseName}</Typography>
+                            <Typography variant="h5" color="primary" mb={2}>Price: {course?.price}</Typography>
+                            <Typography variant="body1" color="text.secondary" mb={2}>Duration: {course?.days} days</Typography>
 
-                                <details>
-                                    <summary>See the full details of this course ...</summary>
-                                    <p>{course.description}</p>
-                                </details>
+                            <FormControl fullWidth>
+                                <InputLabel>Select Query</InputLabel>
+                                <Select name="selectedOption" value={formData.selectedOption} onChange={handleInputChange}>
+                                    <MenuItem value="">Select an option</MenuItem>
+                                    <MenuItem value="General Inquiry">General Inquiry</MenuItem>
+                                    <MenuItem value="Course Details">Course Details</MenuItem>
+                                    <MenuItem value="Enrollment Process">Enrollment Process</MenuItem>
+                                    <MenuItem value="Payment Issues">Payment Issues</MenuItem>
+                                </Select>
+                            </FormControl>
 
-                                <div className="email-us-section">
-                                    <div className="email-us-section__email">
-                                        <textarea
-                                            name="query"
-                                            placeholder="Enter your detailed query here..."
-                                            required
-                                            value={formData.query}
-                                            onChange={handleInputChange}
-                                        ></textarea>
-                                        <button className="contact-us-course-button" onClick={handleSubmit}>Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            <details>
+                                <summary>See full details of this course...</summary>
+                                <Typography variant="body2" sx={{ bgcolor: '#f5f5f5', p: 1, borderRadius: 1 }}>{course?.description}</Typography>
+                            </details>
 
-                        <div className="leave__a-rating-review" onClick={() => handleRateUsClick(course)}>
-                            <h2>Leave a Rating and Review <img src={writeIcon} alt="Rate Us" /></h2>
-                        </div>
+                            <Box mt={2}>
+                                <TextField
+                                    fullWidth
+                                    multiline
+                                    minRows={4}
+                                    name="query"
+                                    label="Enter your detailed query here..."
+                                    value={formData.query}
+                                    onChange={handleInputChange}
+                                />
+                                <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>Submit</Button>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                    <Button
+                        sx={{ display: 'flex', alignItems: 'center', justifySelf: 'center', fontWeight: 'bold', fontSize: '1.2rem', color: 'primary.main', mt: 2, textTransform: 'none', '&:hover': { textShadow: '0 0 5px rgb(7, 212, 244)', bgcolor: 'rgb(214, 214, 214)' } }}
+                        onClick={handleRateUsClick}
+                    >
+                        Leave a Rating and Review <img src={writeIcon} alt="Rate Us" style={{ marginLeft: 8, width: 24 }} />
+                    </Button>
+                    <Typography variant="h4" align="center" fontWeight="bold" mt={4}>Latest Reviews</Typography>
+                    <ReviewsSection course={course} />
+                </>
+            )}
 
-                        <h1 className="reviews-heading">Latest Reviews</h1>
-                        <ReviewsSection />
-                    </>
-                ) : ("")}
-            <div className="contact-whatsapp-contact-section">
-                <div className="whatsapp-us">
-                    <img src={whatsapp} alt={alt} onClick={handleWhatsAppClick} />
-                    <h2>09226224019</h2>
-                </div>
-            </div>
 
-            <EnquiryForm />
-        </div>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', p: 2, bgcolor: '#f9f9f9', mt: 4, borderRadius: 2 }}>
+                <Button onClick={handleWhatsAppClick} startIcon={<img src={whatsapp} alt="WhatsApp" style={{ width: 40, height: 40 }} />}>
+                    <Typography variant="h6">09226224019</Typography>
+                </Button>
+            </Box>
+
+            {/* {!isAuthenticated && <EnquiryForm />}
+            <EnquiryForm contact /> */}
+            <EnquiryForm contact={true} />
+        </Box>
     );
 }
 

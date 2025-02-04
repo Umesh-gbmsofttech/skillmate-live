@@ -1,5 +1,7 @@
 package app.service;
 
+import app.dto.MeetingDto;
+import app.entity.Meeting;
 import app.entity.Role;
 import app.entity.Trainer;
 import app.entity.TrainerProfileDeleted;
@@ -12,10 +14,12 @@ import app.repository.TrainerRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -63,15 +67,45 @@ public class TrainerService {
 	public Trainer updateTrainer(Long id, String fullName, String mobileNumber, String email, String address,
 			String qualification, String experience, String workingStatus, List<String> technologies,
 			MultipartFile profilePic, MultipartFile resume) {
-		Optional<Trainer> opTrainer = trainerRepository.findById(id);
 
+		Optional<Trainer> opTrainer = trainerRepository.findById(id);
 		if (opTrainer.isEmpty()) {
 			return null; // Trainer not found
 		}
 
 		Trainer dbTrainer = opTrainer.get();
 
-// Update properties from the incoming request
+// Create a new TrainerProfileUpdated entry
+		TrainerProfileUpdated trainerProfileUpdated = new TrainerProfileUpdated();
+		trainerProfileUpdated.setTrainerId(dbTrainer.getId());
+		trainerProfileUpdated.setUpdatedAt(LocalDateTime.now());
+
+// Store non-empty fields in TrainerProfileUpdated
+		if (dbTrainer.getFullName() != null)
+			trainerProfileUpdated.setFullName(dbTrainer.getFullName());
+		if (dbTrainer.getMobileNumber() != null)
+			trainerProfileUpdated.setMobileNumber(dbTrainer.getMobileNumber());
+		if (dbTrainer.getEmail() != null)
+			trainerProfileUpdated.setEmail(dbTrainer.getEmail());
+		if (dbTrainer.getAddress() != null)
+			trainerProfileUpdated.setAddress(dbTrainer.getAddress());
+		if (dbTrainer.getQualification() != null)
+			trainerProfileUpdated.setQualification(dbTrainer.getQualification());
+		if (dbTrainer.getExperience() != null)
+			trainerProfileUpdated.setExperience(dbTrainer.getExperience());
+		if (dbTrainer.getWorkingStatus() != null)
+			trainerProfileUpdated.setWorkingStatus(dbTrainer.getWorkingStatus());
+		if (dbTrainer.getProfilePic() != null)
+			trainerProfileUpdated.setProfilePic(dbTrainer.getProfilePic());
+		if (dbTrainer.getResume() != null)
+			trainerProfileUpdated.setResume(dbTrainer.getResume());
+		if (dbTrainer.getCompanyName() != null)
+			trainerProfileUpdated.setCompanyName(dbTrainer.getCompanyName());
+
+// Save the historical data
+		trainerProfileUpdatedRepository.save(trainerProfileUpdated);
+
+// Update Trainer with new values (only if they are not null)
 		if (fullName != null)
 			dbTrainer.setFullName(fullName);
 		if (mobileNumber != null)
@@ -87,13 +121,13 @@ public class TrainerService {
 		if (workingStatus != null)
 			dbTrainer.setWorkingStatus(workingStatus);
 		if (technologies != null)
-			dbTrainer.setTechnologies(technologies); // Could split string into a list if needed
+			dbTrainer.setTechnologies(technologies);
 
 // Handle profile picture upload
 		if (profilePic != null && !profilePic.isEmpty()) {
 			try {
 				byte[] profilePicBytes = profilePic.getBytes();
-				dbTrainer.setProfilePic(profilePicBytes); // Assuming you are storing it as byte array in DB
+				dbTrainer.setProfilePic(profilePicBytes);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -103,7 +137,7 @@ public class TrainerService {
 		if (resume != null && !resume.isEmpty()) {
 			try {
 				byte[] resumeBytes = resume.getBytes();
-				dbTrainer.setResume(resumeBytes); // Assuming you are storing it as byte array in DB
+				dbTrainer.setResume(resumeBytes);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -113,44 +147,6 @@ public class TrainerService {
 		return trainerRepository.save(dbTrainer);
 	}
 
-	// Delete Trainer by ID
-	public void deleteTrainer1(Long id) {
-		trainerRepository.deleteById(id);
-	}
-
-	@Transactional
-	public TrainerProfileUpdated updateTrainerWithHistory(Long id, Trainer updatedTrainer) {
-
-		Trainer existingTrainer = trainerRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Trainer not found with ID: " + id));
-
-		Optional<TrainerProfileUpdated> existingUpdatedProfile = trainerProfileUpdatedRepository
-				.findByTrainerId(existingTrainer.getId());
-
-		TrainerProfileUpdated trainerProfileUpdated;
-
-		if (existingUpdatedProfile.isPresent()) {
-
-			trainerProfileUpdated = existingUpdatedProfile.get();
-		} else {
-
-			trainerProfileUpdated = new TrainerProfileUpdated();
-			trainerProfileUpdated.setTrainerId(existingTrainer.getId());
-		}
-
-		trainerProfileUpdated.setProfilePic(updatedTrainer.getProfilePic());
-		trainerProfileUpdated.setFullName(updatedTrainer.getFullName());
-		trainerProfileUpdated.setMobileNumber(updatedTrainer.getMobileNumber());
-		trainerProfileUpdated.setEmail(updatedTrainer.getEmail());
-		trainerProfileUpdated.setWorkingStatus(updatedTrainer.getWorkingStatus());
-		trainerProfileUpdated.setExperience(updatedTrainer.getExperience());
-		trainerProfileUpdated.setCompanyName(updatedTrainer.getCompanyName());
-		trainerProfileUpdated.setAddress(updatedTrainer.getAddress());
-		trainerProfileUpdated.setQualification(updatedTrainer.getQualification());
-		trainerProfileUpdated.setResume(updatedTrainer.getResume());
-
-		return trainerProfileUpdatedRepository.save(trainerProfileUpdated);
-	}
 //    @Transactional
 //    public void updateTrainerProfile(Long id, Trainer updatedTrainer) {
 //        Trainer existingTrainer = trainerRepository.findById(id)

@@ -26,13 +26,29 @@ public class Meeting {
 
     @JsonView(JsonResoponse_View.BasicView.class)
     private String meetingLink;
+    @JsonView(JsonResoponse_View.BasicView.class)
     private LocalTime fromTime;
+    @JsonView(JsonResoponse_View.BasicView.class)
     private LocalTime toTime;
+    @JsonView(JsonResoponse_View.BasicView.class)
     private String message;
+    
+//    @Column(nullable = false, updatable = false)
+    @JsonView(JsonResoponse_View.BasicView.class)
+    private LocalDate created_at = LocalDate.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id", nullable = false)
     private Trainer trainer;
+    
+    @ManyToMany
+    @JoinTable(
+    		name = "meeting_batches",
+    		joinColumns = @JoinColumn(name = "meeting_id"),
+    		inverseJoinColumns = @JoinColumn(name = "batch_id")
+    		)
+//    @JsonView(JsonResoponse_View.BasicView.class)
+    private List<Batch> batches;
 
     @ManyToMany
     @JoinTable(

@@ -61,11 +61,18 @@ public class AttendanceController {
 		return attendanceService.deleteAttendance(id);
 	}
 
+	//Get single attendance by student id
+	@GetMapping("/student/{studentId}/latest")
+	@JsonView(JsonResoponse_View.DetailedView.class)
+	public ResponseEntity<Attendance> getLatestAttendance(@PathVariable("studentId") Long studentId) {
+	    return attendanceService.getLatestAttendanceByStudentId(studentId);
+	}
+
 	// Get Attendances by Student ID
 	@GetMapping("/student/{studentId}")
 	@JsonView(JsonResoponse_View.DetailedView.class)
 	public ResponseEntity<List<Attendance>> getAttendancesByStudentId(@PathVariable("studentId") Long studentId) {
-		List<Attendance> attendances = attendanceService.getAttendancesByStudentId(studentId);
-		return ResponseEntity.ok(attendances);
+	    return attendanceService.getAttendancesByStudentId(studentId);
 	}
+
 }

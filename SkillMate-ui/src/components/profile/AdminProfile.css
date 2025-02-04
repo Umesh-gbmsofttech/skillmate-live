@@ -38,10 +38,10 @@
 }
 
 .admin-dashboard-control-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /* Create two columns */
-    gap: 10px 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
     padding: 100px 20px;
     border-radius: 10px;
     background-color: #f3f3f3;
@@ -57,6 +57,8 @@
     cursor: pointer;
     transition: background-color 0.5s ease;
     border: none;
+    flex-basis: calc(50% - 10px);
+    /* Adjust the width of each button */
 }
 
 .admin-dashboard-control-buttons button:hover {

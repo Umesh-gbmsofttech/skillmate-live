@@ -70,37 +70,58 @@ public class StudentService {
 //	}
 //	
 	@Transactional
-	public StudentProfileUpdated updateStudentWithHistory(Long id, Student updatedStudent) {
+	public Student updateStudentWithHistory(Long id, Student updatedStudent) {
 
-		Student existingStudent = studentRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
+	    // Fetch the existing student
+	    Student existingStudent = studentRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
 
-		Optional<StudentProfileUpdated> existingUpdatedProfile = studentProfileUpdatedRepository
-				.findByStudentId(existingStudent.getId());
+	    // Save the existing information in StudentProfileUpdated before updating
+	    StudentProfileUpdated studentProfileUpdated = new StudentProfileUpdated();
+	    studentProfileUpdated.setStudentId(existingStudent.getId());
+	    studentProfileUpdated.setProfilePic(existingStudent.getProfilePic());
+	    studentProfileUpdated.setFullName(existingStudent.getFullName());
+	    studentProfileUpdated.setMobileNumber(existingStudent.getMobileNumber());
+	    studentProfileUpdated.setEmail(existingStudent.getEmail());
+	    studentProfileUpdated.setWorkingStatus(existingStudent.getWorkingStatus());
+	    studentProfileUpdated.setAddress(existingStudent.getAddress());
+	    studentProfileUpdated.setQualification(existingStudent.getQualification());
+	    studentProfileUpdated.setResume(existingStudent.getResume());
+	    studentProfileUpdated.setUpdatedAt(LocalDateTime.now());
 
-		StudentProfileUpdated studentProfileUpdated;
+	    studentProfileUpdatedRepository.save(studentProfileUpdated);
 
-		if (existingUpdatedProfile.isPresent()) {
+	    // Now update the Student entity only if fields are not null or empty
+	    if (updatedStudent.getProfilePic() != null && updatedStudent.getProfilePic().length > 0) {
+	        existingStudent.setProfilePic(updatedStudent.getProfilePic());
+	    }
+	    if (updatedStudent.getFullName() != null && !updatedStudent.getFullName().trim().isEmpty()) {
+	        existingStudent.setFullName(updatedStudent.getFullName());
+	    }
+	    if (updatedStudent.getMobileNumber() != null && !updatedStudent.getMobileNumber().trim().isEmpty()) {
+	        existingStudent.setMobileNumber(updatedStudent.getMobileNumber());
+	    }
+	    if (updatedStudent.getEmail() != null && !updatedStudent.getEmail().trim().isEmpty()) {
+	        existingStudent.setEmail(updatedStudent.getEmail());
+	    }
+	    if (updatedStudent.getWorkingStatus() != null && !updatedStudent.getWorkingStatus().trim().isEmpty()) {
+	        existingStudent.setWorkingStatus(updatedStudent.getWorkingStatus());
+	    }
+	    if (updatedStudent.getAddress() != null && !updatedStudent.getAddress().trim().isEmpty()) {
+	        existingStudent.setAddress(updatedStudent.getAddress());
+	    }
+	    if (updatedStudent.getQualification() != null && !updatedStudent.getQualification().trim().isEmpty()) {
+	        existingStudent.setQualification(updatedStudent.getQualification());
+	    }
+	    if (updatedStudent.getResume() != null && updatedStudent.getResume().length > 0) {
+	        existingStudent.setResume(updatedStudent.getResume());
+	    }
 
-			studentProfileUpdated = existingUpdatedProfile.get();
-		} else {
-
-			studentProfileUpdated = new StudentProfileUpdated();
-			studentProfileUpdated.setStudentId(existingStudent.getId());
-		}
-
-		studentProfileUpdated.setProfilePic(updatedStudent.getProfilePic());
-		studentProfileUpdated.setFullName(updatedStudent.getFullName());
-		studentProfileUpdated.setMobileNumber(updatedStudent.getMobileNumber());
-		studentProfileUpdated.setEmail(updatedStudent.getEmail());
-		studentProfileUpdated.setWorkingStatus(updatedStudent.getWorkingStatus());
-		studentProfileUpdated.setAddress(updatedStudent.getAddress());
-		studentProfileUpdated.setQualification(updatedStudent.getQualification());
-		studentProfileUpdated.setResume(updatedStudent.getResume());
-		studentProfileUpdated.setDeletedAt(LocalDateTime.now());
-
-		return studentProfileUpdatedRepository.save(studentProfileUpdated);
+	    // Save and return the updated Student entity
+	    return studentRepository.save(existingStudent);
 	}
+
+
 
 	@Transactional
 	public synchronized void deleteStudent(Long id) {

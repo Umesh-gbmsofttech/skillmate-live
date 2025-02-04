@@ -1,11 +1,9 @@
-import React, { useContext, useState } from 'react';
-import './TrainerSignUp.css';
-import { GlobalContext } from '../context/GlobalContext';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData } from '../redux/authSlice';
+import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
+import { TextField, Button, Checkbox, FormControl, InputLabel, Select, MenuItem, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Link } from 'react-router-dom';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useDispatch } from 'react-redux'; // Import useDispatch from Redux
-import { setUserData } from '../redux/authSlice'; // Import the setUserData action
 
 const TrainerSignUp = () => {
     const [fullName, setFullName] = useState('');
@@ -19,8 +17,11 @@ const TrainerSignUp = () => {
     const [profilePic, setProfilePic] = useState(null);
     const [resume, setResume] = useState(null);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const username = useSelector((state) => state.auth.username);
+    const [showPDF, setShowPDF] = useState(false);
 
-    const dispatch = useDispatch(); // Initialize dispatch to use Redux
+    const dispatch = useDispatch();
 
     const handleTechnologiesChange = (e) => {
         const { value } = e.target;
@@ -49,8 +50,6 @@ const TrainerSignUp = () => {
                 setProfilePic(reader.result.split(',')[1]);
             };
             reader.readAsDataURL(file);
-            console.log(file)
-            console.log(reader)
         }
     };
 
@@ -75,7 +74,6 @@ const TrainerSignUp = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log(`${name}: ${value}`);
         if (name === 'fullName') setFullName(value);
         if (name === 'mobileNumber') setMobileNumber(value);
         if (name === 'email') setEmail(value);
@@ -90,12 +88,14 @@ const TrainerSignUp = () => {
 
         if (!fullName || !mobileNumber || !email || !address || !qualification || !experience || !profilePic || !workingStatus || technologies.length === 0 || !resume) {
             setError('Please fill in all fields, upload a profile picture, and a resume.');
+            showWarningToast('Please fill in all fields, upload a profile picture, and a resume.');
             return;
         }
 
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(mobileNumber)) {
             setError('Please enter a valid 10-digit mobile number.');
+            showWarningToast('Please enter a valid 10-digit mobile number.');
             return;
         }
 
@@ -115,6 +115,7 @@ const TrainerSignUp = () => {
         };
 
         try {
+            setLoading(true);
             const response = await fetch('http://localhost:8080/trainers/create', {
                 method: 'POST',
                 headers: {
@@ -125,222 +126,197 @@ const TrainerSignUp = () => {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log(result.token); // Token returned from API
-                console.log(result.userData); // User data from API
-                alert('Trainer data submitted successfully!');
-
-                // Dispatch the setUserData action to save the user data in Redux store
-                dispatch(setUserData(userData = result.userData));
-            } else {
-                const errorText = await response.text();
-                setError(`Error: ${errorText || 'Something went wrong. Please try again later.'}`);
+                showSuccessToast('Trainer data submitted successfully!');
+                dispatch(setUserData(result.userData));
             }
         } catch (error) {
             setError('Network error. Please check your connection or try again later.');
+            showErrorToast('Network error. Please check your connection or try again later.');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="trainer-overlay">
-            <div className="trainer-signup-form-container">
-                <form className="trainer-signup-form" onSubmit={handleSubmit}>
-                    <h2>Trainer Sign Up</h2>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f4f6f8">
+            <Box bgcolor="white" p={3} borderRadius={2} boxShadow={3} width="100%" maxWidth="600px">
+                <form onSubmit={handleSubmit}>
+                    {username && <Typography variant="h6" align="center">Welcome, {username}</Typography>}
+                    {!username && <Typography variant="h4" align="center" gutterBottom>Trainer Sign Up</Typography>}
 
-                    {error && <p className="error-message">{error}</p>}
-
-                    <div className="profile-pic-container">
+                    <Box textAlign="center" mb={2}>
                         {profilePic ? (
-                            <div className="profile-pic-preview">
-                                <img
-                                    className="profile-pic"
-                                    src={`data:image/jpeg;base64,${profilePic}`}
-                                    alt="Profile Preview"
-                                />
-                            </div>
+                            <Box component="img" src={`data:image/jpeg;base64,${profilePic}`} alt="Profile Preview" width={120} height={120} borderRadius="50%" />
                         ) : (
-                            <div className="profile-pic-placeholder">No Image Uploaded</div>
+                            <Typography variant="body1" color="textSecondary">No Profile Picture</Typography>
                         )}
-                    </div>
-                    <label>
-                        Profile Picture:
+                    </Box>
+
+                    <Box mb={2}>
                         <input
                             type="file"
                             accept="image/*"
                             onChange={handleProfilePicChange}
-                            required
+                            style={{ display: 'none' }}
+                            id="profilePicInput"
                         />
-                    </label>
+                        <label htmlFor="profilePicInput">
+                            <Button variant="outlined" fullWidth component="span">
+                                Upload Profile Picture
+                            </Button>
+                        </label>
+                    </Box>
 
-                    <label>
-                        Name:
-                        <input
-                            type="text"
-                            name="fullName"
-                            value={fullName}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </label>
+                    <TextField
+                        label="Full Name"
+                        name="fullName"
+                        value={fullName}
+                        onChange={handleInputChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
-                    <label>
-                        Mobile:
-                        <input
-                            type="tel"
-                            name="mobileNumber"
-                            value={mobileNumber}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </label>
+                    <TextField
+                        label="Mobile"
+                        name="mobileNumber"
+                        value={mobileNumber}
+                        onChange={handleInputChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
-                    <label>
-                        Email:
-                        <input
-                            type="email"
-                            name="email"
-                            value={email}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </label>
+                    <TextField
+                        label="Email"
+                        name="email"
+                        value={email}
+                        onChange={handleInputChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
-                    <label>
-                        Address:
-                        <input
-                            type="text"
-                            name="address"
-                            value={address}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </label>
+                    <TextField
+                        label="Address"
+                        name="address"
+                        value={address}
+                        onChange={handleInputChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
-                    <label>
-                        Qualification:
-                        <input
-                            type="text"
-                            name="qualification"
-                            value={qualification}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </label>
+                    <TextField
+                        label="Qualification"
+                        name="qualification"
+                        value={qualification}
+                        onChange={handleInputChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
-                    <label>
-                        Experience (years):
-                        <input
-                            type="number"
-                            name="experience"
-                            value={experience}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </label>
+                    <TextField
+                        label="Experience (years)"
+                        name="experience"
+                        value={experience}
+                        onChange={handleInputChange}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
-                    <label>
-                        Current Work Status:
-                        <select
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Current Work Status</InputLabel>
+                        <Select
                             name="workingStatus"
                             value={workingStatus}
                             onChange={handleInputChange}
                             required
                         >
-                            <option value="">Select</option>
-                            <option value="full-time">Full-time</option>
-                            <option value="part-time">Part-time</option>
-                            <option value="freelance">Freelance</option>
-                            <option value="un-employeed">Unemployed</option>
-                        </select>
-                    </label>
+                            <MenuItem value="full-time">Full-time</MenuItem>
+                            <MenuItem value="part-time">Part-time</MenuItem>
+                            <MenuItem value="freelance">Freelance</MenuItem>
+                            <MenuItem value="un-employed">Unemployed</MenuItem>
+                        </Select>
+                    </FormControl>
 
-                    <div className="selected-technologies">
-                        <h5>Selected Technologies:</h5>
-                        <div className="technologies-display">
-                            {technologies.map((tech, index) => (
-                                <span key={index} className="technology-tag">
+                    <Box mb={2}>
+                        <Typography variant="body1" gutterBottom>Technologies:</Typography>
+                        <Box display="flex" flexWrap="wrap">
+                            {['Java', 'Spring Boot', 'JavaScript', 'React', 'Angular', 'React Native'].map((tech) => (
+                                <Box key={tech} mr={2} mb={1}>
+                                    <Checkbox
+                                        value={tech}
+                                        checked={technologies.includes(tech)}
+                                        onChange={handleTechnologiesChange}
+                                    />
                                     {tech}
-                                </span>
+                                </Box>
                             ))}
-                        </div>
-                    </div>
+                        </Box>
+                    </Box>
 
-                    <label>
-                        Technologies:
-                        <div className="technologies-checkbox">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value="Java"
-                                    checked={technologies.includes('Java')}
-                                    onChange={handleTechnologiesChange}
-                                />
-                                Java
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value="Spring Boot"
-                                    checked={technologies.includes('Spring Boot')}
-                                    onChange={handleTechnologiesChange}
-                                />
-                                Spring Boot
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value="JavaScript"
-                                    checked={technologies.includes('JavaScript')}
-                                    onChange={handleTechnologiesChange}
-                                />
-                                JavaScript
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value="React"
-                                    checked={technologies.includes('React')}
-                                    onChange={handleTechnologiesChange}
-                                />
-                                React
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value="Angular"
-                                    checked={technologies.includes('Angular')}
-                                    onChange={handleTechnologiesChange}
-                                />
-                                Angular
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value="React Native"
-                                    checked={technologies.includes('React Native')}
-                                    onChange={handleTechnologiesChange}
-                                />
-                                React Native
-                            </label>
-                        </div>
-                    </label>
-
-                    <label>
-                        Resume (PDF):
+                    <Box mb={2}>
                         <input
                             type="file"
                             accept="application/pdf"
                             onChange={handleResumeChange}
-                            required
+                            style={{ display: 'none' }}
+                            id="resumeInput"
                         />
-                    </label>
+                        <label htmlFor="resumeInput">
+                            <Button variant="outlined" fullWidth component="span">
+                                Upload Resume (PDF)
+                            </Button>
+                        </label>
+                    </Box>
+                    {resume && (
+                        <Box mb={2} textAlign="center">
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => setShowPDF(true)}  // Show PDF in iframe when clicked
+                            >
+                                View Resume
+                            </Button>
+                        </Box>
+                    )}
 
-                    <button type="submit">Submit</button>
+                    <Dialog open={showPDF} onClose={() => setShowPDF(false)} maxWidth="md" fullWidth>
+                        <DialogTitle>Resume Preview</DialogTitle>
+                        <DialogContent>
+                            <iframe
+                                src={`data:application/pdf;base64,${resume}`}
+                                width="100%"
+                                height="500px"
+                                title="Resume"
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setShowPDF(false)} color="primary">
+                                Close
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Box mb={2}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            disabled={loading}
+                        >
+                            {loading ? 'Submitting...' : 'Submit'}
+                        </Button>
+                    </Box>
                 </form>
-                <Link to="/login/mobile">
+                <Link to="/login/mobile" style={{ display: 'block', textAlign: 'center', marginTop: '16px' }}>
                     Have an account? Please login
                 </Link>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 

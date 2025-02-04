@@ -1,23 +1,25 @@
-
 import React from 'react';
 import Slider from 'react-slick';
-import './Carausal.css';
+import './Carousel.css';
 import logo from '../../assets/skillmate.jpg';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import carouselImg1 from '../../assets/carousel1.jpg';
+import carouselImg2 from '../../assets/carousel2.jpg';
+import carouselImg3 from '../../assets/carousel3.jpg';
 
-const Carausal = () => {
+const Carousel = () => {
   const spiritualImages = [
     {
-      image: logo,
+      image: carouselImg1,
       caption: "Experience Peace"
     },
     {
-      image: logo,
+      image: carouselImg2,
       caption: "Embrace Growth"
     },
     {
-      image: logo,
+      image: carouselImg3,
       caption: "Find Balance"
     },
   ];
@@ -56,13 +58,15 @@ const Carausal = () => {
   };
 
   return (
-    <div className="hero-section">
-      <h2>Our Spiritual Journey</h2>
+    <div className="carousel-container">
+      <h2 className="carousel-heading">Our Spiritual Journey</h2>
       <Slider {...settings}>
         {spiritualImages.map((img, index) => (
-          <div className="carousel-item" key={index}>
-            <img className="d-block" src={img.image} alt={`Slide ${index + 1}`} />
-            <h3>{img.caption}</h3>
+          <div className="carousel-slide" key={index}>
+            <div className="carousel-image-container">
+              <img className="carousel-image" src={img.image} alt={`Slide ${index + 1}`} />
+              <h3 className="carousel-caption">{img.caption}</h3>
+            </div>
           </div>
         ))}
       </Slider>
@@ -70,4 +74,4 @@ const Carausal = () => {
   );
 };
 
-export default Carausal;
+export default Carousel;

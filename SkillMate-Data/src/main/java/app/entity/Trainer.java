@@ -74,6 +74,7 @@ public class Trainer {
 	private List<String> technologies;
 
 	@Lob
+	@JsonView(JsonResoponse_View.DetailedView.class)
 	private byte[] resume;
 
 	@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
@@ -101,7 +102,7 @@ public class Trainer {
 	@JsonView(JsonResoponse_View.BasicView.class)
 	private List<Meeting> meetings = new ArrayList<>();
 
-	@OneToMany(mappedBy = "trainer", cascade = { CascadeType.ALL}, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "toTrainer", cascade = { CascadeType.ALL}, fetch = FetchType.LAZY)
 //	@JsonView(JsonResoponse_View.BasicView.class)
 	private List<RatingReviews> ratingReviews = new ArrayList<>();
 

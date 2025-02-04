@@ -1,11 +1,10 @@
-/* Overall container for the page */
+/* Overall container for the page
 .admin-dashboard-manage-students-container {
     padding: 20px;
     font-family: Arial, sans-serif;
     background-color: #EEEEEE;
 }
 
-/* Welcome section for the admin */
 .admin-dashboard-manage-students-container .admin-welcome {
     display: flex;
     flex-direction: column;
@@ -38,7 +37,6 @@
     background-color: #cdcdcd;
 }
 
-/* Add new student button */
 .add__new-student-btn {
     background-color: #356bdf;
     border: none;
@@ -56,14 +54,12 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
 }
 
-/* Students list and cards */
 .ad__students-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* Individual student card styling */
 .ad__students-list-card {
     display: flex;
     flex-direction: row;
@@ -76,7 +72,6 @@
     justify-content: space-between;
 }
 
-/* Student profile image */
 .student-profile {
     width: 180px;
     height: auto;
@@ -85,7 +80,6 @@
     margin-right: 20px;
 }
 
-/* Student details */
 .students-details-data {
     flex: 1;
     padding-bottom: 2%;
@@ -102,7 +96,6 @@
     margin: 5px 0;
 }
 
-/* Edit button styling */
 .ad_edit_st-btn {
     background: none;
     border: none;
@@ -120,7 +113,6 @@
     transform: scale(1.2);
 }
 
-/* Responsive styling */
 @media (max-width: 1024px) {
     .ad__students-list-card {
         flex-direction: column;
@@ -202,4 +194,4 @@
         font-size: 16px;
         padding: 6px 15px;
     }
-}
+} */

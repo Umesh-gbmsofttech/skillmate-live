@@ -1,9 +1,13 @@
+import { FaTimes } from 'react-icons/fa';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
-import './EnquiryForm.css';
+import { Box, Button, TextField, Typography, IconButton, Dialog, DialogContent } from '@mui/material';
 import picture from '../../assets/professional.jpg';
+import { blue } from '@mui/material/colors';
 
-function EnquiryForm() {
+function EnquiryForm({ closeForm, contact }) {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -22,91 +26,146 @@ function EnquiryForm() {
 
   const handleEnquirySubmit = async (e) => {
     e.preventDefault();
-
     try {
-      
       const response = await axios.post('http://localhost:8080/contact-us/create', formData);
       console.log('Enquiry submitted successfully:', response.data);
       alert('Enquiry submitted successfully!');
-      
-      // Optionally reset the form
-      setFormData({
-        fullName: '',
-        email: '',
-        contactNumber: '',
-        qualification: '',
-        query: '',
-      });
+      setFormData({ fullName: '', email: '', contactNumber: '', qualification: '', query: '' });
     } catch (error) {
       console.error('Error submitting enquiry:', error);
       alert('Failed to submit enquiry. Please try again.');
     }
   };
 
+  const formContent = (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'stretch', // Ensures equal height for image and form
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: 2,
+        backgroundColor: '#394852',
+        width: '100%',
+        padding: 2,
+        height: 'auto',
+        maxWidth: 'md',
+        margin: '0 auto',
+        borderRadius: 2,
+      }}
+    >
+      {/* Image Section */}
+      <Box
+        flex={1}
+        display={{ xs: 'block', md: 'block' }}
+        sx={{
+          width: { xs: '100%', md: '50%' },
+          height: { xs: 'auto', md: '100%' }, // Full height on large screens
+        }}
+      >
+        <img
+          src={picture}
+          alt="Professional"
+          style={{
+            width: '100%',
+            height: '100%', // Ensures image stretches to fill the container
+            borderRadius: '8px',
+            objectFit: 'cover',
+          }}
+        />
+      </Box>
+
+      {/* Form Section */}
+      <Box
+        flex={1}
+        component="form"
+        onSubmit={handleEnquirySubmit}
+        display="flex"
+        flexDirection="column"
+        gap={1} // Reduced gap between form fields
+        sx={{
+          width: { xs: '100%', md: '50%' },
+          height: { xs: 'auto', md: '100%' }, // Full height on large screens
+        }}
+      >
+        <Typography variant="h6" align="center" color="white" sx={{ marginBottom: 2 }}>
+          Fill your information and get free consultancy...
+        </Typography>
+        <Typography variant="body2" align="center" color="white" sx={{ marginBottom: 2 }}>
+          And sign up to explore more things
+        </Typography>
+        <TextField
+          label="Your Full Name"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleInputChange}
+          fullWidth
+          required
+          sx={{ marginBottom: 1 }} // Reduced margin bottom
+        />
+        <TextField
+          label="Email ID"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          fullWidth
+          required
+          sx={{ marginBottom: 1 }} // Reduced margin bottom
+        />
+        <TextField
+          label="Contact Number"
+          name="contactNumber"
+          value={formData.contactNumber}
+          onChange={handleInputChange}
+          fullWidth
+          required
+          sx={{ marginBottom: 1 }} // Reduced margin bottom
+        />
+        <TextField
+          label="Your Degree"
+          name="qualification"
+          value={formData.qualification}
+          onChange={handleInputChange}
+          fullWidth
+          required
+          sx={{ marginBottom: 1 }} // Reduced margin bottom
+        />
+        <TextField
+          label="Your Detailed Query"
+          name="query"
+          value={formData.query}
+          onChange={handleInputChange}
+          multiline
+          rows={4}
+          fullWidth
+          required
+          sx={{ marginBottom: 1 }} // Reduced margin bottom
+        />
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Submit
+        </Button>
+      </Box>
+    </Box>
+  );
+
   return (
-    <div className="contact-us__enquiry-form-container">
-      <div className="enquiry-container-heading">
-        <p>Fill your information and get free consultancy...</p>
-        <p>And sign up to explore more things</p>
-      </div>
-      <div className="enquiry-container-form-image">
-        <img className="enquiry-container-image" src={picture} alt="Professional" />
-        <form className="enquiry-container-form" onSubmit={handleEnquirySubmit}>
-          <label htmlFor="fullName">Your Full Name</label>
-          <input
-            type="text"
-            name="fullName"
-            placeholder="Your Full Name"
-            value={formData.fullName}
-            onChange={handleInputChange}
-            required
-          />
-
-          <label htmlFor="email">Email ID</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Your Email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-
-          <label htmlFor="contactNumber">Contact Number</label>
-          <input
-            type="text"
-            name="contactNumber"
-            placeholder="Your Phone Number"
-            value={formData.contactNumber}
-            onChange={handleInputChange}
-            required
-          />
-
-          <label htmlFor="qualification">Your Degree</label>
-          <input
-            type="text"
-            name="qualification"
-            placeholder="Your Degree"
-            value={formData.qualification}
-            onChange={handleInputChange}
-            required
-          />
-
-          <label htmlFor="query">Your Detailed Query</label>
-          <textarea
-            name="query"
-            placeholder="Your Detailed Query"
-            value={formData.query}
-            onChange={handleInputChange}
-            required
-          ></textarea>
-
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-    </div>
+    <>
+      {!contact ? (
+        <Dialog open={!isAuthenticated || contact} onClose={closeForm} maxWidth="md" fullWidth>
+          <DialogContent sx={{ backgroundColor: '#394852', padding: 0 }}>
+            {/* Close Button at Top Right */}
+            <IconButton onClick={closeForm} sx={{ position: 'absolute', top: 5, right: 5, color: 'white' }}>
+              <FaTimes color='blue' />
+            </IconButton>
+            {formContent}
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Box>{formContent}</Box>
+      )}
+    </>
   );
 }
 
 export default EnquiryForm;
-

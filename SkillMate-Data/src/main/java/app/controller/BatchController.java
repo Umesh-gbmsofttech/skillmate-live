@@ -22,10 +22,10 @@ import java.util.Optional;
 @RequestMapping("/batches")
 public class BatchController {
 
-	private static final Logger logger = LoggerFactory.getLogger(BatchController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BatchController.class);
     @Autowired
     private BatchService batchService;
-    
+
     @Autowired
     private TrainerRepository trainerRepository;
 
@@ -33,44 +33,46 @@ public class BatchController {
     @GetMapping("/fetch")
     @JsonView(JsonResoponse_View.DetailedView.class)
     public ResponseEntity<List<Batch>> getAllBatches(
-            @RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         List<Batch> batches = batchService.getAllBatches(page, size);
         return ResponseEntity.ok(batches);
     }
 
     // Get Batch by ID
-//    @GetMapping("/fetch/{id}")
-//    public ResponseEntity<Batch> getBatchById(@PathVariable("id") Long id) {
-//        return batchService.getBatchById(id)
-//                .map(batch -> ResponseEntity.ok(batch))
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+    // @GetMapping("/fetch/{id}")
+    // public ResponseEntity<Batch> getBatchById(@PathVariable("id") Long id) {
+    // return batchService.getBatchById(id)
+    // .map(batch -> ResponseEntity.ok(batch))
+    // .orElse(ResponseEntity.notFound().build());
+    // }
     @GetMapping("/fetch/{id}")
     @JsonView(JsonResoponse_View.DetailedView.class)
     public ResponseEntity<Batch> getBatchById(@PathVariable("id") Long id) {
-        return batchService.getBatchById(id);  // Return the ResponseEntity<Batch> directly
+        return batchService.getBatchById(id); // Return the ResponseEntity<Batch> directly
     }
-
 
     // Create Batch
     @PostMapping("/create")
     @JsonView(JsonResoponse_View.DetailedView.class)
     public ResponseEntity<Batch> createBatch(@Valid @RequestBody Batch batch) {
-//    	Optional<Trainer> opTrainer=trainerRepository.findById(null)
-    	logger.info("Batch request received: {}", batch.getTrainer());
-        return batchService.saveBatch(batch);  // Return the ResponseEntity<Batch> directly
+        // Optional<Trainer> opTrainer=trainerRepository.findById(null)
+        logger.info("Batch request received: {}", batch.getTrainer());
+        System.out.println("---------" + batch.getStudents().size() + "---------");
+        if (batch.getCourse() != null) {
+            System.out.println("---------" + batch.getCourse().size() + "---------");
+        } else {
+            System.out.println("---------course is empty/null---------");
+        }
+        return batchService.saveBatch(batch); // Return the ResponseEntity<Batch> directly
     }
-
-
 
     // Update Batch by ID
     @PutMapping("/update/{id}")
     @JsonView(JsonResoponse_View.DetailedView.class)
     public ResponseEntity<Batch> updateBatch(@Valid @PathVariable Long id, @RequestBody Batch batch) {
-    	return batchService.updateBatch(id, batch);
+        return batchService.updateBatch(id, batch);
     }
-
 
     // Delete Batch by ID
     @DeleteMapping("/delete/{id}")
@@ -85,12 +87,13 @@ public class BatchController {
         List<Batch> batches = batchService.getBatchesByTrainerId(trainerId);
         return ResponseEntity.ok(batches);
     }
+
     // Get Batches by Stuent ID
     @GetMapping("/by-student/{studentId}")
     @JsonView(JsonResoponse_View.DetailedView.class)
     public ResponseEntity<List<Batch>> getBatchesStudentId(@PathVariable("studentId") Long studentId) {
-    	List<Batch> batches = batchService.getBatchesStudentId(studentId);
-    	return ResponseEntity.ok(batches);
+        List<Batch> batches = batchService.getBatchesStudentId(studentId);
+        return ResponseEntity.ok(batches);
     }
 
 }

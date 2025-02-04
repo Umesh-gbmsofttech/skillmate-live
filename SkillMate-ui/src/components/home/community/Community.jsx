@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Community.css';  // Import the CSS for the overall Community component
 import TrainerSection from './TrainerSection'; // Import Trainer Section
 import StudentSection from './StudentSection'; // Import Student Section
 import TestimonialsOfPlatformUsers from '../TestimonialsOfPlatformUsers'; // Import Student Section
 import { useNavigate } from 'react-router-dom';
+import { clearCommunityData } from '../../redux/communityDataSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Community = () => {
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearCommunityData());  // Clear selected trainer/student
+  }, [token]);
 
   return (
     <div className="community-container">
@@ -29,7 +37,7 @@ const Community = () => {
       {/* Render both Trainer and Student Sections */}
       <TrainerSection />  {/* Trainer section component */}
       <StudentSection />  {/* Student section component */}
-      <TestimonialsOfPlatformUsers heading={'What Our Community Says'} />
+      {/* <TestimonialsOfPlatformUsers heading={'What Our Community Says'} /> */}
     </div>
   );
 };

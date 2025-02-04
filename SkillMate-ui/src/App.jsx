@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/home/Navbar';
 import Contact from './components/contact/Contact';
@@ -7,7 +8,6 @@ import CardSection from './components/home/CardSection';
 import StudentSignUp from './components/auth/StudentSignUp';
 import TrainerSignUp from './components/auth/TrainerSignUp';
 import Footer from './components/home/Footer';
-import Carausal from './components/home/Carausal';
 import Community from './components/home/community/Community';
 import Subscription from './components/subscription/Subscription';
 import Live from './components/subscription/Live';
@@ -27,8 +27,6 @@ import TrainerProfileUpdate from './components/profile/TrainerProfileUpdate';
 import StudentProfileUpdate from './components/profile/StudentProfileUpdate';
 import ManageTrainersList from './components/trainer/ManageTrainersList';
 import ManageStudentsList from './components/student/ManageStudentsList';
-import AdEditStudent from './components/student/Ad_EditStudent';
-import AdEditTrainer from './components/trainer/Ad_EditTrainer';
 import AdEditCourse from './components/courses/Ad_EditCourse';
 import ManageCoursesList from './components/courses/ManageCoursesList';
 import ReviewsSection from './components/rating-review/ReviewsSection';
@@ -42,19 +40,45 @@ import AddCourseForm from './components/courses/AddCourseForm';
 import BuyCourse from './components/subscription/BuyCourse';
 import MyCourses from './components/courses/MyCourses';
 import { CourseProvider } from './components/context/CourseContext';
-import AddTrainerForm from './components/trainer/AddTrainerForm';
-import RatingForm from './components/rating-review/Rating_From';
+import Carousel from './components/home/Carousel';
 // import LoginProfile from './components/auth/Profile';
+import { Bounce, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ManageBatches from './components/admin/ManageBatches';
+import CreateBatch from './components/admin/CreateBatch';
+import UpdateBatch from './components/admin/UpdateBatch';
+import EnquiryForm from './components/contact/EnquiryForm';
+import { useSelector } from 'react-redux';
+import ConfirmationDialog from './components/utility/ConfirmationDialog';
 
 
 function App() {
 
   const username = 'admin';
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [showForm, setShowForm] = useState(true);
 
-  // const trainerHeading = {
-  //   name: 'John doe',
-  //   trainerCardHeading: 'Body text for whatever you d like to say.'
-  // }
+  // Function to open the form
+  const openForm = () => {
+    setShowForm(true); // Open form
+  };
+
+  // Function to close the form
+  const closeForm = () => {
+    // document.querySelector('.contact-us__enquiry-form-container-overlay').style.display = 'none';
+    setShowForm(false); // Close form
+  };
+
+  useEffect(() => {
+    if (!showForm) {
+      const timer = setTimeout(() => {
+        openForm(); // Open form after 5 seconds
+      }, 100000);
+      return () => clearTimeout(timer); // Cleanup timer
+    }
+  }, [showForm]);
+
+
   return (
     // debouncing throatling
     //rahulrathod2002
@@ -69,13 +93,14 @@ function App() {
         <Route path="/" element={
           <>
             {/* home */}
-            <Carausal />
+            <Carousel />
+            <ConfirmationDialog />
             {/* <CardSection /> */}
             <OurTopCourses />
             <ExploreAllCourses />
-            <TopTrainers sectionHeading={'TOP TRAINERS'} />
-            <TopTrainers sectionHeading={'Successfully placed students'} />
-            <TestimonialsOfPlatformUsers heading={'Testimonials of Platform Users'} />
+            <TopTrainers sectionHeading={'TOP TRAINERS'} trainer={'trainer'} />
+            <TopTrainers sectionHeading={'Successfully placed students'} student={'student'} />
+            {/* <TestimonialsOfPlatformUsers heading={'Testimonials of Platform Users'} /> */}
             <ReviewsSection />
             <TechnologyStack />
             <OurStudentsPlacedIn />
@@ -98,15 +123,12 @@ function App() {
         <Route path="/about" element={<Footer />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/student-profile" element={<StudentProfile username />} />
-        <Route path="/student-profile-update" element={<StudentProfileUpdate username />} />
+        <Route path="/student-profile-update/:studentId" element={<StudentProfileUpdate username />} />
         <Route path="/trainer-profile" element={<TrainerProfile username />} />
-        <Route path="/trainer-profile-update" element={<TrainerProfileUpdate username />} />
+        <Route path="/trainer-profile-update/:trainerId" element={<TrainerProfileUpdate username />} />
         <Route path="/admin-profile" element={<AdminProfile username />} />
         <Route path="/admin-profile/manage-trainers" element={<ManageTrainersList />} />
-        <Route path="/admin-profile/edit-trainers/:trainerId" element={<AdEditTrainer />} />
-        <Route path='/admin-add-trainer' element={<AddTrainerForm />} />
         <Route path="/admin-profile/manage-students" element={<ManageStudentsList />} />
-        <Route path="/admin-profile/edit-stude/:studentId" element={<AdEditStudent />} />
         <Route path="/admin-profile/edit-courses" element={<AdEditCourse />} />
         <Route path="/admin-profile/manage-courses" element={<ManageCoursesList />} />
         <Route path="/delete-profile" element={<DeleteProfile />} />
@@ -117,11 +139,33 @@ function App() {
 
         <Route path="/buy-course" element={<BuyCourse />} />
         <Route path="/my-courses" element={<MyCourses />} />
-        <Route path="/rating_review_form" element={<RatingForm />} />
+        <Route path="/admin-profile/manage-batches" element={<ManageBatches />} />
+        <Route path="/admin-profile/manage-batches/create/new" element={<CreateBatch />} />
+        <Route path="/admin-profile/manage-batches/edit/:batchId" element={<UpdateBatch />} />
+        {/* <Route path="/rating_review_form" element={<RatingForm />} /> */}
 
         {/* <Route path="/login-profile" element={<LoginProfile />} /> */}
 
       </Routes>
+
+      {showForm && !isAuthenticated && <EnquiryForm closeForm={closeForm} />}
+
+
+      <ToastContainer
+        // position="bottom-center"
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+
       <Footer />
     </Router>
 

@@ -1,9 +1,12 @@
 package app.controller;
 
+import app.dto.MeetingBatchDTO;
+import app.dto.MeetingDto;
 import app.entity.Attendance;
 import app.entity.Batch;
 import app.entity.Course;
 import app.entity.JsonResoponse_View;
+import app.entity.Meeting;
 import app.entity.Student;
 import app.entity.StudentProfileUpdated;
 import app.exception.EntityNotFoundException;
@@ -11,6 +14,7 @@ import app.jwt.JwtResponse;
 import app.repository.AttendanceRepository;
 import app.repository.CourseRepository;
 import app.repository.StudentRepository;
+import app.service.MeetingService;
 import app.service.StudentService;
 import jakarta.validation.Valid;
 
@@ -44,6 +48,8 @@ public class StudentController {
 	
 	@Autowired
 	CourseRepository courseRepository;
+	@Autowired
+	MeetingService meetingService;
 	
 	@Autowired
 	private StudentService studentService;
@@ -70,19 +76,124 @@ public class StudentController {
         return ResponseEntity.ok("Course added to student");
     }
 
-    // Get all courses for a student
-    @GetMapping("/fetch/my-courses/{id}")
-    @JsonView(JsonResoponse_View.DetailedView.class)
-    public ResponseEntity<List<Course>> getAllMyCourses(@PathVariable Long id) {
-        try {
-            Student student = studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Student not found"));
-            List<Course> courses = student.getCourses();
-            return courses.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                    : new ResponseEntity<>(courses, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
+//	@GetMapping("/fetch/my-courses/{id}")
+//	@JsonView(JsonResoponse_View.DetailedView.class)
+//	public ResponseEntity<List<Course>> getAllMyCourses(@PathVariable Long id) {
+//	    try {
+//	        Student student = studentRepository.findById(id)
+//	                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+//
+//	        List<Course> courses = student.getCourses();
+//	        System.out.println(courses.size()+"-----------------");//it should be 2 because student 1 is having 2courses
+//
+//	        if (courses.isEmpty()) {
+//	            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//	        }
+//
+//	        // Fetch the latest valid meeting for each course
+//	        courses.forEach(course -> {
+//	            Meeting latestMeeting = meetingService.getLatestMeetingForCourse(course.getId());
+//	            if(latestMeeting != null ) {
+//	            	
+//	            }
+//	            
+//	            System.out.println("-------------" + course.getId() + "------------");
+//	            if (latestMeeting != null) {
+//	                System.out.println("Meeting Found: " + latestMeeting.getId() + ", From Time: " + latestMeeting.getFromTime());
+//	            } else {
+//	                System.out.println("No valid meeting found for course " + course.getId());
+//	            }
+//	        });
+//
+//	        return new ResponseEntity<>(courses, HttpStatus.OK);
+//	    } catch (Exception e) {
+//	        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//	    }
+//	}
+//	@GetMapping("/fetch/my-courses/{id}")
+//	@JsonView(JsonResoponse_View.DetailedView.class)
+//	public ResponseEntity<List<Course>> getAllMyCourses(@PathVariable Long id) {
+//	    try {
+//	        // Fetch student by ID
+//	        Student student = studentRepository.findById(id)
+//	                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+//
+//	        // Get the list of courses for the student
+//	        List<Course> courses = student.getCourses();
+//
+//	        // If no courses found, return HTTP NO_CONTENT
+//	        if (courses == null || courses.isEmpty()) {
+//	            return ResponseEntity.noContent().build();
+//	        }
+//
+//	        // Iterate over courses and fetch the latest meeting for each course
+//	        courses.forEach(course -> {
+//	            Meeting latestMeeting = meetingService.getLatestMeetingForCourse(course.getId());
+//	            if (latestMeeting != null) {
+//	                course.getMeetings().clear();
+//	                course.getMeetings().add(latestMeeting);
+//	            } else {
+//	                course.getMeetings().clear();
+//	            }
+//	        });
+//
+//	        // Return the list of courses with their latest meetings
+//	        return ResponseEntity.ok(courses);
+//	    } catch (EntityNotFoundException e) {
+//	        // Return 404 if student is not found
+//	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//	    } catch (Exception e) {
+//	        // Log the error for better debugging
+//	        logger.error("Error fetching courses for student with ID: {}", id, e);
+//	        // Return 500 if any internal error occurs
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//	    }
+//	}
+
+
+	@GetMapping("/fetch/my-courses/{id}")
+	@JsonView(JsonResoponse_View.DetailedView.class)
+	public ResponseEntity<List<Course>> getAllMyCourses(@PathVariable Long id) {
+	    try {
+	        // Fetch student by ID
+	        Student student = studentRepository.findById(id)
+	                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+
+	        // Get the list of courses for the student
+	        List<Course> courses = student.getCourses();
+
+	        // If no courses found, return HTTP NO_CONTENT
+	        if (courses == null || courses.isEmpty()) {
+	            return ResponseEntity.noContent().build();
+	        }
+
+	        // Iterate over courses and fetch the latest meeting for each course
+	        courses.forEach(course -> {
+	            MeetingBatchDTO latestMeetingDTO = meetingService.getLatestMeetingForCourse(course.getId());
+	            if (latestMeetingDTO != null) {
+	                course.getMeetings().clear();
+	                course.getMeetings().add(latestMeetingDTO.getMeeting());
+	                // Optionally use batchId as needed
+	                Long batchId = latestMeetingDTO.getBatchId();
+	            } else {
+	                course.getMeetings().clear();
+	            }
+	        });
+
+	        // Return the list of courses with their latest meetings
+	        return ResponseEntity.ok(courses);
+	    } catch (EntityNotFoundException e) {
+	        // Return 404 if student is not found
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	    } catch (Exception e) {
+	        // Log the error for better debugging
+	        logger.error("Error fetching courses for student with ID: {}", id, e);
+	        // Return 500 if any internal error occurs
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	    }
+	}
+
 	
 	// Get all Students
 	@GetMapping("/fetch")
@@ -122,10 +233,10 @@ public class StudentController {
 
 	@PutMapping("/update/{id}")
 	@JsonView(JsonResoponse_View.DetailedView.class)
-	public ResponseEntity<StudentProfileUpdated> updateStudentProfile(@PathVariable("id") Long id,
+	public ResponseEntity<Student> updateStudentProfile(@PathVariable("id") Long id,
 			@Valid @RequestBody Student updatedStudent) {
 		try {
-			StudentProfileUpdated updatedProfile = studentService.updateStudentWithHistory(id, updatedStudent);
+			Student updatedProfile = studentService.updateStudentWithHistory(id, updatedStudent);
 			return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
 		} catch (RuntimeException e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import './StudentSection.css';  // Import the specific CSS file for the StudentSection
-import studentImage from '../../../assets/skillmate.jpg';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setStudent } from '../../redux/communityDataSlice';
+import Loading from '../../../Loading';
+import { showSuccessToast, showErrorToast } from '../../utility/ToastService';
+import { Card, CardContent, Typography, Grid, Avatar, Box, Container, Paper } from '@mui/material';
 import altImage from '../../../assets/skillmate.jpg';
 
 const StudentSection = () => {
-
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(true);
     const [students, setStudents] = useState([]);
     const token = useSelector((state) => state.auth.token);
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchTrainers = async () => {
+        const fetchStudents = async () => {
             try {
                 const response = await fetch('http://localhost:8080/students/fetch', {
                     method: 'GET',
@@ -24,227 +28,117 @@ const StudentSection = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    setStudents(data); // Assuming the API returns an array of reviews
-                    console.log(data)
-                } else {
-                    console.error('Failed to fetch reviews');
+                    setStudents(data); // Assuming the API returns an array of students
+                    setLoading(false);
+                    showSuccessToast('Data fetched successfully');
                 }
             } catch (error) {
-                console.error('Error fetching reviews:', error);
+                setError('Error fetching data:', error);
+                showErrorToast(`Error fetching data:${error}`);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchTrainers();
-    }, []);
-
-    // console.log(students[0].courses[0].courseName)
+        fetchStudents();
+    }, [dispatch, token]);
 
     const handleCardClick = (student) => {
-        navigate('/rating-reviews/page', { state: { student } })
-    }
-
-
-    const student = [
-        {
-            name: "Alice Johnson",
-            position: "Full Stack Developer",
-            experience: "2 years",
-            expertise: "React, Node.js",
-            imageUrl: studentImage,
-            alt: "Student Image 1",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        {
-            name: "Bob Walker",
-            position: "Frontend Developer",
-            experience: "1 year",
-            expertise: "React, HTML, CSS",
-            imageUrl: studentImage,
-            alt: "Student Image 2",
-        },
-        // Add more students as needed
-    ];
+        dispatch(setStudent(student));  // Store selected student
+        navigate('/rating-reviews/page', { state: { student } });
+    };
 
     return (
-        <section className="community-container-student-section">
-            <h2 className="community-container-heading">Meet Our Placed Students</h2>
-            {students?.length > 0 ? (
-                <div className="community-container-students-grid">
-                    {students.map((student, index) => (
-                        <div
-                            key={index}
-                            onClick={() => handleCardClick(student)}
-                            className="community-container-student-card"
-                        >
-                            <div className="community-container-student-image-wrapper">
-                                <img
-                                    src={student.profilePic ? `data:image/png;base64,${student.profilePic}` : altImage}
-                                    alt={student.fullName || 'Student Image'}
-                                    className="community-container-student-image"
-                                />
-                            </div>
-                            <div className="community-container-student-info">
-                                <h3>{student?.fullName}</h3>
-                                <p>{student?.position}</p>
-                                <p>{student?.experience}</p>
-                                <ul>
-                                    expertise:
-                                    {student?.courses && student.courses.length > 0 ? (
-                                        student.courses.map((course, idx) => (
-
-                                            <li key={idx}>{course.courseName}</li>
-                                        ))
-                                    ) : (
-                                        <li>No expertise listed</li>
-                                    )}
-                                </ul>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+        <Container maxWidth="lg" sx={{ mt: 5 }}>
+            {loading ? (
+                <Loading />
+            ) : error ? (
+                <Typography variant="h6" color="error">
+                    {error}
+                </Typography>
             ) : (
-                <div className="community-container-students-grid">
-                    {/* Display mock data if no students are fetched */}
-                    {Array(5).fill({
-                        name: 'Alice Johnson',
-                        position: 'Full Stack Developer',
-                        experience: '2 years',
-                        expertise: 'React, Node.js',
-                        imageUrl: studentImage,
-                        alt: 'Student Image 1',
-                    }).map((student, index) => (
-                        <div
-                            key={index}
-                            onClick={handleCardClick}
-                            className="community-container-student-card"
-                        >
-                            <div className="community-container-student-image-wrapper">
-                                <img
-                                    src={student.imageUrl}
-                                    alt={student.alt}
-                                    className="community-container-student-image"
-                                />
-                            </div>
-                            <div className="community-container-student-info">
-                                <h3>{student.name}</h3>
-                                <p>{student.position}</p>
-                                <p>{student.experience}</p>
-                                <p>Expertise: {student.expertise}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <>
+                    <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+                        Meet Our Placed Students
+                    </Typography>
+                    <Grid container spacing={4} justifyContent="center" marginTop={3}>
+                        {students.map((student, index) => (
+                            <Grid item xs={12} sm={6} md={4} key={index}>
+                                <Paper
+                                    elevation={3}
+                                    sx={{
+                                        cursor: 'pointer',
+                                        p: 2,
+                                        borderRadius: 2,
+                                        textAlign: 'center',
+                                        transition: '0.3s',
+                                        '&:hover': {
+                                            boxShadow: '0px 8px 16px rgba(68, 45, 204, 0.3)',
+                                        },
+                                        position: 'relative',
+                                    }}
+                                    onClick={() => handleCardClick(student)}
+                                >
+                                    {/* Circular Avatar */}
+                                    <Avatar
+                                        src={student.profilePic ? `data:image/png;base64,${student.profilePic}` : altImage}
+                                        alt={student.fullName || 'Student'}
+                                        sx={{
+                                            width: 120,
+                                            height: 120,
+                                            mx: 'auto',
+                                            mt: -7,
+                                            border: '4px solid white',
+                                            boxShadow: '0 5px 10px rgba(0, 0, 0, 0.3)',
+                                        }}
+                                    />
+
+                                    <CardContent sx={{ mt: 2 }}>
+                                        <Typography variant="h6" fontWeight="bold">
+                                            {student.fullName}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {student.position}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {student.experience}
+                                        </Typography>
+                                        <Typography variant="body2" color="primary" sx={{ mt: 1, fontWeight: 'bold' }}>
+                                            Expertise:
+                                            {student?.courses?.length > 0 ? (
+                                                student.courses.map((course, idx) => (
+                                                    <li key={idx}>{course.courseName}</li>
+                                                ))
+                                            ) : (
+                                                <li>No expertise listed</li>
+                                            )}
+                                        </Typography>
+                                    </CardContent>
+                                </Paper>
+                            </Grid>
+                        ))}
+                    </Grid>
+
+                    <Box
+                        sx={{
+                            mt: 5,
+                            p: 3,
+                            backgroundColor: '#f5f5f5',
+                            borderRadius: 2,
+                            textAlign: 'center',
+                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                        }}
+                    >
+                        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
+                            Our Students
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                            Our students are passionate learners who have honed their skills through hands-on experience and expert guidance. They are ready to make a mark in the IT industry with their growing expertise.
+                        </Typography>
+                    </Box>
+                </>
             )}
-            <section className="community-container-students-info">
-                <h1 className="community-container-students-info-heading">Our Students</h1>
-                <p className="community-container-students-info-description">
-                    Our students are passionate learners who have honed their skills through hands-on experience and expert guidance. They are ready to make a mark in the IT industry with their growing expertise.
-                </p>
-            </section>
-        </section>
+        </Container>
     );
 };
 

@@ -1,8 +1,10 @@
 package app.repository;
 
+import app.entity.Meeting;
 import app.entity.Trainer;
 import app.otplogin.EmailOtp;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +19,7 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 	 
 	 boolean existsByEmail(String email);
 	 Optional<Trainer> findById(Long id);
+	 
+//	 List<Meeting> findByTrainer_Id(Long trainerId);
 	    
 }

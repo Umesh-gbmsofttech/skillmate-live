@@ -1,177 +1,277 @@
-import React, { useState } from 'react';
-import './StudentProfile.css';
-import defaultProfilePic from '../../assets/skillmate.jpg';
-import editIcon from '../../assets/editIcon.png';
-import hideEye from '../../assets/hide-eye.png';
-import viewEye from '../../assets/view-eye.png';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Box, TextField, Button, CircularProgress, Typography, MenuItem } from '@mui/material';
 
 function StudentProfileUpdate() {
-    const [showProfile, setShowProfile] = useState(true);
-    const location = useLocation();
-    const { username } = location.state || { username: 'Admin' };
-    const userData = location.state?.userData || {};
-
     const [formData, setFormData] = useState({
-        name: userData.name || '',
-        mobile: userData.mobile || '',
-        email: userData.email || '',
-        address: userData.address || '',
-        qualification: userData.qualification || '',
-        workStatus: userData.workStatus || '',
-        technologies: userData.technologies ? userData.technologies.join(', ') : '',
-        resume: userData.resume || '',
-        profilePic: userData?.profilePic
-            ? `data:image/jpeg;base64,${userData.profilePic}`
-            : defaultProfilePic,
+        fullName: '',
+        mobileNumber: '',
+        email: '',
+        address: '',
+        qualification: '',
+        workingStatus: '',
+        attendanceByDays: '',
+        attendanceAverage: '',
+        remarkByTrainer: '',
+        profilePic: '', // To store base64 image data
+        resume: '', // To store base64 PDF data or URL
     });
+    const [loading, setLoading] = useState(true);
+    const { studentId } = useParams();
+    const navigate = useNavigate();
+    const [previewImage, setPreviewImage] = useState(''); // To show the selected image preview
+    const [pdfFile, setPdfFile] = useState(null);
+    const [showResume, setShowResume] = useState(false);
 
-    const updateUrl = `http://localhost:8080/students/update/${userData.id}`;
+    useEffect(() => {
+        const fetchStudentData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/students/fetch/${studentId}`);
+                const student = response.data;
+                console.log(pdfFile);
+                setFormData({
+                    fullName: student.fullName || '',
+                    mobileNumber: student.mobileNumber || '',
+                    email: student.email || '',
+                    address: student.address || '',
+                    qualification: student.qualification || '',
+                    workingStatus: student.workingStatus || '',
+                    resume: student.resume || '',
+                    profilePic: student.profilePic || '',
+                });
+
+                // Show profile picture preview (existing one)
+                setPreviewImage(student.profilePic ? `data:image/png;base64,${student.profilePic}` : 'default-avatar.png');
+
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+                setLoading(false);
+            }
+        };
+
+        if (studentId) {
+            fetchStudentData();
+        } else {
+            navigate('/admin-dashboard');
+        }
+    }, [studentId, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
         }));
     };
 
     const handleFileChange = (e) => {
-        const { name, files } = e.target;
-        if (files.length > 0) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setFormData((prev) => ({
-                    ...prev,
-                    [name]: reader.result,
+        const file = e.target.files[0];
+        if (file) {
+            convertToBase64(file).then((base64Image) => {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    profilePic: base64Image // Update profilePic in formData
                 }));
-            };
-            reader.readAsDataURL(files[0]);
-        }
-    };
-
-    const handleSubmitClick = async () => {
-        try {
-            const response = await fetch(updateUrl, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    technologies: formData.technologies.split(',').map((tech) => tech.trim()), // Convert back to array
-                }),
+                setPreviewImage(base64Image); // Update preview image immediately
             });
-
-            if (response.ok) {
-                console.log('Account has been updated successfully');
-            } else {
-                console.error('Failed to update account');
-            }
-        } catch (error) {
-            console.error('Error while updating account:', error);
         }
     };
+
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleResumeChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            convertToBase64(file).then((base64File) => {
+                setPdfFile(base64File); // Update the state with the base64 resume
+            });
+        }
+    };
+    // const handleResumeChange = (e) => {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onloadend = () => {
+    //             setFormData((prevData) => ({
+    //                 ...prevData,
+    //                 resume: reader.result // Store base64 encoded resume
+    //             }));
+    //             setPdfFile(reader.result); // Preview the resume as base64
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Simple validation checks
+        if (!formData.fullName || !formData.mobileNumber || !formData.email) {
+            alert('Please fill in all required fields!');
+            return;
+        }
+
+        try {
+            const response = await axios.put(`http://localhost:8080/students/update/${studentId}`, formData);
+            alert('Student updated successfully!');
+            navigate('/admin-profile/manage-students');
+        } catch (error) {
+            console.error('Error updating student data:', error.response || error.message);
+            alert('An error occurred while updating the student.');
+        }
+    };
+
+    if (loading) {
+        return <CircularProgress />;
+    }
+
+    let validViewPdf = pdfFile || formData.resume;
+    if (validViewPdf && !validViewPdf.startsWith('data:application/pdf;base64,')) {
+        validViewPdf = `data:application/pdf;base64,${validViewPdf}`; // Add the base64 prefix if it's missing
+    }
+
 
     return (
-        <div className="student-container-profile">
-            <div className="student-container-profile-welcome">
-                <img
-                    className="student-profile-picture"
-                    src={formData.profilePic}
-                    alt="Profile"
-                />
-                <h1 className="student-welcome-text">Welcome, {username}</h1>
-                <div className="student-action-button-container">
-                    <img
-                        src={showProfile ? hideEye : viewEye}
-                        alt={showProfile ? 'Hide' : 'View'}
-                        onClick={() => setShowProfile(!showProfile)}
-                    />
-                    <img src={editIcon} alt="Edit" />
-                </div>
-            </div>
+        <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
+            <Typography variant="h4" gutterBottom>Edit Student Information</Typography>
+            <form onSubmit={handleSubmit}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {/* Profile Picture Section */}
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                        <img
+                            src={previewImage}
+                            alt="Student Profile"
+                            style={{ width: 200, height: 200, objectFit: 'cover', borderRadius: '50%' }}
+                        />
+                        <Button variant="contained" component="label">
+                            Upload Profile Picture
+                            <input type="file" hidden accept="image/*" onChange={handleFileChange} />
+                        </Button>
+                    </Box>
 
-            {showProfile && (
-                <div className="student-profile-details">
-                    <label htmlFor="profilePic">Select a profile picture:</label>
-                    <input
-                        className="Student-details__item"
-                        type="file"
-                        name="profilePic"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                    />
-                    <label>Name:</label>
-                    <input
-                        className="Student-details__item"
-                        type="text"
-                        name="name"
-                        value={formData.name}
+                    {/* Form Fields */}
+                    <TextField
+                        label="Full Name"
+                        name="fullName"
+                        value={formData.fullName}
                         onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
                     />
-                    <label>Phone:</label>
-                    <input
-                        className="Student-details__item"
-                        type="text"
-                        name="mobile"
-                        value={formData.mobile}
+
+                    <TextField
+                        label="Mobile Number"
+                        name="mobileNumber"
+                        value={formData.mobileNumber}
                         onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
                     />
-                    <label>Email:</label>
-                    <input
-                        className="Student-details__item"
-                        type="email"
+
+                    <TextField
+                        label="Email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
                     />
-                    <label>Address:</label>
-                    <textarea
-                        className="Student-details__item"
+
+                    <TextField
+                        label="Address"
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        multiline
+                        rows={2}
                     />
-                    <label>Education:</label>
-                    <input
-                        className="Student-details__item"
-                        type="text"
+
+                    <TextField
+                        label="Qualification"
                         name="qualification"
                         value={formData.qualification}
                         onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
                     />
-                    <label>Work Status:</label>
-                    <input
-                        className="Student-details__item"
-                        type="text"
-                        name="workStatus"
-                        value={formData.workStatus}
-                        onChange={handleChange}
-                    />
-                    <label>Technologies:</label>
-                    <input
-                        className="Student-details__item"
-                        type="text"
-                        name="technologies"
-                        value={formData.technologies}
-                        onChange={handleChange}
-                    />
-                    <label>Resume:</label>
-                    <input
-                        className="Student-details__item"
-                        type="file"
-                        name="resume"
-                        accept=".pdf,.doc,.docx"
-                        onChange={handleFileChange}
-                    />
-                </div>
-            )}
 
-            <div className="student-profile-action-buttons">
-                <button onClick={handleSubmitClick}>Submit</button>
-            </div>
-        </div>
+                    <TextField
+                        select
+                        label="Working Status"
+                        name="workingStatus"
+                        value={formData.workingStatus}
+                        onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                    >
+                        <MenuItem value="full-time">Full-Time</MenuItem>
+                        <MenuItem value="part-time">Part-Time</MenuItem>
+                        <MenuItem value="unemployed">Unemployed</MenuItem>
+                    </TextField>
+
+                    {/* Resume Section */}
+                    <div>
+                        {formData.resume || pdfFile ? (
+                            <div className='mb-2'>
+                                <Typography variant="h6">Existing Resume:</Typography>
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    sx={{ padding: '4px 25px' }}
+                                    onClick={() => setShowResume(!showResume)}
+                                >
+                                    {showResume ? 'Hide Resume' : 'View Resume'}
+                                </Button>
+
+                                {showResume && (
+                                    <iframe
+                                        src={validViewPdf}
+                                        width="100%"
+                                        height="600px"
+                                        title="Resume Preview"
+                                    />
+                                )}
+                            </div>
+                        ) : (
+                            <Typography variant="h6">No resume uploaded</Typography>
+                        )}
+                        <Button variant="contained" component="label">
+                            Upload Resume
+                            <input type="file" hidden accept="application/pdf" onChange={handleResumeChange} />
+                        </Button>
+                    </div>
+
+
+                    <Box sx={{ textAlign: 'center', marginTop: 4 }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            sx={{ padding: '12px 30px' }}
+                            disabled={loading}
+                        >
+                            {loading ? 'Updating...' : 'Update Student'}
+                        </Button>
+                    </Box>
+                </Box>
+            </form>
+        </Box>
     );
 }
 

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import defaultProfilePic from '../../assets/skillmate.jpg';
-import editIcon from '../../assets/editIcon.png';
-import hideEye from '../../assets/hide-eye.png';
-import viewEye from '../../assets/view-eye.png';
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Box, Typography, IconButton, Avatar, Dialog, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Visibility, VisibilityOff, Edit } from '@mui/icons-material';
+import axios from 'axios';
+import Loading from '../../Loading';
 import Meetings from '../trainer/Meetings';
 import Attendances from '../trainer/Attendances';
-import axios from 'axios';
-import './TrainerProfile.css'
+import defaultProfilePic from '../../assets/skillmate.jpg';
+import viewEye from '../../assets/view-eye.png';
+import hideEye from '../../assets/hide-eye.png';
+import editIcon from '../../assets/editIcon.png';
 
 function TrainerProfile() {
     const [showProfile, setShowProfile] = useState(true);
@@ -18,6 +20,9 @@ function TrainerProfile() {
     const [batches, setBatches] = useState([]);
     const token = useSelector((state) => state.auth.token);
     const trainerId = userData?.id;
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showPDF, setShowPDF] = useState(false);
 
     useEffect(() => {
         const fetchBatches = async () => {
@@ -26,54 +31,144 @@ function TrainerProfile() {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setBatches(response.data);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching batches:', error);
             }
         };
 
-        if (trainerId && token) fetchBatches();
+        if (trainerId && token) {
+            fetchBatches();
+        }
+    }, [trainerId, token]);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/courses/trainer/${trainerId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setCourses(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching batches:', error);
+            }
+        };
+
+        if (trainerId && token) {
+            fetchCourses();
+        }
     }, [trainerId, token]);
 
     return (
         <>
-            <div className="trainer-header">
-                <div className="trainer-header__info">
-                    <img
-                        className="trainer-header__picture"
-                        src={userData?.profilePic ? `data:image/jpeg;base64,${userData.profilePic}` : defaultProfilePic}
-                        alt="Profile"
-                    />
-                    <h1 className="trainer-header__welcome">Welcome, {userData?.fullName || 'Trainer'}</h1>
-                </div>
-                <div className="trainer-header__actions">
-                    <img
-                        src={showProfile ? hideEye : viewEye}
-                        alt={showProfile ? 'Hide Profile' : 'View Profile'}
-                        onClick={() => setShowProfile(!showProfile)}
-                    />
-                    <img onClick={() => navigate('/trainer-profile-update')} src={editIcon} alt="Edit Profile" />
-                </div>
-            </div>
+            {loading ? (
+                <Loading />
+            ) : (
+                <>
+                    <Box
+                        sx={{
+                            maxWidth: 900,
+                            mx: 'auto',
+                            p: 4,
+                            bgcolor: 'background.paper',
+                            borderRadius: 3,
+                            boxShadow: 4,
+                            mt: 5,
+                        }}
+                    >
+                        {/* Profile Header */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+                            <Avatar
+                                src={userData?.profilePic ? `data:image/jpeg;base64,${userData.profilePic}` : defaultProfilePic}
+                                alt="Profile"
+                                sx={{ width: 120, height: 120, boxShadow: 3, border: '3px solid white' }}
+                            />
+                            <Typography variant="h4" fontWeight="bold">
+                                Welcome, {userData?.fullName || 'Trainer'}
+                            </Typography>
+                            <Box>
+                                <IconButton onClick={() => setShowProfile(!showProfile)} color="primary">
+                                    {showProfile ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                                <IconButton onClick={() => navigate(`/trainer-profile-update/${userData.id}`)} color="secondary">
+                                    <Edit />
+                                </IconButton>
+                            </Box>
+                        </Box>
 
-            {showProfile && (
-                <div className="trainer-details">
-                    <p><strong>Full Name:</strong> {userData?.fullName}</p>
-                    <p><strong>Mobile Number:</strong> {userData?.mobileNumber}</p>
-                    <p><strong>Email:</strong> {userData?.email}</p>
-                </div>
+                        {/* Profile Details */}
+                        {showProfile && (
+                            <Box
+                                sx={{
+                                    p: 3,
+                                    borderRadius: 3,
+                                    bgcolor: 'grey.50',
+                                    boxShadow: 2,
+                                    border: '1px solid #e0e0e0',
+                                }}
+                            >
+                                {[{ label: 'Full Name', value: userData?.fullName },
+                                { label: 'Mobile Number', value: userData?.mobileNumber },
+                                { label: 'Email', value: userData?.email },
+                                { label: 'Address', value: userData?.address },
+                                { label: 'Qualification', value: userData?.qualification },
+                                { label: 'Technologies', value: userData?.technologies.join(', ') },
+                                { label: 'Experience', value: userData?.experience },
+                                { label: 'Working Status', value: userData?.workingStatus }].map((item, index) => (
+                                    <Box key={index} sx={{ mb: 2 }}>
+                                        <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                                            {item.label}:
+                                        </Typography>
+                                        <Typography variant="body1">{item.value}</Typography>
+                                    </Box>
+
+                                ))}
+                                {userData.resume && (
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{ mt: 3 }}
+                                        onClick={() => setShowPDF(true)}
+                                    >
+                                        View Resume
+                                    </Button>
+                                )}
+                                {/* PDF Dialog */}
+                                <Dialog open={showPDF} onClose={() => setShowPDF(false)} maxWidth="md" fullWidth>
+                                    {userData.resume ? (
+                                        <Box sx={{ height: '600px' }}>
+                                            <iframe
+                                                src={`data:application/pdf;base64,${userData.resume}`}
+                                                title="Resume PDF"
+                                                style={{ width: '100%', height: '100%', border: 'none' }}
+                                            />
+                                        </Box>
+                                    ) : (
+                                        <Typography>No resume available.</Typography>
+                                    )}
+                                </Dialog>
+                            </Box>
+                        )}
+
+                    </Box>
+                </>
             )}
+            {/* Courses & Batches */}
+            <Meetings userData={userData} courses={courses} trainerId={trainerId} />
 
-            <Meetings />
-
-            <div className="batch-selector">
-                <label>Select Batch:</label>
-                <select value={batch} onChange={(e) => setBatch(e.target.value)}>
-                    <option value="">-- Select Batch --</option>
+            {/* Batch Selection */}
+            <FormControl fullWidth sx={{ mt: 3 }}>
+                <InputLabel>Select Batch</InputLabel>
+                <Select value={batch} onChange={(e) => setBatch(e.target.value)} label="Select Batch">
+                    <MenuItem value="">-- Select Batch --</MenuItem>
                     {batches.map((batchItem) => (
-                        <option key={batchItem.id} value={batchItem.id}>Batch {batchItem.id}</option>
+                        <MenuItem key={batchItem.id} value={batchItem.id}>
+                            Batch {batchItem.id}
+                        </MenuItem>
                     ))}
-                </select>
-            </div>
+                </Select>
+            </FormControl>
 
             <Attendances batch={batch} />
         </>

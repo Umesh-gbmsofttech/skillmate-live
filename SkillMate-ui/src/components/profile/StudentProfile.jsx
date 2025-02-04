@@ -1,79 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import './StudentProfile.css';
-import defaultProfilePic from '../../assets/skillmate.jpg';
-import editIcon from '../../assets/editIcon.png';
-import hideEye from '../../assets/hide-eye.png';
-import viewEye from '../../assets/view-eye.png';
-import MyCourses from '../courses/MyCourses';
-import LiveSessions from '../subscription/LiveSessions';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Box, Typography, IconButton, Avatar, Dialog, Button, Divider } from '@mui/material';
+import { Visibility, VisibilityOff, Edit } from '@mui/icons-material';
+import MyCourses from '../courses/MyCourses';
+import defaultProfilePic from '../../assets/skillmate.jpg';
 
 function StudentProfile() {
     const [showProfile, setShowProfile] = useState(true);
+    const [showPDF, setShowPDF] = useState(false);
+
     const userData = useSelector((state) => state.auth.userData);
-    const [meetings, setMeetings] = useState([]);
-    const [courses, setCourses] = useState([]);
-    const token = useSelector((state) => state.auth.token);
-
     const location = useLocation();
-    const { username } = location.state || { username: 'Admin' };
-
-    console.log(userData.meetings[0]);
     const navigate = useNavigate();
 
-    // // to fetch the courses of student
-    // const fetchCourses = async () => {
-    //     try {
-    //         const response = await axios.get(`http://localhost:8080/courses/student/${userData.id}`, {
-    //             headers: { Authorization: `Bearer ${token}` }
-    //         });
-    //         setCourses(response.data);
-    //         console.log(response.data)
-    //     } catch (error) {
-    //         console.error('Error fetching meetings:', error);
-    //     }
-    // };
-    // useEffect(() => {
-    //     fetchCourses();
-    // }, []);
-    // // to console the course of student
-    // useEffect(() => {
-    //     courses.forEach((course) => {
-    //         console.log('COURSES:')
-    //         console.log('course id: ' + course.id);
-    //         console.log('course name: ' + course.courseName);
-    //         console.log('course price: ' + course.price);
-    //         console.log('course description: ' + course.description);
-    //         console.log('course days: ' + course.days);
-    //     });
-    // }, [meetings, token]);
-
-
-    // to fetch the meeting links
-    const fetchMeetings = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8080/meetings/student/${userData.id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setMeetings(response.data);
-        } catch (error) {
-            console.error('Error fetching meetings:', error);
-        }
-    };
-    useEffect(() => {
-        fetchMeetings();
-    }, []);
-
-    // to console the meeting links
-    useEffect(() => {
-        meetings.forEach((meeting) => {
-            console.log('meeting ID: ' + meeting.id);
-            console.log('meeting Link: ' + meeting.meetingLink);
-        });
-    }, [meetings, token]);
-
+    const { username } = location.state || { username: 'Admin' };
 
     const user = {
         name: userData?.fullName || 'John Doe',
@@ -86,65 +27,106 @@ function StudentProfile() {
         profilePic: userData?.profilePic
             ? `data:image/jpeg;base64,${userData.profilePic}`
             : defaultProfilePic,
-        resume: userData?.resume || 'resume.pdf',
+        resume: userData?.resume,
     };
 
     const handleUpdateAccountClick = () => {
-        navigate('/student-profile-update', { state: { userData } });
+        navigate(`/student-profile-update/${userData.id}`);
     };
 
-    const renderProfileItem = (label, value) => (
-        <p className="Student-details__item">
-            <strong>{label}:</strong> {value}
-        </p>
-    );
-
     return (
-        <div className="student-container-profile">
-            <div className="student-container-profile-welcome">
-                <img
-                    className="student-profile-picture"
-                    src={user.profilePic}
-                    alt={`${user.name}'s Profile`}
-                />
-                <h1 className="student-welcome-text">
-                    Welcome, {userData?.roles[0] !== 'STUDENT' ? username : user.name}
-                </h1>
-                <div className="student-action-button-container">
-                    <img
-                        src={showProfile ? hideEye : viewEye}
-                        alt={showProfile ? 'Hide' : 'View'}
-                        onClick={() => setShowProfile(!showProfile)}
+        <>
+            <Box
+                sx={{
+                    maxWidth: 900,
+                    mx: 'auto',
+                    p: 4,
+                    bgcolor: 'background.paper',
+                    borderRadius: 3,
+                    boxShadow: 4,
+                    mt: 5,
+                }}
+            >
+                {/* Profile Header */}
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+                    <Avatar
+                        src={user.profilePic}
+                        alt={user.name}
+                        sx={{ width: 120, height: 120, boxShadow: 3, border: '3px solid white' }}
                     />
-                    <img
-                        src={editIcon}
-                        alt="Edit"
-                        onClick={handleUpdateAccountClick}
-                    />
-                </div>
-            </div>
+                    <Typography variant="h4" fontWeight="bold">
+                        Welcome, {userData?.roles[0] !== 'STUDENT' ? username : user.name}
+                    </Typography>
+                    <Box>
+                        <IconButton onClick={() => setShowProfile(!showProfile)} color="primary">
+                            {showProfile ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                        <IconButton onClick={handleUpdateAccountClick} color="secondary">
+                            <Edit />
+                        </IconButton>
+                    </Box>
+                </Box>
 
-            {showProfile && (
-                <div className="student-profile-details">
-                    {renderProfileItem('Name', user.name)}
-                    {renderProfileItem('Phone', user.mobile)}
-                    {renderProfileItem('Email', user.email)}
-                    {renderProfileItem('Address', user.address)}
-                    {renderProfileItem('Education', user.qualification)}
-                    {user.workStatus && renderProfileItem('Work Status', user.workStatus)}
-                    {renderProfileItem('Resume', user.resume)}
-                </div>
-            )}
+                {/* Profile Details */}
+                {showProfile && (
+                    <Box
+                        sx={{
+                            p: 3,
+                            borderRadius: 3,
+                            bgcolor: 'grey.50',
+                            boxShadow: 2,
+                            border: '1px solid #e0e0e0',
+                        }}
+                    >
+                        {[
+                            { label: 'Name', value: user.name },
+                            { label: 'Phone', value: user.mobile },
+                            { label: 'Email', value: user.email },
+                            { label: 'Address', value: user.address },
+                            { label: 'Education', value: user.qualification },
+                            { label: 'Work Status', value: user.workStatus },
+                        ].map((item, index) => (
+                            <Box key={index} sx={{ mb: 2 }}>
+                                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                                    {item.label}:
+                                </Typography>
+                                <Typography variant="body1">{item.value}</Typography>
+                                {index < 5 && <Divider sx={{ mt: 1, mb: 1 }} />}
+                            </Box>
+                        ))}
 
-            <div className="student-profile-action-buttons">
-                <p onClick={handleUpdateAccountClick} className="update-account-link">
-                    <i>Update Account</i>
-                </p>
-            </div>
+                        {/* View Resume Button */}
+                        {user.resume && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ mt: 3 }}
+                                onClick={() => setShowPDF(true)}
+                            >
+                                View Resume
+                            </Button>
+                        )}
+                    </Box>
+                )}
+
+                {/* PDF Dialog */}
+                <Dialog open={showPDF} onClose={() => setShowPDF(false)} maxWidth="md" fullWidth>
+                    {user.resume ? (
+                        <Box sx={{ height: '600px' }}>
+                            <iframe
+                                src={`data:application/pdf;base64,${user.resume}`}
+                                title="Resume PDF"
+                                style={{ width: '100%', height: '100%', border: 'none' }}
+                            />
+                        </Box>
+                    ) : (
+                        <Typography>No resume available.</Typography>
+                    )}
+                </Dialog>
+            </Box>
 
             <MyCourses />
-            <LiveSessions />
-        </div>
+        </>
     );
 }
 

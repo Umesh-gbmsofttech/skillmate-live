@@ -1,161 +1,153 @@
-import React, { useEffect, useState } from 'react';
-import './TrainerSection.css';  // Import the specific CSS file for the TrainerSection
-import trainerImage from '../../../assets/skillmate.jpg';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import altImage from '../../../assets/skillmate.jpg';
-
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setTrainer } from "../../redux/communityDataSlice";
+import trainerImage from "../../../assets/skillmate.jpg";
+import altImage from "../../../assets/skillmate.jpg";
+import Loading from "../../../Loading";
+import { showSuccessToast, showErrorToast } from "../../utility/ToastService";
+import {
+    Card,
+    CardContent,
+    Typography,
+    Grid,
+    Avatar,
+    Box,
+    Container,
+    Paper,
+} from "@mui/material";
 
 const TrainerSection = () => {
-
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(true);
     const [trainers, setTrainers] = useState([]);
     const token = useSelector((state) => state.auth.token);
+    const [error, setError] = useState("");
 
-    const handleCardClick = (trainer) => {
-        navigate('/rating-reviews/page', { state: { trainer } })
-    }
     useEffect(() => {
         const fetchTrainers = async () => {
             try {
-                const response = await fetch('http://localhost:8080/trainers/fetch', {
-                    method: 'GET',
+                const response = await fetch("http://localhost:8080/trainers/fetch", {
+                    method: "GET",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    setTrainers(data); // Assuming the API returns an array of reviews
-                    console.log(data)
-                } else {
-                    console.error('Failed to fetch reviews');
+                    setTrainers(data);
+                    setLoading(false);
+                    showSuccessToast("Data fetched successfully!");
                 }
             } catch (error) {
-                console.error('Error fetching reviews:', error);
+                setError(`Error fetching trainers: ${error}`);
+                showErrorToast(`Error fetching trainers: ${error}`);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchTrainers();
-    }, []);
+    }, [dispatch, token]);
 
-    // console.log(trainers.length)//4
-    // console.log(trainers[0].fullName)//Rahul
-    // console.log(trainers[0].profilePic)//base64 image
-    // console.log(trainers[0].technologies)//Java,Spring Boot,JavaScript,React,React Native
-    // console.log(trainers[0].experience)//8
-
-    const trainer = [
-        {
-            name: "John Doe",
-            position: "Full Stack Developer",
-            experience: "8+ years",
-            expertise: "React, Node.js, MongoDB",
-            imageUrl: trainerImage,
-            alt: "Trainer Image 1",
-        },
-        {
-            name: "Jane Smith",
-            position: "Frontend Developer",
-            experience: "5+ years",
-            expertise: "React, CSS, JavaScript",
-            imageUrl: trainerImage,
-            alt: "Trainer Image 2",
-        },
-        {
-            name: "Jane Smith",
-            position: "Frontend Developer",
-            experience: "5+ years",
-            expertise: "React, CSS, JavaScript",
-            imageUrl: trainerImage,
-            alt: "Trainer Image 3",
-        },
-        {
-            name: "Jane Smith",
-            position: "Frontend Developer",
-            experience: "5+ years",
-            expertise: "React, CSS, JavaScript",
-            imageUrl: trainerImage,
-            alt: "Trainer Image 3",
-        },
-        {
-            name: "Jane Smith",
-            position: "Frontend Developer",
-            experience: "5+ years",
-            expertise: "React, CSS, JavaScript",
-            imageUrl: trainerImage,
-            alt: "Trainer Image 3",
-        },
-        {
-            name: "Jane Smith",
-            position: "Frontend Developer",
-            experience: "5+ years",
-            expertise: "React, CSS, JavaScript",
-            imageUrl: trainerImage,
-            alt: "Trainer Image 3",
-        },
-        // Add more trainers as needed
-    ];
+    const handleCardClick = (trainer) => {
+        dispatch(setTrainer(trainer));
+        navigate("/rating-reviews/page", { state: { trainer } });
+    };
 
     return (
-        <section className="community-container-trainers-section">
-            <h2 className="community-container-heading">Meet Our Expert Trainers</h2>
-            {trainers?.length > 0 ?
-                <div className="community-container-trainers-grid">
-                    {trainers.map((trainer, index) => (
-                        <div
-                            onClick={() => handleCardClick(trainer)}
-                            key={index}
-                            className="community-container-trainer-card">
-                            <div className="community-container-trainer-image-wrapper">
-                                <img
-                                    src={trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : altImage}
-                                    alt={altImage}
-                                    className="community-container-trainer-image"
-                                />
-                            </div>
-                            <div className="community-container-trainer-info">
-                                <h3>{trainer?.fullName}</h3>
-                                <p>{trainer?.position}</p>
-                                <p>{trainer?.experience} + years</p>
-                                <p>Expertise: {trainer.technologies}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                :
-                <div className="community-container-trainers-grid">
-                    {trainer.map((trainer, index) => (
-                        <div
-                            onClick={handleCardClick}
-                            key={index}
-                            className="community-container-trainer-card">
-                            <div className="community-container-trainer-image-wrapper">
-                                <img
-                                    src={trainer.imageUrl}
-                                    alt={trainer.alt}
-                                    className="community-container-trainer-image"
-                                />
-                            </div>
-                            <div className="community-container-trainer-info">
-                                <h3>{trainer.name}</h3>
-                                <p>{trainer.position}</p>
-                                <p>{trainer.experience}</p>
-                                <p>Expertise: {trainer.expertise}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            }
-            <section className="community-container-trainers-info">
-                <h1 className="community-container-trainers-info-heading">Our Trainers</h1>
-                <p className="community-container-trainers-info-description">
-                    Our trainers are experienced working professionals with 8-10 years of industry experience. They are passionate about sharing their knowledge and expertise to help you grow in your IT career.
-                </p>
-            </section>
-        </section>
+        <Container maxWidth="lg" sx={{ mt: 5 }}>
+            {loading ? (
+                <Loading />
+            ) : error ? (
+                <Typography variant="h6" color="error">
+                    {error}
+                </Typography>
+            ) : (
+                <>
+                    <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+                        Meet Our Expert Trainers
+                    </Typography>
+                    <Grid container spacing={4} justifyContent="center" marginTop={3}>
+                        {trainers.map((trainer, index) => (
+                            <Grid item xs={12} sm={6} md={4} key={index}>
+                                <Paper
+                                    elevation={3}
+                                    sx={{
+                                        cursor: 'pointer',
+                                        p: 2,
+                                        borderRadius: 2,
+                                        textAlign: "center",
+                                        transition: "0.3s",
+                                        "&:hover": {
+                                            boxShadow: "0px 8px 16px rgba(68, 45, 204, 0.3)",
+                                        },
+                                        position: "relative",
+                                    }}
+                                    onClick={() => handleCardClick(trainer)}
+                                >
+                                    {/* Circular Avatar */}
+                                    <Avatar
+                                        src={trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : altImage}
+                                        alt={trainer.fullName || "Trainer"}
+                                        sx={{
+                                            width: 120,
+                                            height: 120,
+                                            mx: "auto",
+                                            mt: -7,
+                                            border: "4px solid white",
+                                            boxShadow: "0 5px 10px rgba(0, 0, 0, 0.3)",
+                                        }}
+                                    />
+
+                                    <CardContent sx={{ mt: 2 }}>
+                                        <Typography variant="h6" fontWeight="bold">
+                                            {trainer.fullName}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {trainer.position}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {trainer.experience}+ years experience
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="primary"
+                                            sx={{ mt: 1, fontWeight: "bold" }}
+                                        >
+                                            Expertise: {trainer.technologies.join(", ")}
+                                        </Typography>
+                                    </CardContent>
+                                </Paper>
+                            </Grid>
+                        ))}
+                    </Grid>
+
+                    {/* Info Section */}
+                    <Box
+                        sx={{
+                            mt: 5,
+                            p: 3,
+                            backgroundColor: "#f5f5f5",
+                            borderRadius: 2,
+                            textAlign: "center",
+                            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                        }}
+                    >
+                        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
+                            Our Trainers
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                            Our trainers are experienced working professionals with 8-10 years of industry experience.
+                            They are passionate about sharing their knowledge and expertise to help you grow in your IT career.
+                        </Typography>
+                    </Box>
+                </>
+            )}
+        </Container>
     );
 };
 

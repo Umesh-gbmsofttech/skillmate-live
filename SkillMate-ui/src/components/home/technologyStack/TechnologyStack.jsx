@@ -1,39 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './TechnologyStack.css';
-import logo from '../../../assets/skillmate.jpg'; // Replace with actual logo paths if available
-import locationIcon from '../../../assets/locationIcon.png'; // Import locationIcon.png
+import logo from '../../../assets/skillmate.jpg';
+import backendImg from '../../../assets/technology_stack/backend.png';
+import databaseImg from '../../../assets/technology_stack/database.png';
+import frontendImg from '../../../assets/technology_stack/frontend.png';
+import osImg from '../../../assets/technology_stack/os.jpeg';
+import serverImg from '../../../assets/technology_stack/server.jpg';
 
 function TechnologyStack() {
+    const [hoveredIndex, setHoveredIndex] = useState(null); // Track hovered card
+
     const technologies = [
         {
             number: 1,
             technologyName: "OS",
-            imageUrl: logo,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            imageUrl: osImg,
+            description: "Operating system used for server deployment.",
         },
         {
             number: 2,
             technologyName: "SERVER",
-            imageUrl: logo,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            imageUrl: serverImg,
+            description: "Manages client requests and backend logic.",
         },
         {
             number: 3,
             technologyName: "DATABASE",
-            imageUrl: logo,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            imageUrl: databaseImg,
+            description: "Stores and retrieves application data efficiently.",
         },
         {
             number: 4,
             technologyName: "BACKEND PROGRAMMING/LANGUAGE",
-            imageUrl: logo,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            imageUrl: frontendImg,
+            description: "Languages used to build business logic and APIs.",
         },
         {
             number: 5,
             technologyName: "FRONTEND FRAMEWORK/LIBRARY",
-            imageUrl: logo,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            imageUrl: backendImg,
+            description: "Tools for creating interactive user interfaces.",
         },
     ];
 
@@ -45,31 +51,23 @@ function TechnologyStack() {
 
             <div className="technology__container-technology">
                 {technologies.map((technology, index) => (
-                    <div key={index} className="technology__container-technology-card">
-                        {/* Replacing the community container with locationIcon */}
-                        <div className="location-icon-wrapper">
-                            {/* Display technology number in the center of location icon */}
-                            <div className="number-container">
-                                {technology.number}
-                            </div>
-                        </div>
-
+                    <div className="technology__container-technology-card"
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(null)}>
                         <div className="technology__container-technology-info">
-                            {/* Image and technology name */}
                             <h3>{technology.technologyName}</h3>
-
                             <img
                                 src={technology.imageUrl}
                                 alt={technology.technologyName}
                                 className="technology__container-technology-image"
                             />
-
-                            {/* Hoverable description */}
-                            <div className="technology__description">
-                                <p>{technology.description.description}</p>
+                            {/* Hoverable description with a speech bubble */}
+                            <div className={`technology__description ${hoveredIndex === index ? 'visible' : ''}`}>
+                                <p>{technology.description}</p>
                             </div>
                         </div>
                     </div>
+
                 ))}
             </div>
         </div>

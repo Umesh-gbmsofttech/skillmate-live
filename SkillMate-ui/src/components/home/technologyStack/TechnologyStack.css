@@ -33,7 +33,25 @@
 
 .technology__container-technology-card:hover {
     box-shadow: 0 0 20px #43d5e6;
-    background-color: #2bb9c9;
+    /* background-color: #2bb9c9; */
+}
+
+.nav-links {
+    margin: 0;
+    padding: 0;
+}
+
+.notification-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.notification-btn:hover {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    scale: 1.1;
 }
 
 /* Location Icon as background */
@@ -47,7 +65,7 @@
     background-image: url('../../../assets/locationIcon.png');
     background-size: contain;
     background-repeat: no-repeat;
-    background-filter: blur(5px);
+    /* background-filter: blur(5px); */
     z-index: 10;
 }
 
@@ -90,22 +108,50 @@
 /* Hoverable description that appears on hover */
 .technology__description {
     display: none;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
+    background-color: rgba(229, 229, 229, 0.8);
+    color: rgb(0, 0, 0);
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 105%;
+    /* Position the bubble below the card */
+    left: 50%;
+    transform: translateX(-50%);
     padding: 10px;
     border-radius: 10px;
     z-index: 1000;
     font-size: 1em;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease-in-out;
+    /* max-width: 200px; */
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.technology__container-technology-card:hover .technology__description {
+/* Make description visible when hovered */
+.technology__description.visible {
     display: block;
+    opacity: 1;
 }
+
+/* Arrow pointing towards the card */
+.technology__description::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    /* Position the arrow below the description box */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+/* Style the hoverable description box */
+.technology__description p {
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+}
+
 
 /* Responsive Styles */
 @media (max-width: 768px) {

@@ -1,132 +1,137 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import './ReviewsSection.css';
+import { Card, CardContent, CardMedia, Typography, Rating, Box, Avatar } from '@mui/material';
 import userImage from '../../assets/skillmate.jpg'; // Default image for fallback
 
-function ReviewsSection() {
+function ReviewsSection({ course, user }) {
   const token = useSelector((state) => state.auth.token); // Get token from Redux state
-  const [reviews, setReviews] = useState([]);
 
-  // Placeholder reviews when no reviews are fetched
-  const review = Array(5).fill({
-    userImage,
-    name: 'Review given by user',
-    date: 'Date',
-    rating: '*****',
-    review: 'The platform Skillmate is good and user-friendly for all users.',
-  });
+  // Access trainer and student from Redux
+  const trainer = useSelector((state) => state.communityData.trainer);
+  const student = useSelector((state) => state.communityData.student);
+
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const fetchReviews = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/rating-reviews/fetch', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+      let url = '';
 
-        if (response.ok) {
-          const data = await response.json();
-          setReviews(data); // Assuming the API returns an array of reviews
-        } else {
-          console.error('Failed to fetch reviews');
+      // Set URL based on whether it's a trainer, student, or course
+      if (user?.roles == 'TRAINER') {
+        url = `http://localhost:8080/rating-reviews/trainer/${trainer?.id}`;
+      } else if (user?.roles == 'STUDENT') {
+        url = `http://localhost:8080/rating-reviews/student/${student?.id}`;
+      } else if (course) {
+        url = `http://localhost:8080/rating-reviews/course/${course.id}`;
+      } else {
+        url = `http://localhost:8080/rating-reviews/fetch`; // Default URL for fetching reviews if no specific entity
+      }
+
+      if (url) {
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setReviews(data);
+          }
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
         }
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
       }
     };
 
+    // Call the fetchReviews whenever the relevant dependencies change
     fetchReviews();
-  }, [token]);
+  }, [token, trainer, student, course, user]);
 
   return (
-    <div className="reviews-section">
-      <div className="reviews-list">
+    <Box sx={{ padding: '40px 20px', backgroundColor: '#f9f9f9' }}>
+      {/* Title Section */}
+      <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold', color: '#333' }}>
+        Reviews
+      </Typography>
+
+      {/* Reviews list container with horizontal scroll */}
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2,
+          overflowX: 'auto',
+          paddingBottom: 2,
+          scrollSnapType: 'x mandatory',
+          scrollbarWidth: 'thin',
+        }}
+      >
         {reviews?.length > 0
           ? reviews.map((review, index) => (
-              <div key={index} className="review-card">
-                {/* User Image */}
-                <img 
-                  src={`data:image/jpeg;base64,${review.student?.profilePic}` || userImage} 
-                  alt="User" 
-                  className="user-image" 
+            <Card
+              key={index}
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                minWidth: 280,
+                backgroundColor: '#fff',
+                padding: 2,
+                borderRadius: 2,
+                boxShadow: 3,
+                transition: 'transform 0.3s ease',
+                scrollSnapAlign: 'start',
+                '&:hover': {
+                  transform: 'scale(1.03)',
+                },
+              }}
+            >
+              <CardMedia
+                component="div"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 80,
+                  height: 80,
+                  marginBottom: 2,
+                }}
+              >
+                <Avatar
+                  src={
+                    review.ratingGiverTrainer?.profilePic
+                      ? `data:image/jpeg;base64,${review.ratingGiverTrainer.profilePic}`
+                      : review.ratingGiverStudent?.profilePic
+                        ? `data:image/jpeg;base64,${review.ratingGiverStudent.profilePic}`
+                        : userImage
+                  }
+                  alt="User"
+                  sx={{ width: 60, height: 60 }}
                 />
-                <div className="content">
-                  {/* User Name */}
-                  <h4>{review.student?.fullName || 'User'}</h4>
-                  {/* Review Date */}
-                  <span>{review.date}</span>
-                  {/* Rating Stars */}
-                  <div className="stars">
-                    <span>{'⭐'.repeat(Math.round(review.rating))}</span>
-                  </div>
-                  {/* Review Text */}
-                  <p>{review.review}</p>
-                </div>
-              </div>
-            ))
-          : review.map((placeholderReview, index) => (
-              <div key={index} className="review-card">
-                {/* User Image */}
-                <img 
-                  src={placeholderReview.userImage || userImage} 
-                  alt="User" 
-                  className="user-image" 
-                />
-                <div className="content">
-                  {/* User Name */}
-                  <h4>{placeholderReview.name}</h4>
-                  {/* Review Date */}
-                  <span>{placeholderReview.date}</span>
-                  {/* Rating Stars */}
-                  <div className="stars">
-                    <span>{'⭐'.repeat(placeholderReview.rating)}</span>
-                  </div>
-                  {/* Review Text */}
-                  <p>{placeholderReview.review}</p>
-                </div>
-              </div>
-            ))}
-      </div>
-    </div>
+              </CardMedia>
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+                  {review.ratingGiverTrainer?.fullName || review.ratingGiverStudent?.fullName || 'User'}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
+                  {review.reviewDate || 'No Date Provided'}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 1 }}>
+                  <Rating value={review.rating || 0} readOnly precision={0.5} sx={{ marginRight: 1 }} />
+                  <Typography variant="body2">{`${review.rating || 0} / 5`}</Typography>
+                </Box>
+                <Typography variant="body2" color="textSecondary">
+                  {review.review || 'No review provided'}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))
+          : 'No reviews available'}
+      </Box>
+    </Box>
   );
 }
 
 export default ReviewsSection;
-
-
-// import React from 'react';
-// import './ReviewsSection.css';
-// import userImage from '../../assets/skillmate.jpg'
-
-// function ReviewsSection() {
-//   const reviews = Array(5).fill({
-//     userImage,
-//     name: 'Review given by user',
-//     date: 'Date',
-//     rating: '*****',
-//     review: 'The platform skillmate is good and usefriendly for all users',
-//   });
-
-  
-//   return (
-//     <div className="reviews-section">
-//       <div className="reviews-list">
-//         {reviews.map((review, index) => (
-//           <div key={index} className="review-card">
-//             <h4>{review.name}</h4>
-//             <p>{review.body}</p>
-//             <span>{review.review} - {review.date}</span>
-//             <div className="stars">
-//               <span style={{ color: 'gold' }}>⭐️⭐️⭐️⭐️⭐️</span>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ReviewsSection;

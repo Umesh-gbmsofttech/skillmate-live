@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SkillMateDataApplication<SkillMate-Data>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "app.SkillMateDataApplication",
+            "projectName": "SkillMate-Data",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -20,5 +20,15 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 	@Query("SELECT new app.dto.StudentAttendanceDTO(s.id, s.fullName, s.email, a.totalAttendance, a.remark) " +
 		       "FROM Attendance a JOIN a.student s WHERE a.batch.id = :batchId")
 		List<StudentAttendanceDTO> findAttendanceByBatchId(@Param("batchId") Long batchId);
+	
+	
+	//to get latest and single attendance of student by student id
+	@Query("SELECT a FROM Attendance a WHERE a.student.id = :studentId ORDER BY a.inTime DESC LIMIT 1")
+	Optional<Attendance> findLatestAttendanceByStudentId(@Param("studentId") Long studentId);
+
+	//to get all attendances of student by student id
+	@Query("SELECT a FROM Attendance a WHERE a.student.id = :studentId")
+	List<Attendance> findByStudentId(@Param("studentId") Long studentId);
+
 
 }

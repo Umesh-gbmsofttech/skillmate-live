@@ -1,11 +1,9 @@
-/* Overall container for the page */
-.trainers-list-container {
+/* .trainers-list-container {
     padding: 20px;
     font-family: Arial, sans-serif;
     background-color: #EEEEEE;
 }
 
-/* Welcome section for the admin */
 .trainers-list-container .admin-welcome {
     display: flex;
     flex-direction: column;
@@ -55,14 +53,12 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
 }
 
-/* Styling for the trainer list and cards */
 .ad__trainers-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* Individual trainer card styling */
 .ad__trainer-list-card {
     display: flex;
     flex-direction: row;
@@ -76,7 +72,6 @@
     padding: 20px;
 }
 
-/* Trainer profile image */
 .ad__trainer-list-card .trainer-profile {
     width: 180px;
     height: 180px;
@@ -85,7 +80,6 @@
     margin-right: 20px;
 }
 
-/* Trainer details */
 .trainer-details-data {
     flex: 1;
 }
@@ -105,7 +99,6 @@
     font-weight: bold;
 }
 
-/* Edit button styling */
 .ad_edit_tr-btn {
     background: none;
     border: none;
@@ -123,7 +116,6 @@
     transform: scale(1.2);
 }
 
-/* Responsive styling for mobile screens */
 @media (max-width: 1024px) {
     .trainers-list-container .add__new-trainer-btn {
         padding: 10px 24px;
@@ -242,4 +234,4 @@
     .trainers-list-container .add__new-trainer-btn {
         padding: 8px 18px;
     }
-}
+} */

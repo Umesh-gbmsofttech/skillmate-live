@@ -1,6 +1,6 @@
 import React from 'react';
 import './AdminProfile.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../../assets/skillmate.jpg';
 import UpdateBatch from '../admin/UpdateBatch';
@@ -23,6 +23,9 @@ function AdminProfile() {
     const handleManageCoursesClick = () => {
         navigate('/admin-profile/manage-courses');
     };
+    const handleManageBatchesClick = () => {
+        navigate("/admin-profile/manage-batches");
+    };
 
     return (
         <div className="admin-container-profile">
@@ -35,10 +38,11 @@ function AdminProfile() {
                 <button className="admin-dashboard-button" onClick={handleManageTrainerClick}>Trainers</button>
                 <button className="admin-dashboard-button" onClick={handleManageStudentClick}>Students</button>
                 <button className="admin-dashboard-button" onClick={handleManageCoursesClick}>Courses</button>
-                <button className="admin-dashboard-button">Messages</button>
+                <button className="admin-dashboard-button" onClick={handleManageBatchesClick}>Batches</button>
+                {/* <button className="admin-dashboard-button">Messages</button> */}
             </div>
             {/* <UpdateBatch /> */}
-            <ManageBatches />
+            {/* <ManageBatches /> */}
         </div>
     );
 }

@@ -1,10 +1,12 @@
 package app.controller;
 
+import app.dto.MeetingDto;
 import app.dto.StudentAttendanceDTO;
 import app.entity.Attendance;
 import app.entity.Batch;
 import app.entity.Course;
 import app.entity.JsonResoponse_View;
+import app.entity.Meeting;
 import app.entity.Student;
 import app.entity.Trainer;
 import app.entity.TrainerProfileUpdated;
@@ -89,6 +91,15 @@ public class TrainerController {
 		trainerRepository.save(trainer);
 		return ResponseEntity.ok("Course added to trainer");
 	}
+	
+////	  Get Meeting by Trainer ID
+////	 Get all meetings for a specific trainer
+//    @GetMapping("/{trainerId}/meetings")
+//    @JsonView(JsonResoponse_View.BasicView.class)  // Using JsonView to control the response format
+//    public List<Meeting> getMeetingsByTrainer(@PathVariable Long trainerId) {
+//        return trainerService.getMeetingsByTrainer(trainerId);
+//    }
+
 
 	@GetMapping("/fetch")
 	@JsonView(JsonResoponse_View.DetailedView.class)
@@ -103,7 +114,7 @@ public class TrainerController {
 	}
 
 	@GetMapping("/fetch/{id}")
-	@JsonView(JsonResoponse_View.BasicView.class)
+	@JsonView(JsonResoponse_View.DetailedView.class)
 	public ResponseEntity<Trainer> getTrainerById(@PathVariable("id") Long id) {
 		Optional<Trainer> trainerData = trainerService.getTrainerById(id);
 		if (trainerData.isPresent()) {
@@ -147,6 +158,7 @@ public class TrainerController {
 //		return ResponseEntity.ok(updatedTrainer);
 //	}
 	@PutMapping("/update/{id}")
+//	@JsonView(JsonResoponse_View.DetailedView.class)
     public ResponseEntity<Trainer> updateTrainerProfile(
         @PathVariable Long id,
         @RequestParam(required = false) String fullName,

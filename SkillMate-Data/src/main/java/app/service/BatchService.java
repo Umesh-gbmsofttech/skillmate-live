@@ -77,6 +77,7 @@ public class BatchService {
 		logger.info("Fetching batches for trainer ID: {}", trainerId);
 		return batchRepository.findByTrainerId(trainerId); // Fetch batches by trainer ID
 	}
+
 	// Get Batches by Student ID
 	public List<Batch> getBatchesStudentId(Long studentId) {
 		logger.info("Fetching batches for student ID: {}", studentId);
@@ -85,16 +86,35 @@ public class BatchService {
 
 	// Update Batch by ID
 	public ResponseEntity<Batch> updateBatch(Long id, Batch newBatch) {
-		Optional<Batch> existingBatchOpt = batchRepository.findById(id);
-		if (existingBatchOpt.isPresent()) {
-			Batch existingBatch = existingBatchOpt.get();
-			updateBatchFields(existingBatch, newBatch);
-			Batch updatedBatch = batchRepository.save(existingBatch);
-			return ResponseEntity.ok(updatedBatch);
-		} else {
-			return ResponseEntity.notFound().build(); // Simplified response for not found
-		}
+	    Optional<Batch> existingBatchOpt = batchRepository.findById(id);
+	    
+	    if (existingBatchOpt.isPresent()) {
+	        Batch existingBatch = existingBatchOpt.get();
+
+	        // Update only fields that are non-null and non-empty
+	        if (newBatch.getTrainer() != null && !newBatch.getTrainer().isEmpty()) {
+	            existingBatch.setTrainer(newBatch.getTrainer());
+	        }
+	        if (newBatch.getStudents() != null && !newBatch.getStudents().isEmpty()) {
+	            existingBatch.setStudents(newBatch.getStudents());
+	        }
+	        if (newBatch.getMeetings() != null && !newBatch.getMeetings().isEmpty()) {
+	            existingBatch.setMeetings(newBatch.getMeetings());
+	        }
+	        if (newBatch.getCourse() != null && !newBatch.getCourse().isEmpty()) {
+	            existingBatch.setCourse(newBatch.getCourse());
+	        }
+	        if (newBatch.getAttendance() != null && !newBatch.getAttendance().isEmpty()) {
+	            existingBatch.setAttendance(newBatch.getAttendance());
+	        }
+
+	        Batch updatedBatch = batchRepository.save(existingBatch);
+	        return ResponseEntity.ok(updatedBatch);
+	    } else {
+	        return ResponseEntity.notFound().build(); // Return 404 if batch not found
+	    }
 	}
+
 
 	private void updateBatchFields(Batch existingBatch, Batch newBatch) {
 		if (newBatch.getTrainer() != null)

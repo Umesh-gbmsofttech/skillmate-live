@@ -1,84 +1,10 @@
-// import React, { useState } from 'react';
-// import './Ad_EditCourse.css';
-// import profilePic from '../../assets/profilePic.jpg';
-
-// function AdEditCourse() {
-//     const [showProfile, setShowProfile] = useState(true);
-
-//     const course = {
-//         profilePic,
-//         courseName: 'Full-stack Development',
-//         Duration: '180 days',
-//         time: '1 hr daily',
-//         price: '$100',
-//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut tincidunt neque, ac pellentesque felis. Donec euismod orci vel velit hendrerit, ut efficitur ex laoreet. Nulla facilisi. Donec vitae metus id nisi gravida scelerisque. Proin vel velit vel felis faucibus maximus in eu neque.',
-//     };
-
-//     const handleSubmitClick = () => {
-//         console.log('Account has been updated successfully.');
-//     };
-
-//     const handleFileChange = (e) => {
-//         const file = e.target.files[0];
-//         console.log(file);
-//     };
-
-//     return (
-//         <div className="admin__edit-course-ed-container">
-//             <div className="ad__-course-ed-header">
-//                 <h1 className="ad__-course-ed-header__welcome">Edit Course</h1>
-//             </div>
-
-//             <div className="ad__-course-ed-details">
-//                 <div className="ad__-course-ed-header__profile-container">
-//                     <img className="ad__-course-ed-header__picture" src={course.profilePic} alt="Profile" />
-//                     <div className="ad__-course-ed-header__file-upload">
-//                         <input
-//                             type="file"
-//                             id="ad__course-ed-profile-image"
-//                             className="ad__-course-ed-header__file-input"
-//                             onChange={handleFileChange}
-//                         />
-//                         <button
-//                             className="ad__-course-ed-header__file-button"
-//                             onClick={() => document.getElementById('ad__course-ed-profile-image').click()}
-//                         >
-//                             Choose Cover Image
-//                         </button>
-//                     </div>
-//                 </div>
-
-//                 <p className="ad__-course-ed-details__item">Name: {course.courseName}</p>
-//                 <p className="ad__-course-ed-details__item">Name: {course.Duration}</p>
-//                 <p className="ad__-course-ed-details__item">Name: {course.time}</p>
-//                 <p className="ad__-course-ed-details__item">Name: {course.price}</p>
-//                 <p className="ad__-course-ed-details__item">Name: {course.description}</p>
-//             </div>
-
-//             <div className="ad__-course-ed-actions">
-//                 <button className="ad__-course-ed-actions__submit" onClick={handleSubmitClick}>
-//                     Update course
-//                 </button>
-//             </div>
-//         </div>
-//     );
-// }
-
-// export default AdEditCourse;
-
-
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
-import './Ad_EditCourse.css';
-import profilePic from '../../assets/profilePic.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';  // Import useDispatch to dispatch actions
-import { updateCourse } from '../redux/courseActions'; // Import the updateCourse action
+import { useDispatch } from 'react-redux';
+import { updateCourse } from '../redux/courseActions';
 import axios from 'axios';
+import { Box, Typography, TextField, Button, Select, MenuItem, CircularProgress, Checkbox, ListItemText } from '@mui/material';
+import courseCoverImage from '../../assets/profilePic.jpg';
 
 function AdEditCourse() {
     const [courseName, setCourseName] = useState('');
@@ -86,144 +12,213 @@ function AdEditCourse() {
     const [time, setTime] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
-    const [profilePic, setProfilePic] = useState(null);
-    const dispatch = useDispatch();  // Initialize useDispatch hook
-    const navigate = useNavigate();  // Initialize useNavigate hook
+    const [courseCoverImage, setProfilePic] = useState(null);
+    const [trainers, setTrainers] = useState([]);
+    const [selectedTrainerIds, setSelectedTrainerIds] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [previewImage, setPreviewImage] = useState(null);  // New state for image preview
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const location = useLocation();
-    const courseData = location.state?.course; // Get course data passed via state
-    const [error, setError] = useState(null);
+    const courseData = location.state?.course;
 
     useEffect(() => {
         if (courseData) {
             setCourseName(courseData.courseName);
-            setDays(courseData.Duration);
+            setDays(courseData.days);
             setTime(courseData.time);
             setPrice(courseData.price);
             setDescription(courseData.description);
-            setProfilePic(courseData.coverImage || profilePic);
+            setProfilePic(courseData.coverImage || courseCoverImage);
+
+            // Preselect trainers based on the course's current trainers
+            const initialTrainerIds = courseData.trainer?.map(trainer => trainer.id) || [];
+            setSelectedTrainerIds(initialTrainerIds);
+
+            // Set preview image from existing course data
+            setPreviewImage(courseData.coverImage ? `data:image/jpeg;base64,${courseData.coverImage}` : courseCoverImage);
         }
     }, [courseData]);
 
+    useEffect(() => {
+        if (!trainers || trainers.length === 0) {
+            axios.get('http://localhost:8080/trainers/fetch')
+                .then((response) => {
+                    setTrainers(response.data);
+                })
+                .catch((err) => console.error('Error fetching trainers:', err));
+        }
+    }, [trainers]);
+
     const handleSubmitClick = async () => {
+        // Convert the image to a Base64 string
+        const convertToBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        };
+
+        let coverImageBase64 = previewImage; // Use the preview image (either existing or newly selected)
+        if (courseCoverImage && typeof courseCoverImage !== 'string') {
+            coverImageBase64 = await convertToBase64(courseCoverImage); // Convert to base64 if it's a new file
+        }
+
         const updatedCourse = {
             ...courseData,
             courseName,
-            days, // Ensure the field matches the backend schema
+            days,
             time,
             price,
             description,
-            coverImage: profilePic,
+            coverImage: coverImageBase64,
+            trainer: selectedTrainerIds.map(id => ({ id })),
         };
 
+        setLoading(true);
         try {
-            // Make an API call to update the course
             const response = await axios.put(
-                `http://localhost:8080/courses/update/${courseData.id}`, // Ensure this matches your backend route
+                `http://localhost:8080/courses/update/${courseData.id}`,
                 updatedCourse
             );
 
             if (response.status === 200) {
-                // Update course in Redux after a successful API response
                 dispatch(updateCourse(updatedCourse));
-
-                // Navigate back to the course list
                 navigate('/admin-profile/manage-courses');
-            } else {
-                console.error('Failed to update course:', response.statusText);
             }
         } catch (error) {
             console.error('Error updating course:', error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
-
-    // Dispatch action to update the course in Redux
-
-
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setProfilePic(URL.createObjectURL(file)); // Update profilePic state with selected file
+        setProfilePic(file);  // Store the selected file for conversion later
+        setPreviewImage(URL.createObjectURL(file));  // Set preview image directly from the file
+    };
+
+    const handleTrainerChange = (event) => {
+        setSelectedTrainerIds(event.target.value);
     };
 
     if (!courseData) {
-        return <div style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', marginBlock: '20%' }}>Loading course details...</div>;
-    }
-    if (error) {
-        return <div>Failed to load course details...</div>;
+        return <CircularProgress />;
     }
 
     return (
-        <div className="admin__edit-course-ed-container">
-            <div className="ad__-course-ed-header">
-                <h1>Edit Course</h1>
-            </div>
+        <Box sx={{ padding: 4, backgroundColor: '#f9f9f9' }}>
+            <Typography variant="h4" gutterBottom>Edit Course</Typography>
 
-            <div className="ad__-course-ed-details">
-                <div className="ad__-course-ed-header__profile-container">
-                    <img className="ad__-course-ed-header__picture" src={`data:image/jpeg;base64,${courseData.coverImage}`} alt="Course Cover" />
-                    <div className="ad__-course-ed-header__file-upload">
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img
+                        src={previewImage}  // Use preview image state for displaying the image
+                        alt="Course Cover"
+                        style={{
+                            width: 300,
+                            height: 200,
+                            objectFit: 'cover',
+                            borderRadius: 10,
+                            marginBottom: 20,
+                        }}
+                    />
+                    <Button
+                        variant="contained"
+                        component="label"
+                        sx={{
+                            backgroundColor: '#e5e5e7',
+                            color: '#000',
+                            '&:hover': { backgroundColor: '#0056b3' },
+                            borderRadius: '5px',
+                            padding: '10px 20px',
+                        }}
+                    >
+                        Choose Cover Image
                         <input
                             type="file"
-                            id="ad__course-ed-profile-image"
-                            className="ad__-course-ed-header__file-input"
+                            hidden
                             onChange={handleFileChange}
                         />
-                        <button
-                            className="ad__-course-ed-header__file-button"
-                            onClick={() => document.getElementById('ad__course-ed-profile-image').click()}
-                        >
-                            Choose Cover Image
-                        </button>
-                    </div>
-                </div>
+                    </Button>
+                </Box>
+            </Box>
 
-                <div className="ad__-course-ed-details__item">
-                    <label>Name:</label>
-                    <input
-                        type="text"
-                        value={courseName}
-                        onChange={(e) => setCourseName(e.target.value)}
-                    />
-                </div>
-                <div className="ad__-course-ed-details__item">
-                    <label>Duration:</label>
-                    <input
-                        type="text"
-                        value={days}
-                        onChange={(e) => setDays(e.target.value)}
-                    />
-                </div>
-                <div className="ad__-course-ed-details__item">
-                    <label>Time:</label>
-                    <input
-                        type="text"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                    />
-                </div>
-                <div className="ad__-course-ed-details__item">
-                    <label>Price:</label>
-                    <input
-                        type="text"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                    />
-                </div>
-                <div className="ad__-course-ed-details__item">
-                    <label>Description:</label>
-                    <input
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                </div>
-            </div>
+            <Box sx={{ backgroundColor: '#fff', padding: 4, borderRadius: 2, boxShadow: 3 }}>
+                <TextField
+                    label="Course Name"
+                    fullWidth
+                    variant="outlined"
+                    value={courseName}
+                    onChange={(e) => setCourseName(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                />
+                <TextField
+                    label="Duration"
+                    fullWidth
+                    variant="outlined"
+                    value={days}
+                    onChange={(e) => setDays(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                />
+                <TextField
+                    label="Price"
+                    fullWidth
+                    variant="outlined"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                />
+                <TextField
+                    label="Description"
+                    fullWidth
+                    variant="outlined"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                />
+                <Box sx={{ marginBottom: 2 }}>
+                    <Typography variant="body1">Trainers:</Typography>
+                    <Select
+                        fullWidth
+                        multiple
+                        value={selectedTrainerIds}
+                        onChange={handleTrainerChange}
+                        renderValue={(selected) => {
+                            const selectedTrainers = trainers.filter(trainer => selected.includes(trainer.id));
+                            return selectedTrainers.map(trainer => trainer.fullName).join(', ');
+                        }}
+                        sx={{ padding: '10px', borderRadius: '5px', backgroundColor: '#f1f0f0' }}
+                    >
+                        {trainers.map((trainer) => (
+                            <MenuItem key={trainer.id} value={trainer.id}>
+                                <Checkbox checked={selectedTrainerIds.indexOf(trainer.id) > -1} />
+                                <ListItemText primary={`${trainer.fullName} (id: ${trainer.id})`} />
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </Box>
+            </Box>
 
-            <div className="ad__-course-ed-actions">
-                <button className="ad__-course-ed-actions__submit" onClick={handleSubmitClick}>
-                    Update Course
-                </button>
-            </div>
-        </div>
+            <Box sx={{ textAlign: 'center', marginTop: 4 }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmitClick}
+                    disabled={loading}
+                    sx={{
+                        padding: '12px 30px',
+                        fontSize: '16px',
+                        '&:hover': { backgroundColor: '#0056b3' },
+                    }}
+                >
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Update Course'}
+                </Button>
+            </Box>
+        </Box>
     );
 }
 

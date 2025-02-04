@@ -13,11 +13,13 @@ function AddCourseForm() {
   const [trainerId, setTrainerId] = useState('');
   const [coverImage, setCoverImage] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const token = useSelector((state) => state.auth.token);
-  const trainers = useSelector((state) => state.trainers); // Assuming trainers are stored in the Redux state
+  // const trainers = useSelector((state) => state.trainers); // Assuming trainers are stored in the Redux state
+  const [trainers, setTrainers] = useState([]); // Local state to store trainers
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -41,7 +43,6 @@ function AddCourseForm() {
         },
       });
 
-      console.log(response.data);
       dispatch(setCourses(response.data)); // Update Redux store
       navigate('/admin-profile/manage-courses'); // Redirect to courses page
     } catch (error) {
@@ -53,15 +54,18 @@ function AddCourseForm() {
   // Fetch trainer list (if not already available in Redux store)
   useEffect(() => {
     if (!trainers || trainers.length === 0) {
-      axios.get('http://localhost:8080/trainers')
+      axios.get('http://localhost:8080/trainers/fetch')
         .then((response) => {
           // Dispatch to save trainers in Redux store
-          dispatch({ type: 'SET_TRAINERS', payload: response.data });
+          // dispatch({ type: 'SET_TRAINERS', payload: response.data });
+          setTrainers(response.data);
         })
         .catch((err) => console.error('Error fetching trainers:', err));
     }
   }, [trainers, dispatch]);
-
+  // }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
   return (
     <div className="add-course-form-container">
       <h2>Add New Course</h2>
@@ -107,11 +111,12 @@ function AddCourseForm() {
             <option value="">Select Trainer</option>
             {trainers && trainers.map((trainer) => (
               <option key={trainer.id} value={trainer.id}>
-                {trainer.name}
+                {"id: " + trainer.id + ", "} {"Name: " + trainer.fullName}
               </option>
             ))}
           </select>
         </div>
+
         <div>
           <label>Cover Image:</label>
           <input

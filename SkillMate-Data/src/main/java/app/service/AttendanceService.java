@@ -72,9 +72,20 @@ public class AttendanceService {
         if (newAttendance.getBatch() != null) existingAttendance.setBatch(newAttendance.getBatch());
     }
 
-    // Get Attendance by Student ID
-    public List<Attendance> getAttendancesByStudentId(Long studentId) {
-        // You can create a custom query in your repository to fetch by studentId
-        return attendanceRepository.findAll(); // Placeholder
+    //Get single attendance by student id
+    public ResponseEntity<Attendance> getLatestAttendanceByStudentId(Long studentId) {
+        Optional<Attendance> latestAttendance = attendanceRepository.findLatestAttendanceByStudentId(studentId);
+        return latestAttendance.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
+
+    // Get Attendance by Student ID
+    public ResponseEntity<List<Attendance>> getAttendancesByStudentId(Long studentId) {
+        List<Attendance> attendances = attendanceRepository.findByStudentId(studentId);
+        if (attendances.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(attendances);
+    }
+
 }

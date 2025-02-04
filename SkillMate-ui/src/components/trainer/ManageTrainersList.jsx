@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import './ManageTrainersList.css';
+import Fuse from 'fuse.js';
+import '../admin/AdminWelcome.css';
 import Search from '../Search';
-import editIcon from '../../assets/editIcon.png';
-import deleteIcon from '../../assets/deleteIcon.png';
-import profileImagePlaceholder from '../../assets/profilePic.jpg'; // Placeholder if profile image is missing
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Loading from '../../Loading';
+import { useNavigate } from 'react-router-dom';
+import profileImagePlaceholder from '../../assets/profilePic.jpg';
+import ConfirmationDialog from '../utility/ConfirmationDialog';
+import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
 
 function ManageTrainersList() {
     const navigate = useNavigate();
     const [trainers, setTrainers] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+    const [trainerToDelete, setTrainerToDelete] = useState(null);
 
-    // Fetch trainers data
     useEffect(() => {
         const fetchTrainers = async () => {
             try {
@@ -30,100 +34,128 @@ function ManageTrainersList() {
                         : profileImagePlaceholder,
                 }));
                 setTrainers(fetchedTrainers);
+                setLoading(false);
             } catch (error) {
-                console.error('Error fetching trainers data:', error);
+                // console.error('Error fetching trainers data:', error);
+                showErrorToast('Error fetching trainers data!');
             }
         };
 
         fetchTrainers();
     }, []);
 
-    // Filtered list based on search query
-    const filteredTrainers = trainers.filter(trainer =>
-        trainer.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        trainer.technologies?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        trainer.experience?.toString().includes(searchQuery)
-    );
+    // Fuse.js configuration for search
+    const fuse = new Fuse(trainers, {
+        keys: ['fullName', 'technologies', 'experience'],
+        threshold: 0.3, // Adjust for more/less strict matching
+        includeScore: true,
+    });
 
-
+    // Filter trainers based on search query
+    const filteredTrainers = searchQuery
+        ? fuse.search(searchQuery).map(result => result.item)
+        : trainers;
 
     // Handle delete trainer
     const handleDeleteTrainer = async (trainerId) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this trainer?');
-        if (!confirmDelete) return;
+        setTrainerToDelete(trainerId);
+        setIsConfirmDialogOpen(true); // Open the confirmation dialog
+    };
 
-        try {
-            const response = await axios.delete(`http://localhost:8080/trainers/delete/${trainerId}`);
-            if (response.status === 200) {
-                alert('Trainer deleted successfully!');
-                setTrainers((prevTrainers) => prevTrainers.filter((trainer) => trainer.id !== trainerId));
-            } else {
-                alert('Failed to delete the trainer. Please try again.');
+    // Handle confirming the delete action
+    const handleConfirmDelete = async () => {
+        if (trainerToDelete) {
+            try {
+                const response = await axios.delete(`http://localhost:8080/trainers/delete/${trainerToDelete}`);
+                if (response.status === 200) {
+                    showSuccessToast('Trainer deleted successfully!');
+                    setTrainers((prevTrainers) => prevTrainers.filter((trainer) => trainer.id !== trainerToDelete));
+                    setSearchQuery(''); // Clear search query
+                } else {
+                    showErrorToast('Failed to delete the trainer. Please try again.');
+                }
+            } catch (error) {
+                // console.error('Error deleting the trainer:', error);
+                showErrorToast('An error occurred while trying to delete the trainer.');
             }
-        } catch (error) {
-            console.error('Error deleting the trainer:', error);
-            alert('An error occurred while trying to delete the trainer.');
+            setIsConfirmDialogOpen(false); // Close the dialog after confirming deletion
         }
     };
 
-    // Handle trainer edit click (navigate to the edit page with trainerId)
-    const handleTrainerEditClick = (trainerId) => {
-        navigate(`/admin-profile/edit-trainers/${trainerId}`); // Passing trainerId as a URL parameter
-    };
-
-    // Handle adding new trainer
-    const handleTrainerAddClick = () => {
-        navigate('/admin-add-trainer', { state: { trainerId: null } });
+    // Handle cancel action for deletion
+    const handleCancel = () => {
+        setIsConfirmDialogOpen(false); // Close the dialog without deleting
+        setTrainerToDelete(null); // Reset the trainer to delete
     };
 
     return (
-        <div className="trainers-list-container">
-            <div className="admin-welcome">
-                <h1>Hello, Admin!</h1>
-                <p>Trainer's List</p>
-            </div>
-
-            <Search onSearch={setSearchQuery} />
-
-            <button onClick={handleTrainerAddClick} className="add__new-trainer-btn">
-                Add New Trainer
-            </button>
-
-            <div className="ad__trainers-list">
-                {trainers.length > 0 ? (
-                    filteredTrainers.map((trainer, index) => (
-                        <div key={index} className="ad__trainer-list-card">
-                            <img
-                                className="trainer-profile"
-                                src={trainer.profileImage}
-                                alt={`${trainer.name} profile`}
-                            />
-                            <div className="trainer-details-data">
-                                <h3>{trainer.fullName}</h3>
-                                <p>Experience: {trainer.experience}</p>
-                                <p>Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}</p>
-                                <p>Technologies: {trainer.technologies}</p>
-                                <p>Trainer ID: {trainer.id}</p>
+        <>
+            {loading ? (
+                <Loading />
+            ) : (
+                <div className="container trainers-list-container">
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="admin-welcome">
+                                <h1>Hello, Admin!</h1>
+                                <p>Trainer's List</p>
                             </div>
-                            <button
-                                onClick={() => handleTrainerEditClick(trainer.id)}
-                                className="ad_edit_tr-btn"
-                            >
-                                <img src={editIcon} alt="edit" />
-                            </button>
-                            <button
-                                onClick={() => handleDeleteTrainer(trainer.id)}
-                                className="ad_delete_course-btn"
-                            >
-                                <img src={deleteIcon} alt="delete" />
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-12">
+                            <Search onSearch={setSearchQuery} />
+                        </div>
+                        <p className='col-12'>Number of Results: {filteredTrainers.length}</p>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-12">
+                            <button onClick={() => navigate('/trainer-signup')} className="btn btn-success add__new-trainer-btn mb-5">
+                                Add New Trainer
                             </button>
                         </div>
-                    ))
-                ) : (
-                    <p>No trainers available.</p>
-                )}
-            </div>
-        </div>
+                    </div>
+
+                    <div className="row ad__trainers-list">
+                        {filteredTrainers.length > 0 ? (
+                            filteredTrainers.map((trainer, index) => (
+                                <div key={index} className="col-12 col-md-6 col-lg-4 mb-3">
+                                    <div className="card">
+                                        <img className="card-img-top" src={trainer.profileImage} alt={`${trainer.fullName} profile`} />
+                                        <div className="card-body">
+                                            <h5 className="card-title">{trainer.fullName}</h5>
+                                            <p className="card-text">Experience: {trainer.experience}</p>
+                                            <p className="card-text">Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}</p>
+                                            <p className="card-text">Technologies: {trainer.technologies}</p>
+                                            <p className="card-text">Trainer ID: {trainer.id}</p>
+                                            <button className="btn btn-primary mr-2" onClick={() => navigate(`/trainer-profile-update/${trainer.id}`)}>
+                                                Edit
+                                            </button>
+                                            <button className="btn btn-danger" onClick={() => handleDeleteTrainer(trainer.id)}>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="col-12">
+                                <p>No trainers available.</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <ConfirmationDialog
+                        open={isConfirmDialogOpen}
+                        onClose={handleCancel}
+                        onConfirm={handleConfirmDelete}
+                        message="Are you sure you want to delete this trainer?"
+                    />
+                </div>
+            )}
+        </>
     );
 }
 

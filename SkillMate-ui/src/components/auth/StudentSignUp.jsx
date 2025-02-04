@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import './StudentSignUp.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { TextField, Button, CircularProgress, Select, MenuItem, InputLabel, FormControl, Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Checkbox } from '@mui/material';
 import { setUserData } from '../redux/authSlice';
+import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 
 const StudentSignUp = () => {
     const [fullName, setFullName] = useState('');
@@ -16,6 +15,9 @@ const StudentSignUp = () => {
     const [resume, setResume] = useState(null);
     const [workingStatus, setWorkingStatus] = useState('');
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [showPDF, setShowPDF] = useState(false); // PDF view toggle
+    const username = useSelector((state) => state.auth.username);
 
     const dispatch = useDispatch();
     let navigate = useNavigate();
@@ -61,15 +63,17 @@ const StudentSignUp = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        setLoading(true);
         if (!fullName || !mobileNumber || !email || !address || !qualification || !profilePic || !resume || !workingStatus) {
             setError('Please fill in all fields and upload a profile picture and resume.');
+            showWarningToast('Please fill in all fields and upload a profile picture and resume.');
             return;
         }
 
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(mobileNumber)) {
             setError('Please enter a valid 10-digit mobile number.');
+            showWarningToast('Please enter a valid 10-digit mobile number.');
             return;
         }
 
@@ -85,7 +89,7 @@ const StudentSignUp = () => {
             .then((response) => {
                 if (!response.ok) {
                     return response.text().then((text) => {
-                        console.log(text || response.text());
+                        showSuccessToast('Student data submitted successfully!');
                         throw new Error(text || 'An error occurred on the server.');
                     });
                 }
@@ -93,145 +97,200 @@ const StudentSignUp = () => {
             })
             .then((data) => {
                 if (data) {
-                    // Dispatch user data to Redux store
-                    dispatch(setUserData(data.userData));
-                    setFullName('');
-                    setMobileNumber('');
-                    setEmail('');
-                    setAddress('');
-                    setQualification('');
-                    setProfilePic(null);
-                    setResume(null);
-                    setWorkingStatus('');
-                    setError(null);
-
                     alert('Student data submitted successfully!');
                     navigate("login/mobile");
                 }
             })
             .catch((error) => {
                 setError(error.message || 'An error occurred while submitting the form.');
+                showErrorToast(`${error.message}` || 'An error occurred while submitting the form.');
             });
+        setLoading(false);
     };
 
     return (
-        <div className="bootstrap-scope student-overlay">
-            <div className="student-signup-form-container">
-                <form className="student-signup-form" onSubmit={handleSubmit}>
-                    <h2>Student Sign Up</h2>
-                    {error && <p className="alert alert-danger">{error}</p>}
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f4f6f8">
+            <Box bgcolor="white" p={3} borderRadius={2} boxShadow={3} width="100%" maxWidth="600px">
+                <form onSubmit={handleSubmit}>
+                    {username && <Typography variant="h6" align="center">Welcome, {username}</Typography>}
+                    {!username && <Typography variant="h4" align="center" gutterBottom>Student Sign Up</Typography>}
 
-                    <div className="profile-pic-container">
+                    <Box textAlign="center" mb={2}>
                         {profilePic ? (
-                            <div className="profile-pic-preview">
-                                <img
-                                    className="profile-pic"
-                                    src={`data:image/jpeg;base64,${profilePic}`}
-                                    alt="Profile Preview"
-                                />
-                            </div>
+                            <Box component="img" src={`data:image/jpeg;base64,${profilePic}`} alt="Profile Preview" width={120} height={120} borderRadius="50%" />
                         ) : (
-                            <div className="profile-pic-placeholder">No Image Uploaded</div>
+                            <Typography variant="body1" color="textSecondary">No Profile Picture</Typography>
                         )}
-                    </div>
-                    <label>
-                        Profile Picture:
+                    </Box>
+
+                    <Box mb={2}>
                         <input
                             type="file"
                             accept="image/*"
                             onChange={handleProfilePicChange}
-                            required
+                            style={{ display: 'none' }}
+                            id="profilePicInput"
                         />
-                    </label>
-                    <label>
-                        Name:
-                        <input
-                            type="text"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            className="form-control"
-                            required
-                        />
-                    </label>
+                        <label htmlFor="profilePicInput">
+                            <Button variant="outlined" fullWidth component="span">
+                                Upload Profile Picture
+                            </Button>
+                        </label>
+                    </Box>
 
-                    <label>
-                        Mobile:
-                        <input
-                            type="tel"
-                            value={mobileNumber}
-                            onChange={(e) => setMobileNumber(e.target.value)}
-                            className="form-control"
-                            required
-                        />
-                    </label>
+                    <TextField
+                        label="Full Name"
+                        name="fullName"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
-                    <label>
-                        Email:
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="form-control"
-                            required
-                        />
-                    </label>
+                    <TextField
+                        label="Mobile"
+                        name="mobileNumber"
+                        value={mobileNumber}
+                        onChange={(e) => setMobileNumber(e.target.value)}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
 
-                    <label>
-                        Address:
-                        <input
-                            type="text"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            className="form-control"
-                            required
-                        />
-                    </label>
-                    <label>
-                        Current Work Status:
-                        <select
+                    <TextField
+                        label="Email"
+                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+
+                    <TextField
+                        label="Address"
+                        name="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+
+                    <TextField
+                        label="Qualification"
+                        name="qualification"
+                        value={qualification}
+                        onChange={(e) => setQualification(e.target.value)}
+                        required
+                        fullWidth
+                        margin="normal"
+                    />
+
+                    {/* <TextField
+                        label="Experience (years)"
+                        name="experience"
+                        value={experience}
+                        onChange={(e) => setExperience(e.target.value)}
+                        required
+                        fullWidth
+                        margin="normal"
+                    /> */}
+
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Current Work Status</InputLabel>
+                        <Select
                             name="workingStatus"
                             value={workingStatus}
                             onChange={(e) => setWorkingStatus(e.target.value)}
                             required
                         >
-                            <option value="">Select</option>
-                            <option value="full-time">Full-time</option>
-                            <option value="part-time">Part-time</option>
-                            <option value="freelance">Freelance</option>
-                            <option value="un-employed">Unemployed</option>
-                        </select>
+                            <MenuItem value="full-time">Full-time</MenuItem>
+                            <MenuItem value="part-time">Part-time</MenuItem>
+                            <MenuItem value="freelance">Freelance</MenuItem>
+                            <MenuItem value="un-employed">Unemployed</MenuItem>
+                        </Select>
+                    </FormControl>
 
-                    </label>
-                    <label>
-                        Qualification:
-                        <input
-                            type="text"
-                            value={qualification}
-                            onChange={(e) => setQualification(e.target.value)}
-                            className="form-control"
-                            required
-                        />
-                    </label>
-                    <label>
-                        Resume (PDF):
+                    {/* <Box mb={2}>
+                        <Typography variant="body1" gutterBottom>Technologies:</Typography>
+                        <Box display="flex" flexWrap="wrap">
+                            {['Java', 'Spring Boot', 'JavaScript', 'React', 'Angular', 'React Native'].map((tech) => (
+                                <Box key={tech} mr={2} mb={1}>
+                                    <Checkbox
+                                        value={tech}
+                                        checked={technologies.includes(tech)}
+                                        onChange={handleTechnologiesChange}
+                                    />
+                                    {tech}
+                                </Box>
+                            ))}
+                        </Box>
+                    </Box> */}
+
+                    <Box mb={2}>
                         <input
                             type="file"
                             accept="application/pdf"
                             onChange={handleResumeChange}
-                            required
+                            style={{ display: 'none' }}
+                            id="resumeInput"
                         />
-                    </label>
+                        <label htmlFor="resumeInput">
+                            <Button variant="outlined" fullWidth component="span">
+                                Upload Resume (PDF)
+                            </Button>
+                        </label>
+                    </Box>
 
+                    {resume && (
+                        <Box mb={2} textAlign="center">
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => setShowPDF(true)}  // Show PDF in iframe when clicked
+                            >
+                                View Resume
+                            </Button>
+                        </Box>
+                    )}
 
-                    <button type="submit" className="btn btn-primary">
-                        Submit
-                    </button>
+                    <Dialog open={showPDF} onClose={() => setShowPDF(false)} maxWidth="md" fullWidth>
+                        <DialogTitle>Resume Preview</DialogTitle>
+                        <DialogContent>
+                            <iframe
+                                src={`data:application/pdf;base64,${resume}`}
+                                width="100%"
+                                height="500px"
+                                title="Resume"
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setShowPDF(false)} color="primary">
+                                Close
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Box mb={2}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            disabled={loading}
+                        >
+                            {loading ? 'Submitting...' : 'Submit'}
+                        </Button>
+                    </Box>
                 </form>
-                <Link to="/login/mobile" className="btn btn-link">
-                    Have an account? Please Login
+
+                <Link to="/login/mobile" style={{ display: 'block', textAlign: 'center', marginTop: '16px' }}>
+                    Have an account? Please login
                 </Link>
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 
