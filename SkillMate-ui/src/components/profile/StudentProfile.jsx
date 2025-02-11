@@ -52,7 +52,7 @@ function StudentProfile() {
                     <Avatar
                         src={user.profilePic}
                         alt={user.name}
-                        sx={{ width: 120, height: 120, boxShadow: 3, border: '3px solid white' }}
+                        sx={{ width: 180, height: 220, objectFit: 'cover', objectPosition: 'top', borderRadius: '0', padding: '10px' }}
                     />
                     <Typography variant="h4" fontWeight="bold">
                         Welcome, {userData?.roles[0] !== 'STUDENT' ? username : user.name}

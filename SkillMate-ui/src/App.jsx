@@ -7,7 +7,7 @@ import Courses from './components/courses/Courses';
 import CardSection from './components/home/CardSection';
 import StudentSignUp from './components/auth/StudentSignUp';
 import TrainerSignUp from './components/auth/TrainerSignUp';
-import Footer from './components/home/Footer';
+// import Footer from './components/home/Footer';
 import Community from './components/home/community/Community';
 import Subscription from './components/subscription/Subscription';
 import DeleteProfile from './components/profile/DeleteProfile';
@@ -47,6 +47,11 @@ import UpdateBatch from './components/admin/UpdateBatch';
 import EnquiryForm from './components/contact/EnquiryForm';
 import { useSelector } from 'react-redux';
 import ConfirmationDialog from './components/utility/ConfirmationDialog';
+import Footer from './components/home/footer/Footer';
+import SoftwareEngineer from './components/home/footer/career/SoftwareEngineer';
+import FrontendDeveloper from './components/home/footer/career/FrontendDeveloper';
+import BackendDeveloper from './components/home/footer/career/BackendDeveloper';
+import FullstackDeveloper from './components/home/footer/career/FullstackDeveloper';
 
 
 function App() {
@@ -138,7 +143,11 @@ function App() {
         <Route path="/admin-profile/manage-batches/edit/:batchId" element={<UpdateBatch />} />
         {/* <Route path="/rating_review_form" element={<RatingForm />} /> */}
 
-        {/* <Route path="/login-profile" element={<LoginProfile />} /> */}
+        {/* Footer Career section */}
+        <Route path="/careers/software-engineer" element={<SoftwareEngineer />} />
+        <Route path="/careers/frontend-developer" element={<FrontendDeveloper />} />
+        <Route path="/careers/backend-developer" element={<BackendDeveloper />} />
+        <Route path="/careers/fullstack-developer" element={<FullstackDeveloper />} />
 
       </Routes>
 

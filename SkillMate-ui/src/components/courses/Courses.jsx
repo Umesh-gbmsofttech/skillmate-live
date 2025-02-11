@@ -80,7 +80,7 @@ function Courses() {
   return (
     <div>
       <Box sx={{ padding: 2, backgroundColor: '#1A2130' }}>
-        <Typography variant="h4" gutterBottom sx={{ color: '#3B6790' }}>
+        <Typography variant="h4" gutterBottom sx={{ color: '#3B6790' }} style={{ textAlign: 'center' }}>
           Explore a wide range of courses designed to help you succeed in the tech industry
         </Typography>
 
@@ -94,7 +94,7 @@ function Courses() {
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 3 }}>
             {filteredCourses.map((course) => (
               <Card key={course.id} sx={{ width: 300, boxShadow: 3, backgroundColor: '#71BBB2', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 2 }}>
-                
+
                 <CardMedia
                   component="img"
                   height="250"
@@ -111,15 +111,15 @@ function Courses() {
                   </Typography>
                 </CardContent>
                 {username === 'ADMIN' && (
-                 
-                 <img
-                   onClick={() => handleCourseEditClick(course)}
-                   src={editIcon}
-                   alt="edit"
-                   style={{ width: 20, height: 20, cursor: 'pointer',position: 'relative', top: '0%', right: '-88%' }}
-                 />
-              
-             )}
+
+                  <img
+                    onClick={() => handleCourseEditClick(course)}
+                    src={editIcon}
+                    alt="edit"
+                    style={{ width: 20, height: 20, cursor: 'pointer', position: 'relative', top: '0%', right: '-88%' }}
+                  />
+
+                )}
                 <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2 }}>
                   <Button
                     variant="contained"
@@ -137,7 +137,7 @@ function Courses() {
                     BUY NOW
                   </Button>
                 </Box>
-                
+
               </Card>
             ))}
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import logo from '../../assets/skillmate.jpg'
-import facebook from '../../assets/facebook.png'
-import instagram from '../../assets/instagram.png'
-import linkedid from '../../assets/linkedin.png'
+import { Link } from 'react-router-dom'; // Import Link for internal navigation
+import facebook from '../../../assets/facebook.png';
+import instagram from '../../../assets/instagram.png';
+import linkedid from '../../../assets/linkedin.png';
 import './Footer.css';
-import CompanySignature from './CompanySignature';
+import CompanySignature from '../CompanySignature';
 
 function Footer() {
     return (
@@ -13,34 +13,41 @@ function Footer() {
                 <div className="footer-section get-in-touch" id="get-in-touch">
                     <h4 className="footer-heading">Get in touch</h4>
                     <ul className="footer-list">
-                        <a href="https://www.instagram.com/_skillmate/" target='_blank'>
+                        <a href="https://www.instagram.com/_skillmate/" target='_blank' rel="noopener noreferrer">
                             <li className="footer-item">
                                 <img src={instagram} alt="Instagram Logo" />
                                 Instagram
                             </li>
                         </a>
-                        <a href="https://www.facebook.com/profile.php?id=61563688179860" target='_blank'>
+                        <a href="https://www.facebook.com/profile.php?id=61563688179860" target='_blank' rel="noopener noreferrer">
                             <li className="footer-item">
                                 <img src={facebook} alt="Facebook Logo" />
                                 Facebook
                             </li>
                         </a>
-                        <a href="https://www.linkedin.com/company/104900751/admin/dashboard/" target='_blank'>
+                        <a href="https://www.linkedin.com/company/104900751/admin/dashboard/" target='_blank' rel="noopener noreferrer">
                             <li className="footer-item">
                                 <img src={linkedid} alt="LinkedIn Logo" />
                                 LinkedIn
                             </li>
                         </a>
                     </ul>
-
                 </div>
                 <div className="footer-section use-cases" id="use-cases">
                     <h4 className="footer-heading">Career</h4>
                     <ul className="footer-list">
-                        <li className="footer-item">UI Design</li>
-                        <li className="footer-item">Wireframing</li>
-                        <li className="footer-item">Prototyping</li>
-                        <li className="footer-item">Team Collaboration</li>
+                        <li className="footer-item">
+                            <Link to="/careers/software-engineer">Software Engineer</Link>
+                        </li>
+                        <li className="footer-item">
+                            <Link to="/careers/frontend-developer">Frontend Developer</Link>
+                        </li>
+                        <li className="footer-item">
+                            <Link to="/careers/backend-developer">Backend Developer</Link>
+                        </li>
+                        <li className="footer-item">
+                            <Link to="/careers/fullstack-developer">Full Stack Developer</Link>
+                        </li>
                     </ul>
                 </div>
                 <div className="footer-section explore" id="explore">

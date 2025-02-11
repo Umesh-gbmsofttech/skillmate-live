@@ -24,7 +24,7 @@ function TrainerProfile() {
     const [loading, setLoading] = useState(true);
     const [showPDF, setShowPDF] = useState(false);
 
-    
+
 
     useEffect(() => {
         const fetchBatches = async () => {
@@ -84,7 +84,7 @@ function TrainerProfile() {
                             <Avatar
                                 src={userData?.profilePic ? `data:image/jpeg;base64,${userData.profilePic}` : defaultProfilePic}
                                 alt="Profile"
-                                sx={{ width: 180, height: 220  , objectFit: 'cover', objectPosition: 'top' , borderRadius:'0',padding:'10px' }}
+                                sx={{ width: 180, height: 220, objectFit: 'cover', objectPosition: 'top', borderRadius: '0', padding: '10px' }}
 
                             />
                             <Typography variant="h4" fontWeight="bold">
@@ -158,15 +158,26 @@ function TrainerProfile() {
                 </>
             )}
             {/* Courses & Batches */}
-            
-            <div style={{display:'flex', justifyContent:'center', width:'100%'}}>
-            <Meetings userData={userData} courses={courses} trainerId={trainerId} />
+
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                <Meetings userData={userData} courses={courses} trainerId={trainerId} />
             </div>
 
             {/* Batch Selection */}
-            <FormControl fullWidth sx={{ mt: 3, marginLeft: '120px', marginRight: '120px', color: 'white' }}>
+            <FormControl
+                sx={{
+                    maxWidth: 1000,
+                    mx: 'auto',
+                    boxShadow: 2,
+                    mt: 5,
+                    display: 'flex',
+                    alignSelf: 'center',
+                    justifySelf: 'center',
+                }}
+            >
                 <InputLabel style={{ color: 'white' }}>Select Batch</InputLabel>
-                <Select style={{ width: '1000px' }} value={batch} onChange={(e) => setBatch(e.target.value)} label="Select Batch">
+                <Select
+                    value={batch} onChange={(e) => setBatch(e.target.value)} label="Select Batch">
                     <MenuItem value="">-- Select Batch --</MenuItem>
                     {batches.map((batchItem) => (
                         <MenuItem key={batchItem.id} value={batchItem.id}>
@@ -175,6 +186,7 @@ function TrainerProfile() {
                     ))}
                 </Select>
             </FormControl>
+
 
             <Attendances batch={batch} />
         </>

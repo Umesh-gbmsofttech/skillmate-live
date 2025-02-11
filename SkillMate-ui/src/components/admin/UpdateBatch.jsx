@@ -232,58 +232,53 @@ function UpdateBatch() {
 
               {/* ..............................CARDS.................................... */}
 
-              {/* Display Trainer Cards */}
-              <Grid item xs={12} margin={2}>
-                <Typography variant="h6" gutterBottom>Trainers</Typography>
-                <Grid container spacing={2}>
-                  {batch.trainer.map((trainer) => (
-                    <Grid item xs={12} sm={2} key={trainer.id}>
-                      <Card>
-                        <CardMedia
-                          component="img"
-                          alt="Trainer Image"
-                          height="140"
-                          image={`data:image/jpeg;base64,${trainer.profilePic}` || defaultProfileImage}
+              {/* Display Trainer and Course Cards */}
+              <Grid item xs={12} margin={2} >
+                <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
+                  <>
+                    {batch.trainer.map((trainer) => (
+                      <Grid item xs={12} sm={2} key={trainer.id}>
+                        <Typography variant="h6" gutterBottom>Trainer</Typography>
+                        <Card>
+                          <CardMedia
+                            component="img"
+                            alt="Trainer Image"
+                            height="140"
+                            image={`data:image/jpeg;base64,${trainer.profilePic}` || defaultProfileImage}
 
-                        />
-                        <CardContent>
-                          <Typography variant="h5">{trainer.fullName}</Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            Experience: {trainer.experience || 'No experience'}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            Technologies:{trainer.technologies.join(', ') || 'No Technologies available'}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Grid>
-
-              {/* Display Course Cards */}
-              <Grid item xs={12} margin={2}>
-                <Typography variant="h6" gutterBottom>Courses</Typography>
-                <Grid container spacing={2}>
-                  {batch.course.map((course) => (
-                    <Grid item xs={12} sm={2} key={course.id}>
-                      <Card>
-                        <CardMedia
-                          component="img"
-                          alt="Course Image"
-                          height="140"
-                          // image={course.coverImage || defaultProfileImage}
-                          image={`data:image/jpeg;base64,${course.coverImage}` || defaultProfileImage}
-                        />
-                        <CardContent>
-                          <Typography variant="h5">{course.courseName}</Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {course.description || 'No description available'}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
+                          />
+                          <CardContent>
+                            <Typography variant="h5">{trainer.fullName}</Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              Experience: {trainer.experience || 'No experience'}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              Technologies:{trainer.technologies.join(', ') || 'No Technologies available'}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                    {batch.course.map((course) => (
+                      <Grid item xs={12} sm={2} key={course.id}>
+                        <Typography variant="h6" gutterBottom>Course</Typography>
+                        <Card>
+                          <CardMedia
+                            component="img"
+                            alt="Course Image"
+                            height="140"
+                            // image={course.coverImage || defaultProfileImage}
+                            image={`data:image/jpeg;base64,${course.coverImage}` || defaultProfileImage}
+                          />
+                          <CardContent>
+                            <Typography variant="h5">{course.courseName}</Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              {course.description || 'No description available'}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}</>
                 </Grid>
               </Grid>
 

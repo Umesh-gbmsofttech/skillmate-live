@@ -83,6 +83,7 @@ function Navbar() {
             sx={{
               position: 'relative',
               display: 'inline-block',
+              textDecoration: isActiveLink('/') ? 'underline' : 'none', // For active link
               '&:hover': {
                 color: '#F0F0F0',
                 cursor: 'pointer',
@@ -92,7 +93,7 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: '100%',
+                width: isActiveLink('/') ? '0%' : '100%',
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
@@ -102,12 +103,11 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: '0%',
+                width: isActiveLink('/') ? '0%' : '0%', // Active link should show underline immediately
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
               },
-              textDecoration: isActiveLink('/') ? 'underline' : 'none',
             }}
           >
             Home
@@ -118,6 +118,7 @@ function Navbar() {
             sx={{
               position: 'relative',
               display: 'inline-block',
+              textDecoration: isActiveLink('/courses') ? 'underline' : 'none',
               '&:hover': {
                 color: '#F0F0F0',
                 cursor: 'pointer',
@@ -127,7 +128,7 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: '100%',
+                width: isActiveLink('/courses') ? '0%' : '100%',
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
@@ -137,21 +138,22 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: '0%',
+                width: isActiveLink('/courses') ? '0%' : '0%', // Active link should show underline immediately
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
               },
-              textDecoration: isActiveLink('/courses') ? 'underline' : 'none',
             }}
           >
             Courses
           </Typography>
+
           <Typography
             onClick={() => handleNavigation('/community')}
             sx={{
               position: 'relative',
               display: 'inline-block',
+              textDecoration: isActiveLink('/community') ? 'underline' : 'none',
               '&:hover': {
                 color: '#F0F0F0',
                 cursor: 'pointer',
@@ -161,7 +163,7 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: '100%',
+                width: isActiveLink('/community') ? '0%' : '100%',
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
@@ -171,55 +173,21 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: '0%',
+                width: isActiveLink('/community') ? '0%' : '0%', // Active link should show underline immediately
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
               },
-              textDecoration: isActiveLink('/community') ? 'underline' : 'none',
             }}
           >
             Community
           </Typography>
-          {/* <Typography
-            onClick={() => handleNavigation('/resources')}
-            sx={{
-              position: 'relative',
-              display: 'inline-block',
-              '&:hover': {
-                color: '#F0F0F0',
-                cursor: 'pointer',
-              },
-              '&:hover::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                width: '100%',
-                height: '2px',
-                backgroundColor: '#FF8C00',
-                transition: 'width 0.3s ease',
-              },
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                width: '0%',
-                height: '2px',
-                backgroundColor: '#FF8C00',
-                transition: 'width 0.3s ease',
-              },
-              textDecoration: isActiveLink('/resources') ? 'underline' : 'none',
-            }}
-          >
-            Resources
-          </Typography> */}
           <Typography
             onClick={() => handleNavigation('/contact')}
             sx={{
               position: 'relative',
               display: 'inline-block',
+              textDecoration: isActiveLink('/contact') ? 'underline' : 'none',
               '&:hover': {
                 color: '#F0F0F0',
                 cursor: 'pointer',
@@ -229,7 +197,7 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: '100%',
+                width: isActiveLink('/contact') ? '0%' : '100%',
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
@@ -239,51 +207,17 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: '0%',
+                width: isActiveLink('/contact') ? '0%' : '0%', // Active link should show underline immediately
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
               },
-              textDecoration: isActiveLink('/contact') ? 'underline' : 'none',
             }}
           >
             Contact
           </Typography>
           {isAuthenticated && (
             <>
-              {/* <Typography
-                onClick={() => handleNavigation('/subscriptions')}
-                sx={{
-                  position: 'relative',
-                  display: 'inline-block',
-                  '&:hover': {
-                    color: '#F0F0F0',
-                    cursor: 'pointer',
-                  },
-                  '&:hover::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '2px',
-                    backgroundColor: '#FF8C00',
-                    transition: 'width 0.3s ease',
-                  },
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    width: '0%',
-                    height: '2px',
-                    backgroundColor: '#FF8C00',
-                    transition: 'width 0.3s ease',
-                  },
-                }}
-              >
-                Subscription
-              </Typography> */}
               <Typography
                 onClick={handleLogout}
                 sx={{

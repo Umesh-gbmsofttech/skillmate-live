@@ -27,15 +27,11 @@ function Meetings({ userData, trainerId, courses }) {
             let allStudents = [];
             for (let batch of trainerBatches) {
                 try {
-                    // console.log("trainer's batch id: " + batch?.id);
                     const response = await axios.get(`http://localhost:8080/students/batch/${batch.id}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
-                    // console.log('students by batch id: ' + response.data)
                     allStudents = [...allStudents, ...response.data];
-                    // console.log('all students: ', allStudents);
                 } catch (error) {
-                    // console.error('Error fetching students:', error);
                     showErrorToast(`Error fetching students: ${error}`);
                 }
             }
@@ -48,13 +44,9 @@ function Meetings({ userData, trainerId, courses }) {
                             const coursesResponse = await axios.get(`http://localhost:8080/students/fetch/my-courses/${student.id}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             });
-                            // Attach the fetched courses to the student
                             student.courses = coursesResponse.data;
-                            // console.log("student", student.id)
-                            // console.log('student my courses: ', coursesResponse.data);
                         }
                     } catch (error) {
-                        // console.error(`Error fetching courses for student ${student.id}:`, error);
                         showErrorToast(`Error fetching courses for student ${student.id}:, ${error}`);
                     }
                     return student;
@@ -67,7 +59,6 @@ function Meetings({ userData, trainerId, courses }) {
         if (trainerBatches.length) fetchStudents();
     }, [trainerBatches, token]);
 
-    console.log("Students: ", students)
     // Fetch batches for the trainer
     useEffect(() => {
         const fetchBatches = async () => {
@@ -76,9 +67,7 @@ function Meetings({ userData, trainerId, courses }) {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setTrainerBatches(response.data);
-                // console.log('trainer batches: ', response.data);
             } catch (error) {
-                // console.error('Error fetching batches:', error);
                 showErrorToast(`Error fetching batches: ${error}`);
             }
         };
@@ -124,29 +113,16 @@ function Meetings({ userData, trainerId, courses }) {
             const studentCourses = (student.courses || []).map((course) => course.id);
             const studentBatches = (student?.batches || []).map((batch) => batch.id);
 
-            // console.log("Checking student:", student.id);
-            // console.log("Student Courses:", studentCourses);
-            // console.log("Selected Course:", meetingDetails.selectedCourse);
-            // console.log("Student Batches:", studentBatches);
-            // console.log("Selected Batches:", meetingDetails.selectedBatches);
-
-            const courseMatches = studentCourses.includes(parseInt(meetingDetails.selectedCourse)); // Ensure they are integers
+            const courseMatches = studentCourses.includes(parseInt(meetingDetails.selectedCourse));
             const batchMatches = studentBatches.some((batchId) =>
                 meetingDetails.selectedBatches.includes(batchId)
             );
 
             return courseMatches;
-            // return courseMatches && batchMatches;
         }).map((student) => ({
             id: student.id,
         }));
 
-        console.log("Selected Student IDs: ", selectedStudentIds);
-
-
-
-
-        console.log(students)
         if (selectedStudentIds.length === 0) {
             showWarningToast("No students match the selected course and batch.");
             return;
@@ -178,20 +154,19 @@ function Meetings({ userData, trainerId, courses }) {
 
             setPreviousMeetings((prevMeetings) => [response.data, ...prevMeetings]);
         } catch (error) {
-            // console.error("Error saving meeting:", error);
             showErrorToast(`Error saving meeting: ${error}`);
         }
     };
 
     return (
-        <div style={{ padding: '40px 120px 10px 120px', width:'70%' }}>
+        <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto' }}>
             <Paper elevation={3} style={{ padding: '20px' }}>
                 <Typography variant="h5" gutterBottom>
                     Create a Meeting
                 </Typography>
                 <Grid container spacing={2}>
                     {/* Multiple Batches Selection */}
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <FormControl fullWidth variant="outlined">
                             <InputLabel>Choose Batches</InputLabel>
                             <Select
@@ -204,11 +179,7 @@ function Meetings({ userData, trainerId, courses }) {
                                 {trainerBatches.map((batch) => (
                                     <MenuItem key={batch.id} value={batch.id}>
                                         <Checkbox checked={meetingDetails.selectedBatches.indexOf(batch.id) > -1} />
-                                        {/* Display the course name or a fallback message */}
-                                        <ListItemText
-                                            primary={batch?.course ? `Batch Id: ${batch.id} ` : `${batch.id} `}
-                                        />
-
+                                        <ListItemText primary={batch?.course ? `Batch Id: ${batch.id} ` : `${batch.id} `} />
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -216,7 +187,7 @@ function Meetings({ userData, trainerId, courses }) {
                     </Grid>
 
                     {/* Single Course Selection */}
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sm={6} md={4}>
                         <FormControl fullWidth variant="outlined">
                             <InputLabel>Choose Course</InputLabel>
                             <Select

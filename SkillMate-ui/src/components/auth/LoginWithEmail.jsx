@@ -132,7 +132,7 @@ const LoginWithEmail = () => {
               />
             </div>
             <div className="d-grid">
-              <button type="submit" className="btn btn-success" disabled={loading}>
+              <button type="submit" className="btn btn-success w-100" disabled={loading}>
                 {loading ? (
                   <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 ) : (
