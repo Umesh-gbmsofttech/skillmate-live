@@ -126,7 +126,7 @@ function Attendances({ batch }) {
     };
 
     return (
-        <div className="attendance-list">
+        <div style={{ padding: '0px 120px 10px 120px' }}>
             {loading ? (
                 <Loading />
             ) : (

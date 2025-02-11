@@ -228,7 +228,7 @@ public class TrainerController {
 
 	// Delete a Trainer
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
+	public ResponseEntity<String> deleteTrainer(@PathVariable Long id) {
 		try {
 			trainerService.deleteTrainer(id);
 			return ResponseEntity.ok("trainer profile deleted successfully");

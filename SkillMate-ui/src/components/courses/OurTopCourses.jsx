@@ -1,20 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './OurTopCourses.css';
 import { useNavigate } from 'react-router-dom';
-import editIcon from '../../assets/editIcon.png';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { Box, Typography, Button, IconButton, Grid } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit'; // MUI Edit icon
 
 function OurTopCourses() {
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const token = useSelector((state) => state.auth.token); // Token from Redux state
-    const courses = useSelector((state) => state.courses.courses); // Courses from Redux store
-    // const [courses, setCourses] = useState([]);
+    const token = useSelector((state) => state.auth.token);
+    const courses = useSelector((state) => state.courses.courses);
+    const username = useSelector((state) => state.auth.username);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [visibleCards, setVisibleCards] = useState([]);
+
+    // Ref to hold the course cards
+    const cardRefs = useRef([]);
 
     const handleBuyNowClick = (course) => {
         navigate('/subscriptions', { state: { course } });
@@ -24,88 +26,120 @@ function OurTopCourses() {
         navigate('/admin-profile/edit-courses', { state: { course } });
     };
 
-
-    const [visibleCards, setVisibleCards] = useState([]);
-
-    // Ref to hold the course cards
-    const cardRefs = useRef([]);
-
-    useEffect(() => {
-        // console.log(courses);
-        // Ensure cardRefs is correctly initialized
-        cardRefs.current = cardRefs.current.slice(0, courses?.length);
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            },
-            { threshold: 0.5 } // Trigger when 50% is visible
-        );
-
-        // Observe each card element
-        cardRefs.current.forEach((course, index) => {
-            if (course) observer.observe(course);
-        });
-
-        return () => observer.disconnect();
-    }, [courses]);
     useEffect(() => {
         if (!courses || courses.length === 0) {
             const fetchCourses = async () => {
-                setLoading(true); // Ensure loading state is set before fetching
+                setLoading(true);
                 try {
                     const response = await axios.get('http://localhost:8080/courses/fetch', {
                         headers: {
                             'Content-Type': 'application/json',
-                            // 'Authorization': `Bearer ${token}`, // Uncomment if required
                         },
                     });
-                    console.log(response.data)
-                    dispatch({ type: "SET_COURSES", payload: response.data }); // Fix: Dispatching setCourses action
+                    dispatch({ type: "SET_COURSES", payload: response.data });
                 } catch (error) {
                     setError('Failed to fetch courses.');
                 } finally {
-                    setLoading(false); // Ensure loading state is reset
+                    setLoading(false);
                 }
             };
 
             fetchCourses();
         }
-    }, [dispatch, courses]); // Dependency updated to avoid unnecessary re-fetching
 
+        // Intersection Observer
+        cardRefs.current = cardRefs.current.slice(0, courses?.length);
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.5 });
 
-    console.log(courses)
+        cardRefs.current.forEach((course, index) => {
+            if (course) observer.observe(course);
+        });
+
+        return () => observer.disconnect();
+    }, [courses, dispatch]);
+
     return (
-        <div className='ourTopCoursesContainer'>
-            <h3 className='ourTopCoursesHeading'>Our Top Courses</h3>
-            <div className="ourTopCoursesCardSection">
+        <Box sx={{ backgroundColor: '#1A2130', padding: 3 }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 3, color: '#A6CDC6' }}>
+                Our Top Courses
+            </Typography>
+            <Grid container spacing={4} justifyContent="center">
                 {courses?.map((course, index) => (
-                    <div
-                        key={index}
-                        ref={(el) => (cardRefs.current[index] = el)}
-                        className="courseCard"
-                    >
-                        {/* Render the course image using Base64 encoding */}
-                        <img
-                            className='cardImage'
-                            src={`data:image/jpeg;base64,${course.coverImage}`}
-                            alt={course.courseName}
-                        />
-                        <div className="cardDetails">
-                            <h4 className="cardCourseName">{course.courseName}</h4>
-                            <h4 className="cardTrainerName">{course.trainerName || 'Trainer Name'}</h4>
-                            <p className="cardRating">{course.rating || 'No reviews yet'}</p>
-                            <button onClick={() => handleBuyNowClick(course)} className="cardBuyNowButton">Buy Now</button>
-                            <img onClick={() => handleCourseEditClick(course)} src={editIcon} alt="Edit" className="editIcon" />
-                        </div>
-                    </div>
+                    <Grid item key={index} xs={12} sm={6} md={4}>
+                        <Box
+                            ref={(el) => (cardRefs.current[index] = el)}
+                            sx={{
+                                boxShadow: 4,
+                                backgroundColor: '#FBF5DD',
+                                borderRadius: 2,
+                                overflow: 'hidden',
+                                opacity: 0,
+                                transform: 'translateY(50px)',
+                                transition: 'transform 0.8s ease, opacity 1.8s ease',
+                                '&.visible': {
+                                    opacity: 1,
+                                    transform: 'translateY(0)',
+                                },
+                                '&:hover': {
+                                    transform: 'scale(1.02)',
+                                    boxShadow: 10,
+                                },
+                            }}
+                        >
+                            <img
+                                src={`data:image/jpeg;base64,${course.coverImage}`}
+                                alt={course.courseName}
+                                style={{ width: '100%', height: 230, objectFit: 'cover' }}
+                            />
+                            <Box sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333', marginBottom: 1 }}>
+                                    {course.courseName}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#555', marginBottom: 1 }}>
+                                    {course.trainerName || 'Trainer Name'}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#555', marginBottom: 1 }}>
+                                    {course.rating || 'No reviews yet'}
+                                </Typography>
+                                <Button
+                                    onClick={() => handleBuyNowClick(course)}
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{
+                                        marginTop: 1,
+                                        width: '100%',
+                                    }}
+                                >
+                                    Buy Now
+                                </Button>
+                                {username === 'ADMIN' && (
+                                    <IconButton
+                                        onClick={() => handleCourseEditClick(course)}
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 300,
+                                            right: 16,
+                                            width: 20,
+                                            height: 20,
+                                            // backgroundColor: '',
+                                            '&:hover': { transform: 'scale(1.1)', backgroundColor: 'yellowgreen', },
+                                        }}
+                                    >
+                                        <EditIcon fontSize="small" />
+                                    </IconButton>
+                                )}
+                            </Box>
+                        </Box>
+                    </Grid>
                 ))}
-            </div>
-        </div>
+            </Grid>
+        </Box>
     );
 }
 

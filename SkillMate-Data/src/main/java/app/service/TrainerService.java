@@ -172,27 +172,40 @@ public class TrainerService {
 //    }
 
 	@Transactional
-	public void deleteTrainer(Long id) {
+	public synchronized void deleteTrainer(Long id) {
+	    Trainer trainer = trainerRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Trainer not found with ID: " + id));
 
-		Trainer trainer = trainerRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Trainer not found with ID: " + id));
+	    TrainerProfileDeleted trainerProfileDeleted = new TrainerProfileDeleted();
+	    trainerProfileDeleted.setTrainerId(trainer.getId());
+	    trainerProfileDeleted.setProfilePic(trainer.getProfilePic());
+	    trainerProfileDeleted.setFullName(trainer.getFullName());
+	    trainerProfileDeleted.setMobileNumber(trainer.getMobileNumber());
+	    trainerProfileDeleted.setEmail(trainer.getEmail());
+	    trainerProfileDeleted.setWorkingStatus(trainer.getWorkingStatus());
+	    trainerProfileDeleted.setExperience(trainer.getExperience());
+	    trainerProfileDeleted.setCompanyName(trainer.getCompanyName());
+	    trainerProfileDeleted.setAddress(trainer.getAddress());
+	    trainerProfileDeleted.setQualification(trainer.getQualification());
+	    trainerProfileDeleted.setResume(trainer.getResume());
+	    synchronized (this) {
 
-		TrainerProfileDeleted trainerProfileDeleted = new TrainerProfileDeleted();
-		trainerProfileDeleted.setTrainerId(trainer.getId());
-		trainerProfileDeleted.setProfilePic(trainer.getProfilePic());
-		trainerProfileDeleted.setFullName(trainer.getFullName());
-		trainerProfileDeleted.setMobileNumber(trainer.getMobileNumber());
-		trainerProfileDeleted.setEmail(trainer.getEmail());
-		trainerProfileDeleted.setWorkingStatus(trainer.getWorkingStatus());
-		trainerProfileDeleted.setExperience(trainer.getExperience());
-		trainerProfileDeleted.setCompanyName(trainer.getCompanyName());
-		trainerProfileDeleted.setAddress(trainer.getAddress());
-		trainerProfileDeleted.setQualification(trainer.getQualification());
-		trainerProfileDeleted.setResume(trainer.getResume());
+	    trainerProfileDeletedRepository.save(trainerProfileDeleted);
 
-		trainerProfileDeletedRepository.save(trainerProfileDeleted);
+	    trainerRepository.deleteBatchTrainersByTrainerId(id);
+	    trainerRepository.deleteCourseTrainersByTrainerId(id);
+	    trainerRepository.deleteStudentTrainersByTrainerId(id);
+	    trainerRepository.deleteTrainerTechnologiesByTrainerId(id);
+	    trainerRepository.deleteRatingReviewsForTrainer(id);
+	    trainerRepository.deleteRatingReviewsByTrainer(id);
+	    trainerRepository.deleteMeetingStudentsByTrainerId(id);
+	    trainerRepository.deleteMeetingBatchesByTrainerId(id);
+	    trainerRepository.deleteMeetingsByTrainerId(id);
+	    trainerRepository.deleteTrainerRolesByTrainerId(id);
 
-		trainerRepository.deleteById(id);
+	    trainerRepository.deleteById(id);
+	    }
 	}
+
 
 }

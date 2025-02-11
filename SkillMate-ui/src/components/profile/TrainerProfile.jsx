@@ -13,7 +13,7 @@ import hideEye from '../../assets/hide-eye.png';
 import editIcon from '../../assets/editIcon.png';
 
 function TrainerProfile() {
-    const [showProfile, setShowProfile] = useState(true);
+    const [showProfile, setShowProfile] = useState(false);
     const userData = useSelector((state) => state.auth.userData);
     const navigate = useNavigate();
     const [batch, setBatch] = useState('');
@@ -68,9 +68,9 @@ function TrainerProfile() {
                 <>
                     <Box
                         sx={{
-                            maxWidth: 900,
+                            maxWidth: 1000,
                             mx: 'auto',
-                            p: 4,
+                            p: 2,
                             bgcolor: 'background.paper',
                             borderRadius: 3,
                             boxShadow: 4,
@@ -78,7 +78,7 @@ function TrainerProfile() {
                         }}
                     >
                         {/* Profile Header */}
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Avatar
                                 src={userData?.profilePic ? `data:image/jpeg;base64,${userData.profilePic}` : defaultProfilePic}
                                 alt="Profile"
@@ -158,9 +158,9 @@ function TrainerProfile() {
             <Meetings userData={userData} courses={courses} trainerId={trainerId} />
 
             {/* Batch Selection */}
-            <FormControl fullWidth sx={{ mt: 3 }}>
-                <InputLabel>Select Batch</InputLabel>
-                <Select value={batch} onChange={(e) => setBatch(e.target.value)} label="Select Batch">
+            <FormControl fullWidth sx={{ mt: 3, marginLeft: '120px', marginRight: '120px', color: 'white' }}>
+                <InputLabel style={{ color: 'white' }}>Select Batch</InputLabel>
+                <Select style={{ width: '1000px' }} value={batch} onChange={(e) => setBatch(e.target.value)} label="Select Batch">
                     <MenuItem value="">-- Select Batch --</MenuItem>
                     {batches.map((batchItem) => (
                         <MenuItem key={batchItem.id} value={batchItem.id}>

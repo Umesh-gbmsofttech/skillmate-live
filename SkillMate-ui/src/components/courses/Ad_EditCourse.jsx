@@ -5,6 +5,8 @@ import { updateCourse } from '../redux/courseActions';
 import axios from 'axios';
 import { Box, Typography, TextField, Button, Select, MenuItem, CircularProgress, Checkbox, ListItemText } from '@mui/material';
 import courseCoverImage from '../../assets/profilePic.jpg';
+import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
+import { CloudUpload } from '@mui/icons-material';
 
 function AdEditCourse() {
     const [courseName, setCourseName] = useState('');
@@ -13,8 +15,6 @@ function AdEditCourse() {
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [courseCoverImage, setProfilePic] = useState(null);
-    const [trainers, setTrainers] = useState([]);
-    const [selectedTrainerIds, setSelectedTrainerIds] = useState([]);
     const [loading, setLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState(null);  // New state for image preview
     const dispatch = useDispatch();
@@ -30,28 +30,12 @@ function AdEditCourse() {
             setPrice(courseData.price);
             setDescription(courseData.description);
             setProfilePic(courseData.coverImage || courseCoverImage);
-
-            // Preselect trainers based on the course's current trainers
-            const initialTrainerIds = courseData.trainer?.map(trainer => trainer.id) || [];
-            setSelectedTrainerIds(initialTrainerIds);
-
             // Set preview image from existing course data
             setPreviewImage(courseData.coverImage ? `data:image/jpeg;base64,${courseData.coverImage}` : courseCoverImage);
         }
     }, [courseData]);
 
-    useEffect(() => {
-        if (!trainers || trainers.length === 0) {
-            axios.get('http://localhost:8080/trainers/fetch')
-                .then((response) => {
-                    setTrainers(response.data);
-                })
-                .catch((err) => console.error('Error fetching trainers:', err));
-        }
-    }, [trainers]);
-
     const handleSubmitClick = async () => {
-        // Convert the image to a Base64 string
         const convertToBase64 = (file) => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -66,6 +50,11 @@ function AdEditCourse() {
             coverImageBase64 = await convertToBase64(courseCoverImage); // Convert to base64 if it's a new file
         }
 
+        // Remove the prefix if it exists (e.g., "data:image/jpeg;base64,") when data is submitting
+        if (coverImageBase64 && coverImageBase64.startsWith('data:image')) {
+            coverImageBase64 = coverImageBase64.replace(/^data:image\/[a-z]+;base64,/, "");
+        }
+
         const updatedCourse = {
             ...courseData,
             courseName,
@@ -73,8 +62,7 @@ function AdEditCourse() {
             time,
             price,
             description,
-            coverImage: coverImageBase64,
-            trainer: selectedTrainerIds.map(id => ({ id })),
+            coverImage: coverImageBase64, // Send only the base64 string without prefix
         };
 
         setLoading(true);
@@ -85,15 +73,18 @@ function AdEditCourse() {
             );
 
             if (response.status === 200) {
+                showSuccessToast('Course updated successfully'); // Debugging log
                 dispatch(updateCourse(updatedCourse));
-                navigate('/admin-profile/manage-courses');
+                // navigate('/admin-profile/manage-courses');
             }
         } catch (error) {
-            console.error('Error updating course:', error.message);
+            // console.error('Error updating course:', error.message);
+            showErrorToast('Error updating course!');
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -137,6 +128,7 @@ function AdEditCourse() {
                             padding: '10px 20px',
                         }}
                     >
+                        <CloudUpload sx={{ marginRight: 1 }} />
                         Choose Cover Image
                         <input
                             type="file"
@@ -157,6 +149,7 @@ function AdEditCourse() {
                     sx={{ marginBottom: 2 }}
                 />
                 <TextField
+                    type='number'
                     label="Duration"
                     fullWidth
                     variant="outlined"
@@ -165,6 +158,7 @@ function AdEditCourse() {
                     sx={{ marginBottom: 2 }}
                 />
                 <TextField
+                    type='number'
                     label="Price"
                     fullWidth
                     variant="outlined"
@@ -180,27 +174,6 @@ function AdEditCourse() {
                     onChange={(e) => setDescription(e.target.value)}
                     sx={{ marginBottom: 2 }}
                 />
-                <Box sx={{ marginBottom: 2 }}>
-                    <Typography variant="body1">Trainers:</Typography>
-                    <Select
-                        fullWidth
-                        multiple
-                        value={selectedTrainerIds}
-                        onChange={handleTrainerChange}
-                        renderValue={(selected) => {
-                            const selectedTrainers = trainers.filter(trainer => selected.includes(trainer.id));
-                            return selectedTrainers.map(trainer => trainer.fullName).join(', ');
-                        }}
-                        sx={{ padding: '10px', borderRadius: '5px', backgroundColor: '#f1f0f0' }}
-                    >
-                        {trainers.map((trainer) => (
-                            <MenuItem key={trainer.id} value={trainer.id}>
-                                <Checkbox checked={selectedTrainerIds.indexOf(trainer.id) > -1} />
-                                <ListItemText primary={`${trainer.fullName} (id: ${trainer.id})`} />
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </Box>
             </Box>
 
             <Box sx={{ textAlign: 'center', marginTop: 4 }}>

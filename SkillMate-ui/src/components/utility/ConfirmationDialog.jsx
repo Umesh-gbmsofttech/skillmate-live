@@ -8,7 +8,7 @@ export default function ConfirmationDialog({ open, onClose, onConfirm, message }
             onClose={onClose}
             sx={{
                 '& .MuiDialog-paper': {
-                    backgroundColor: '#f1f1f1', // Light background color for the dialog
+                    backgroundColor: '#16404D', // Light background color for the dialog
                     borderRadius: 3, // Rounded corners
                     padding: 2, // Adding padding to the dialog
                     boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)', // Light shadow effect

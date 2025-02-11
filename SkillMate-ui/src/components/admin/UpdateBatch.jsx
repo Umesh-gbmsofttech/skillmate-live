@@ -51,6 +51,7 @@ function UpdateBatch() {
           studentIds: currentBatch.students.map((student) => student.id),  // Student IDs (from current batch)
         });
 
+        // console.log(newBatch)
         setLoading(false);
       } catch (error) {
         showErrorToast(`Failed to fetch data: ${error.message}`);
@@ -78,7 +79,6 @@ function UpdateBatch() {
       trainer: newBatch.trainerIds.map(id => ({ id })), // Sending an array of objects with id
       students: newBatch.studentIds.map(id => ({ id })), // Same for students
       course: newBatch.courseIds.map(id => ({ id })), // Same for course
-      attendance: [] // Assuming you may want to send an empty attendance array or handle it separately
     };
 
     try {
@@ -120,12 +120,13 @@ function UpdateBatch() {
                   alignItems="center"
                   justifyContent="center"
                   style={{ marginBottom: '20px' }}  // Space between card and form
+
                 >
-                  <Card>
+                  <Card sx={{ bgcolor: '#f7f7f71b' }}>
                     <CardMedia
                       component="img"
                       alt="Course Image"
-                      height="280"
+                      height="260"
                       image={`data:image/jpeg;base64,${batch.course[0]?.coverImage}` || defaultProfileImage}
                     />
                     <CardContent>
@@ -157,7 +158,8 @@ function UpdateBatch() {
                   xs={12}  // Full width on mobile
                   sm={7}   // 7/12 on small screens
                   md={8}   // 8/12 on medium screens and up
-                  lg={6}   // 9/12 on large screens and up
+                  lg={6}
+                  bgcolor={'#f7f7f71b'}  // 9/12 on large screens and up
                 >
                   <Typography variant="body1" color="textPrimary" align="center">
                     Select Course, Trainer, and Students to update the batch

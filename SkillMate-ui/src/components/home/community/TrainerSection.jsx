@@ -68,9 +68,28 @@ const TrainerSection = () => {
                 </Typography>
             ) : (
                 <>
-                    <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+                    <Typography variant="h4" align="center" fontWeight="bold" gutterBottom color='#3caacb'>
                         Meet Our Expert Trainers
                     </Typography>
+                    {/* Info Section */}
+                    <Box
+                        sx={{
+                            mt: 5,
+                            p: 3,
+                            backgroundColor: "#f5f5f5",
+                            borderRadius: 2,
+                            textAlign: "center",
+                            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                        }}
+                    >
+                        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
+                            Our Trainers
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                            Our trainers are experienced working professionals with 8-10 years of industry experience.
+                            They are passionate about sharing their knowledge and expertise to help you grow in your IT career.
+                        </Typography>
+                    </Box>
                     <Grid container spacing={4} justifyContent="center" marginTop={3}>
                         {trainers.map((trainer, index) => (
                             <Grid item xs={12} sm={6} md={4} key={index}>
@@ -82,8 +101,9 @@ const TrainerSection = () => {
                                         borderRadius: 2,
                                         textAlign: "center",
                                         transition: "0.3s",
+                                        backgroundColor: '#FBF5DD',
                                         "&:hover": {
-                                            boxShadow: "0px 8px 16px rgba(68, 45, 204, 0.3)",
+                                            boxShadow: "0px 8px 16px rgba(254, 254, 254, 0.6)",
                                         },
                                         position: "relative",
                                     }}
@@ -98,7 +118,7 @@ const TrainerSection = () => {
                                             height: 120,
                                             mx: "auto",
                                             mt: -7,
-                                            border: "4px solid white",
+                                            border: "4px solid #16404D",
                                             boxShadow: "0 5px 10px rgba(0, 0, 0, 0.3)",
                                         }}
                                     />
@@ -125,26 +145,6 @@ const TrainerSection = () => {
                             </Grid>
                         ))}
                     </Grid>
-
-                    {/* Info Section */}
-                    <Box
-                        sx={{
-                            mt: 5,
-                            p: 3,
-                            backgroundColor: "#f5f5f5",
-                            borderRadius: 2,
-                            textAlign: "center",
-                            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-                        }}
-                    >
-                        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
-                            Our Trainers
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Our trainers are experienced working professionals with 8-10 years of industry experience.
-                            They are passionate about sharing their knowledge and expertise to help you grow in your IT career.
-                        </Typography>
-                    </Box>
                 </>
             )}
         </Container>

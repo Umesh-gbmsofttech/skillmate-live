@@ -7,7 +7,7 @@ import MyCourses from '../courses/MyCourses';
 import defaultProfilePic from '../../assets/skillmate.jpg';
 
 function StudentProfile() {
-    const [showProfile, setShowProfile] = useState(true);
+    const [showProfile, setShowProfile] = useState(false);
     const [showPDF, setShowPDF] = useState(false);
 
     const userData = useSelector((state) => state.auth.userData);
@@ -38,9 +38,9 @@ function StudentProfile() {
         <>
             <Box
                 sx={{
-                    maxWidth: 900,
+                    maxWidth: 1000,
                     mx: 'auto',
-                    p: 4,
+                    p: 2,
                     bgcolor: 'background.paper',
                     borderRadius: 3,
                     boxShadow: 4,
@@ -48,7 +48,7 @@ function StudentProfile() {
                 }}
             >
                 {/* Profile Header */}
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Avatar
                         src={user.profilePic}
                         alt={user.name}

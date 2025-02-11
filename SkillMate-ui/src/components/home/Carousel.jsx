@@ -4,9 +4,8 @@ import './Carousel.css';
 import logo from '../../assets/skillmate.jpg';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import carouselImg1 from '../../assets/carousel1.jpg';
-import carouselImg2 from '../../assets/carousel2.jpg';
-import carouselImg3 from '../../assets/carousel3.jpg';
+import carouselImg1 from '../../assets/carausel.jpg';
+
 
 const Carousel = () => {
   const spiritualImages = [
@@ -15,11 +14,11 @@ const Carousel = () => {
       caption: "Experience Peace"
     },
     {
-      image: carouselImg2,
+      image: carouselImg1,
       caption: "Embrace Growth"
     },
     {
-      image: carouselImg3,
+      image: carouselImg1,
       caption: "Find Balance"
     },
   ];

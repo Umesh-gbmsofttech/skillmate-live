@@ -58,9 +58,26 @@ const StudentSection = () => {
                 </Typography>
             ) : (
                 <>
-                    <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+                    <Typography variant="h4" align="center" fontWeight="bold" gutterBottom color='#3caacb'>
                         Meet Our Placed Students
                     </Typography>
+                    <Box
+                        sx={{
+                            mt: 5,
+                            p: 3,
+                            backgroundColor: '#f5f5f5',
+                            borderRadius: 2,
+                            textAlign: 'center',
+                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                        }}
+                    >
+                        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
+                            Our Students
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                            Our students are passionate learners who have honed their skills through hands-on experience and expert guidance. They are ready to make a mark in the IT industry with their growing expertise.
+                        </Typography>
+                    </Box>
                     <Grid container spacing={4} justifyContent="center" marginTop={3}>
                         {students.map((student, index) => (
                             <Grid item xs={12} sm={6} md={4} key={index}>
@@ -72,6 +89,7 @@ const StudentSection = () => {
                                         borderRadius: 2,
                                         textAlign: 'center',
                                         transition: '0.3s',
+                                        backgroundColor: '#FBF5DD',
                                         '&:hover': {
                                             boxShadow: '0px 8px 16px rgba(68, 45, 204, 0.3)',
                                         },
@@ -88,7 +106,7 @@ const StudentSection = () => {
                                             height: 120,
                                             mx: 'auto',
                                             mt: -7,
-                                            border: '4px solid white',
+                                            border: "4px solid #16404D",
                                             boxShadow: '0 5px 10px rgba(0, 0, 0, 0.3)',
                                         }}
                                     />
@@ -118,24 +136,6 @@ const StudentSection = () => {
                             </Grid>
                         ))}
                     </Grid>
-
-                    <Box
-                        sx={{
-                            mt: 5,
-                            p: 3,
-                            backgroundColor: '#f5f5f5',
-                            borderRadius: 2,
-                            textAlign: 'center',
-                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                        }}
-                    >
-                        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
-                            Our Students
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            Our students are passionate learners who have honed their skills through hands-on experience and expert guidance. They are ready to make a mark in the IT industry with their growing expertise.
-                        </Typography>
-                    </Box>
                 </>
             )}
         </Container>

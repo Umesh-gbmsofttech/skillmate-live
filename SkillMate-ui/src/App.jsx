@@ -10,16 +10,13 @@ import TrainerSignUp from './components/auth/TrainerSignUp';
 import Footer from './components/home/Footer';
 import Community from './components/home/community/Community';
 import Subscription from './components/subscription/Subscription';
-import Live from './components/subscription/Live';
 import DeleteProfile from './components/profile/DeleteProfile';
-import Profile from './components/profile/Profile';
 import OurTopCourses from './components/courses/OurTopCourses';
 import ExploreAllCourses from './components/courses/ExploreAllCourses';
 import TopTrainers from './components/trainer/TopTrainers';
 import TestimonialsOfPlatformUsers from './components/home/TestimonialsOfPlatformUsers';
 import TechnologyStack from './components/home/technologyStack/TechnologyStack';
 import OurStudentsPlacedIn from './components/home/tieUpComponies/OurStudentsPlacedIn';
-import Test from './components/home/Test';
 import StudentProfile from './components/profile/StudentProfile';
 import TrainerProfile from './components/profile/TrainerProfile';
 import AdminProfile from './components/profile/AdminProfile';
@@ -109,7 +106,6 @@ function App() {
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/courses" element={<Courses />} />
-        <Route path="/test" element={<Test />} />
         <Route path="/login/email" element={<LoginWithEmail />} />
         <Route path="/login/mobile" element={<LoginWithMobile />} />
         <Route path="/student-signup" element={<StudentSignUp />} />
@@ -119,9 +115,7 @@ function App() {
         <Route path="/reviews-section" element={<ReviewsSection />} />
         <Route path="/community" element={<Community />} />
         <Route path="/subscriptions" element={<Subscription />} />
-        <Route path="/live" element={<Live />} />
         <Route path="/about" element={<Footer />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/student-profile" element={<StudentProfile username />} />
         <Route path="/student-profile-update/:studentId" element={<StudentProfileUpdate username />} />
         <Route path="/trainer-profile" element={<TrainerProfile username />} />

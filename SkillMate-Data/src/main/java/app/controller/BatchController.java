@@ -77,7 +77,12 @@ public class BatchController {
     // Delete Batch by ID
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteBatch(@PathVariable("id") Long id) {
-        return batchService.deleteBatch(id);
+        try { 
+        	batchService.deleteBatch(id);
+        	return ResponseEntity.ok("Batch deleted successfully");
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(404).body(e.getMessage());
+		}
     }
 
     // Get Batches by Trainer ID

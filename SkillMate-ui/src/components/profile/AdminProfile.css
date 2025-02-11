@@ -8,7 +8,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f3f3f3;
+    background-color: #4C7B8B;
     padding: 10px 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -30,11 +30,13 @@
     color: #333;
     flex-grow: 1;
     text-align: center;
+    margin-left: -60px;
 }
 
 .admin-container-profile-manage-board-heading {
     text-align: center;
     margin: 100px 0 0 0;
+    color: #5A72A0;
 }
 
 .admin-dashboard-control-buttons {
@@ -44,7 +46,7 @@
     gap: 10px;
     padding: 100px 20px;
     border-radius: 10px;
-    background-color: #f3f3f3;
+    background-color: #4C7B8B;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin: 5% 4% 5% 4%;
 }
@@ -52,8 +54,8 @@
 .admin-dashboard-control-buttons button {
     padding: 15px 25px;
     border-radius: 10px;
-    background-color: #25ff4d;
-    color: #333;
+    background-color: #283145;
+    color: #fffdfd;
     cursor: pointer;
     transition: background-color 0.5s ease;
     border: none;
@@ -62,5 +64,11 @@
 }
 
 .admin-dashboard-control-buttons button:hover {
-    background-color: #19c739;
+    background-color: #161d2d;
+}
+
+@media (max-width: 767px) {
+    .admin-container-profile-welcome .admin-welcome-text {
+        margin-left: 0px;
+    }
 }

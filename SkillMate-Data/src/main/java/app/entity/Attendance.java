@@ -42,10 +42,10 @@ public class Attendance {
 
     @Transient
     private String averageAttendance;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id")
-//    @JsonManagedReference
+    // @JsonManagedReference
     private Trainer trainer;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -58,7 +58,7 @@ public class Attendance {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "batch_id")
-//    @JsonView(JsonResoponse_View.DetailedView.class)
+    // @JsonView(JsonResoponse_View.DetailedView.class)
     private Batch batch;
 
 }

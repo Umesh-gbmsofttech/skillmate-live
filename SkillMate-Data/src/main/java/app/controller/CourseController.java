@@ -2,6 +2,7 @@ package app.controller;
 
 import app.entity.Course;
 import app.entity.JsonResoponse_View;
+import app.entity.Student;
 import app.service.CourseService;
 import jakarta.validation.Valid;
 
@@ -59,6 +60,17 @@ public class CourseController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    // Get a Students by Course ID
+    @GetMapping("/fetch/students/of/course/{id}")
+    @JsonView(JsonResoponse_View.DetailedView.class)
+    public ResponseEntity<List<Student>> getStudentsByCourseId(@PathVariable("id") Long id) {
+    	List<Student> studentsData = courseService.getStudentsCourseById(id);
+    	if (!studentsData.isEmpty()) {
+    		return new ResponseEntity<>(studentsData, HttpStatus.OK);
+    	} else {
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
     }
 
     // Get Courses by student ID
@@ -125,7 +137,7 @@ public class CourseController {
     public ResponseEntity<HttpStatus> deleteCourse(@PathVariable("id") Long id) {
         try {
             courseService.deleteCourse(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

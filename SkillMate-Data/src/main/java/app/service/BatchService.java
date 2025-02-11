@@ -62,15 +62,26 @@ public class BatchService {
 	}
 
 	// Delete Batch by ID
+	@Transactional
 	public ResponseEntity<String> deleteBatch(Long id) {
-		if (batchRepository.existsById(id)) {
-			batchRepository.deleteById(id);
-			logger.info("Batch with ID {} deleted successfully.", id);
-			return ResponseEntity.ok("Batch record deleted successfully.");
-		}
-		logger.warn("Batch with ID {} not found.", id);
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Batch record not found.");
+	    if (!batchRepository.existsById(id)) {
+	        logger.warn("Batch with ID {} not found.", id);
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Batch record not found.");
+	    }
+
+	    // Delete related data first
+	    batchRepository.deleteMeetingBatchesByBatchId(id);
+	    batchRepository.deleteBatchTrainersByBatchId(id);
+	    batchRepository.deleteBatchCoursesByBatchId(id);
+	    batchRepository.deleteBatchStudentsByBatchId(id);
+
+	    // Finally, delete the batch itself
+	    batchRepository.deleteById(id);
+	    logger.info("Batch with ID {} deleted successfully.", id);
+
+	    return ResponseEntity.ok("Batch record deleted successfully.");
 	}
+
 
 	// Get Batches by Trainer ID
 	public List<Batch> getBatchesByTrainerId(Long trainerId) {

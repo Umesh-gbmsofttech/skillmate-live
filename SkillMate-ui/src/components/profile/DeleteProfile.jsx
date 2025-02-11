@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import './DeleteProfile.css'
 import { useNavigate } from 'react-router-dom';
 
 

@@ -140,7 +140,7 @@ function StudentProfileUpdate() {
 
 
     return (
-        <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
+        <Box sx={{ padding: 4, backgroundColor: '#f7f7f71b', borderRadius: 2, marginTop: 2, marginLeft: 2, marginRight: 2 }}>
             <Typography variant="h4" gutterBottom>Edit Student Information</Typography>
             <form onSubmit={handleSubmit}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

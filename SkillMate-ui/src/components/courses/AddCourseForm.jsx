@@ -3,23 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCourses } from '../redux/courseActions'; // Import the action
-import './AddCourseForm.css';
+import { Box, Typography, TextField, Button, CircularProgress, Input, Grid, Container, Paper, IconButton } from '@mui/material';
+import { showSuccessToast, showErrorToast } from '../utility/ToastService';
+import { CloudUpload } from '@mui/icons-material';
 
 function AddCourseForm() {
   const [courseName, setCourseName] = useState('');
   const [days, setDays] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
-  const [trainerId, setTrainerId] = useState('');
   const [coverImage, setCoverImage] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);  // State for image preview
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const token = useSelector((state) => state.auth.token);
-  // const trainers = useSelector((state) => state.trainers); // Assuming trainers are stored in the Redux state
-  const [trainers, setTrainers] = useState([]); // Local state to store trainers
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -31,7 +31,6 @@ function AddCourseForm() {
     courseData.append('days', days);
     courseData.append('price', price);
     courseData.append('description', description);
-    courseData.append('trainerId', trainerId);
     if (coverImage) {
       courseData.append('coverImage', coverImage);
     }
@@ -45,88 +44,213 @@ function AddCourseForm() {
 
       dispatch(setCourses(response.data)); // Update Redux store
       navigate('/admin-profile/manage-courses'); // Redirect to courses page
+      showSuccessToast('Course added successfully!');
     } catch (error) {
-      console.error('Error uploading the course:', error);
+      showErrorToast('Error uploading the course!');
       setError('Failed to add the course. Please try again.');
     }
   };
 
-  // Fetch trainer list (if not already available in Redux store)
-  useEffect(() => {
-    if (!trainers || trainers.length === 0) {
-      axios.get('http://localhost:8080/trainers/fetch')
-        .then((response) => {
-          // Dispatch to save trainers in Redux store
-          // dispatch({ type: 'SET_TRAINERS', payload: response.data });
-          setTrainers(response.data);
-        })
-        .catch((err) => console.error('Error fetching trainers:', err));
+  // Handle image preview on file selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCoverImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }, [trainers, dispatch]);
-  // }, []);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-  return (
-    <div className="add-course-form-container">
-      <h2>Add New Course</h2>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Course Name:</label>
-          <input
-            type="text"
-            value={courseName}
-            onChange={(e) => setCourseName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Duration (in days):</label>
-          <input
-            type="text"
-            value={days}
-            onChange={(e) => setDays(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Price:</label>
-          <input
-            type="text"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Description:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Trainer:</label>
-          <select
-            value={trainerId}
-            onChange={(e) => setTrainerId(e.target.value)}
-          >
-            <option value="">Select Trainer</option>
-            {trainers && trainers.map((trainer) => (
-              <option key={trainer.id} value={trainer.id}>
-                {"id: " + trainer.id + ", "} {"Name: " + trainer.fullName}
-              </option>
-            ))}
-          </select>
-        </div>
+  };
 
-        <div>
-          <label>Cover Image:</label>
-          <input
-            type="file"
-            onChange={(e) => setCoverImage(e.target.files[0])}
-          />
-        </div>
-        <button type="submit">Add Course</button>
-      </form>
-    </div>
+  return (
+    <Container maxWidth="sm">
+      <Paper sx={{ padding: 4, marginTop: 2, boxShadow: 3 }}>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center', marginBottom: 3 }}>
+          Add New Course
+        </Typography>
+        {error && (
+          <Typography color="error" variant="body2" gutterBottom sx={{ textAlign: 'center', marginBottom: 2 }}>
+            {error}
+          </Typography>
+        )}
+
+        {loading && <CircularProgress sx={{ display: 'block', margin: '0 auto' }} />}
+
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={3}>
+            {/* Image Preview */}
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 3 }}>
+              {previewImage ? (
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <img
+                    src={previewImage}
+                    alt="Course Cover"
+                    style={{
+                      width: '100%',
+                      maxWidth: 350,
+                      height: 'auto',
+                      objectFit: 'cover',
+                      borderRadius: 10,
+                    }}
+                  />
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
+                    No image selected
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+
+            {/* Cover Image Input */}
+            <Grid item xs={12}>
+              <Button
+                variant="outlined"
+                component="label"
+                fullWidth
+                sx={{
+                  borderColor: '#3f51b5',
+                  color: '#3f51b5',
+                  '&:hover': { borderColor: '#303f9f', color: '#303f9f' },
+                  padding: '10px',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <CloudUpload sx={{ marginRight: 1 }} />
+                Choose Cover Image
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </Button>
+            </Grid>
+
+            {/* Course Name Input */}
+            <Grid item xs={12}>
+              <TextField
+                label="Course Name"
+                variant="outlined"
+                fullWidth
+                value={courseName}
+                onChange={(e) => setCourseName(e.target.value)}
+                required
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: '#3f51b5',
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    borderColor: '#3f51b5',
+                  },
+                  '& .MuiOutlinedInput-root.Mui-focused': {
+                    borderColor: '#3f51b5',
+                  },
+                }}
+              />
+            </Grid>
+
+            {/* Duration Input */}
+            <Grid item xs={12}>
+              <TextField
+                label="Duration (in days)"
+                type="number"
+                variant="outlined"
+                fullWidth
+                value={days}
+                onChange={(e) => setDays(e.target.value)}
+                required
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: '#3f51b5',
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    borderColor: '#3f51b5',
+                  },
+                  '& .MuiOutlinedInput-root.Mui-focused': {
+                    borderColor: '#3f51b5',
+                  },
+                }}
+              />
+            </Grid>
+
+            {/* Price Input */}
+            <Grid item xs={12}>
+              <TextField
+                label="Price"
+                type="number"
+                variant="outlined"
+                fullWidth
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                required
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: '#3f51b5',
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    borderColor: '#3f51b5',
+                  },
+                  '& .MuiOutlinedInput-root.Mui-focused': {
+                    borderColor: '#3f51b5',
+                  },
+                }}
+              />
+            </Grid>
+
+            {/* Description Input */}
+            <Grid item xs={12}>
+              <TextField
+                label="Description"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: '#3f51b5',
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    borderColor: '#3f51b5',
+                  },
+                  '& .MuiOutlinedInput-root.Mui-focused': {
+                    borderColor: '#3f51b5',
+                  },
+                }}
+              />
+            </Grid>
+
+            {/* Submit Button */}
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                type="submit"
+                sx={{
+                  padding: '12px',
+                  fontWeight: 'bold',
+                  borderRadius: '8px',
+                  backgroundColor: '#3f51b5',
+                  '&:hover': { backgroundColor: '#303f9f' },
+                }}
+              >
+                Add Course
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </Container>
   );
 }
 

@@ -10,6 +10,7 @@ function Subscription() {
     const location = useLocation(); // Retrieve data passed via navigation
     const course = location.state?.course;
     const admin = useSelector((state) => state.auth.username); // for admin only
+    const userData = useSelector((state) => state.auth.userData);
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const navigate = useNavigate();
 
@@ -33,6 +34,13 @@ function Subscription() {
                 </>
                 : ""
             }
+            {/* {userData ?
+                <>
+                    < MyCourses />
+                    <LiveSessions />
+                </>
+                : ""
+            } */}
         </div>
     )
 }

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Fuse from 'fuse.js';
-import '../admin/AdminWelcome.css';
-import Search from '../Search';
+import { Grid, Typography, Button, Card, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../Loading';
 import defaultProfileImage from '../../assets/profilePic.jpg';
+import { showSuccessToast, showErrorToast } from '../utility/ToastService';
+import Search from '../Search';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
-import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
 
 function ManageStudentsList() {
     const navigate = useNavigate();
@@ -26,9 +26,9 @@ function ManageStudentsList() {
             try {
                 const response = await axios.get('http://localhost:8080/students/fetch');
                 setStudents(response.data);
+                console.log(response.data);
                 setLoading(false);
             } catch (error) {
-                // console.error('Error fetching students:', error);
                 showErrorToast('Error fetching students!');
                 setLoading(false);
             }
@@ -38,7 +38,6 @@ function ManageStudentsList() {
     }, []);
 
     const handleDeleteStudent = (studId) => {
-        // Set the student to be deleted and open the confirmation dialog
         setStudentToDelete(studId);
         setIsConfirmDialogOpen(true);
     };
@@ -54,16 +53,15 @@ function ManageStudentsList() {
                     showErrorToast('Failed to delete the student. Please try again.');
                 }
             } catch (error) {
-                // console.error('Error deleting the student:', error);
                 showErrorToast('An error occurred while trying to delete the student.');
             }
         }
-        setIsConfirmDialogOpen(false); // Close the confirmation dialog
+        setIsConfirmDialogOpen(false);
     };
 
     const handleCancel = () => {
-        setIsConfirmDialogOpen(false); // Close the confirmation dialog without deleting
-        setStudentToDelete(null); // Reset the student ID
+        setIsConfirmDialogOpen(false);
+        setStudentToDelete(null);
     };
 
     const handleCourseEditClick = (studentId) => {
@@ -74,7 +72,6 @@ function ManageStudentsList() {
         return <Loading />;
     }
 
-    // Fuse.js search options
     const fuse = new Fuse(students, {
         keys: ['fullName', 'technologies', 'experience'],
         threshold: 0.3,
@@ -83,57 +80,87 @@ function ManageStudentsList() {
     const filteredStudents = searchQuery ? fuse.search(searchQuery).map(result => result.item) : students;
 
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-12">
-                    <div className="admin-welcome">
-                        <h1>Hello, Admin!</h1>
-                        <p>Student's List</p>
-                    </div>
-                </div>
-            </div>
+        <Grid container spacing={3} sx={{ padding: 3 }}>
+            <Grid item xs={12}>
+                <Typography variant="h4" align="center" color='#3caacb'>
+                    Student's List
+                </Typography>
+            </Grid>
 
-            <div className="row">
-                <div className="col-12">
-                    <Search onSearch={setSearchQuery} />
-                </div>
-                <p className="col-12">Number of Results: {filteredStudents.length}</p>
-            </div>
+            <Grid item xs={12}>
+                <Search onSearch={setSearchQuery} />
+            </Grid>
 
-            <div className="row">
-                <div className="col-12">
-                    <button onClick={handleCourseAddClick} className="btn btn-success mb-5">Add New Student</button>
-                </div>
-            </div>
+            <Grid item xs={12}>
+                <Typography variant="body1" align="center" color='#3caacb'>
+                    Number of Results: {filteredStudents.length}
+                </Typography>
+            </Grid>
 
-            <div className="row">
-                {filteredStudents.length === 0 ? (
-                    <div className="col-12">
-                        <p>No Students available.</p>
-                    </div>
-                ) : (
-                    filteredStudents.map((student, index) => (
-                        <div key={index} className="col-12 col-md-6 col-lg-4 mb-3">
-                            <div className="card">
-                                <img
-                                    className="card-img-top"
-                                    src={student.profileImage || defaultProfileImage}
-                                    alt={`${student.fullName} profile`}
-                                />
-                                <div className="card-body">
-                                    <h5 className="card-title">{student.fullName}</h5>
-                                    <p className="card-text">Technologies: {student.technologies || 'N/A'}</p>
-                                    <p className="card-text">Average Attendance: {student.attendanceByDays || 'N/A'} {student.attendanceAverage || ''}</p>
-                                    <p className="card-text">Batches: {Array.isArray(student.batches) ? student.batches.map(batch => batch.id).join(', ') : 'N/A'}</p>
-                                    <p className="card-text">Remark By Trainer: {student.remarkByTrainer || 'N/A'}</p>
-                                    <button onClick={() => handleCourseEditClick(student.id)} className="btn btn-primary mr-2">Edit</button>
-                                    <button onClick={() => handleDeleteStudent(student.id)} className="btn btn-danger">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
+            <Grid item xs={12} textAlign="center">
+                <Button variant="contained" color="primary" onClick={handleCourseAddClick}>
+                    Add New Student
+                </Button>
+            </Grid>
+
+            <Grid item xs={12}>
+                <Grid container spacing={3}>
+                    {filteredStudents.length === 0 ? (
+                        <Grid item xs={12}>
+                            <Typography variant="body1" align="center" color="textSecondary">
+                                No Students available.
+                            </Typography>
+                        </Grid>
+                    ) : (
+                        filteredStudents.map((student) => (
+                            <Grid key={student.id} item xs={12} sm={6} md={4} lg={3}>
+                                <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                    <CardMedia
+                                        component="img"
+                                        height="200"
+                                        image={student.profileImage || defaultProfileImage}
+                                        alt={`${student.fullName} profile`}
+                                    />
+                                    <CardContent sx={{ flexGrow: 1 }}>
+                                        <Typography variant="h6" gutterBottom>
+                                            {student.fullName}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            Average Attendance: {student.attendanceByDays || 'N/A'} {student.attendanceAverage || ''}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            Batches: {Array.isArray(student.batches) ? student.batches.map(batch => batch.id).join(', ') : 'N/A'}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            Remark By Trainer: {student.remarkByTrainer || 'N/A'}
+                                        </Typography>
+                                    </CardContent>
+                                    <Grid container justifyContent="space-around" sx={{ marginBottom: '8px' }} spacing={1}>
+                                        <Grid item>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => handleCourseEditClick(student.id)}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleDeleteStudent(student.id)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </Card>
+                            </Grid>
+                        ))
+                    )}
+                </Grid>
+            </Grid>
 
             <ConfirmationDialog
                 open={isConfirmDialogOpen}
@@ -141,7 +168,7 @@ function ManageStudentsList() {
                 onConfirm={handleConfirmDelete}
                 message="Are you sure you want to delete this student?"
             />
-        </div>
+        </Grid>
     );
 }
 

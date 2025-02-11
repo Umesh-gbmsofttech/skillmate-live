@@ -8,9 +8,11 @@ import app.exception.EntityNotFoundException;
 import app.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -34,6 +36,15 @@ public class CourseService {
         return courseRepository.findById(id);
     }
 
+ // Get students by course id
+    public List<Student> getStudentsCourseById(Long courseId) {
+        List<Student> students = courseRepository.findStudentsByCourseId(courseId);
+//        if (students.isEmpty()) {
+//            throw new NoSuchElementException("No students found for course ID: " + courseId);
+//        }
+        return students;
+    }
+	
     public List<Course> getCoursesByStudentId(Long studentId) {
         return courseRepository.findAllByStudents_Id(studentId);
     }
@@ -131,8 +142,17 @@ public class CourseService {
     }
 
     // Delete a Course
+    // public void deleteCourse(Long id) {
+    // courseRepository.deleteById(id);
+    // }
+    @Transactional
     public void deleteCourse(Long id) {
+        courseRepository.deleteBatchCoursesByCourseId(id);
+        courseRepository.deleteMeetingCoursesByCourseId(id);
+        courseRepository.deleteCourseStudentsByCourseId(id);
+        courseRepository.deleteCourseTrainersByCourseId(id);
+        courseRepository.deleteAttendanceByCourseId(id);
+        courseRepository.deleteRatingReviewsByCourseId(id);
         courseRepository.deleteById(id);
     }
-
 }

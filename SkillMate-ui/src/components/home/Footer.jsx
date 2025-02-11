@@ -3,7 +3,7 @@ import logo from '../../assets/skillmate.jpg'
 import facebook from '../../assets/facebook.png'
 import instagram from '../../assets/instagram.png'
 import linkedid from '../../assets/linkedin.png'
-import './Footer.css'; // Add relevant styles
+import './Footer.css';
 import CompanySignature from './CompanySignature';
 
 function Footer() {
@@ -35,7 +35,7 @@ function Footer() {
 
                 </div>
                 <div className="footer-section use-cases" id="use-cases">
-                    <h4 className="footer-heading">Use Cases</h4>
+                    <h4 className="footer-heading">Career</h4>
                     <ul className="footer-list">
                         <li className="footer-item">UI Design</li>
                         <li className="footer-item">Wireframing</li>

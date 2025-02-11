@@ -50,7 +50,7 @@ public class Student {
 
     @Lob
     @Column(name = "profile_pic", columnDefinition = "LONGBLOB")
-     @JsonView(JsonResoponse_View.BasicView.class)
+    @JsonView(JsonResoponse_View.BasicView.class)
     private byte[] profilePic;
 
     @JsonView(JsonResoponse_View.BasicView.class)
@@ -93,7 +93,7 @@ public class Student {
     // inverseJoinColumns = @JoinColumn(name = "batch_id")
     // )
     @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//     @JsonView(JsonResoponse_View.DetailedView.class)
+    // @JsonView(JsonResoponse_View.DetailedView.class)
     private List<Batch> batches = new ArrayList<>();
 
     @ManyToMany(mappedBy = "students", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)

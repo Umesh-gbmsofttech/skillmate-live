@@ -54,12 +54,9 @@ public class Course {
     @JsonView(JsonResoponse_View.BasicView.class)
     private String days;
 
-    // @ManyToOne
-    // @JoinColumn(name = "trainer_id")
-    // private Trainer trainer;
     @ManyToMany
     @JsonView(JsonResoponse_View.DetailedView.class) // new added
-    @JoinTable(name = "course_trainers", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "trainer_id", nullable = true))
+    @JoinTable(name = "course_trainers", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "trainer_id"))
     private List<Trainer> trainer;
 
     @OneToMany
@@ -71,7 +68,7 @@ public class Course {
     @JsonView(JsonResoponse_View.DetailedView.class)
     private List<Student> students;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Attendance> attendance;
 
     @OneToMany(mappedBy = "toCourse", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)

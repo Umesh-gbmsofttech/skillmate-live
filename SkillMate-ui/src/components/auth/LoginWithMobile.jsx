@@ -10,7 +10,6 @@ import {
   setError,
   loginSuccess,
 } from '../redux/authSlice';
-import './LoginWithMobile.css';
 import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
 
 const LoginWithMobile = () => {
@@ -89,7 +88,7 @@ const LoginWithMobile = () => {
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-      <div className="card p-4 shadow-lg login-container-mobile">
+      <div className="card p-4 shadow-lg">
         <h2 className="text-center mb-4">Login with Mobile</h2>
         {!isOtpSent ? (
           <div>
@@ -158,23 +157,22 @@ const LoginWithMobile = () => {
         {error && <div className="alert alert-danger mt-3" role="alert">{error}</div>}
 
         <div className="mt-4 text-center">
-          <i>
-            <a
+          <p className="mb-0">
+            <a href="#"
               onClick={() => navigate('/login/email')}
               className="text-decoration-none"
             >
               Login With Email
             </a>
-          </i>
-          <br />
-          <i>
-            <a
+          </p>
+          <p className="mb-0">
+            <a href="#"
               onClick={() => navigate('/student-or-trainer/signup')}
               className="text-decoration-none"
             >
               Don't have an account? Sign Up
             </a>
-          </i>
+          </p>
         </div>
       </div>
     </div>

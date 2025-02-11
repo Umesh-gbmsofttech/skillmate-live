@@ -125,31 +125,37 @@ public class StudentService {
 
 	@Transactional
 	public synchronized void deleteStudent(Long id) {
-		// Find the student by ID
-		Student student = studentRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
+	    Student student = studentRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
 
-		// Create a new deleted student profile record
-		StudentProfileDeleted studentProfileDeleted = new StudentProfileDeleted();
-		studentProfileDeleted.setStudentId(student.getId()); // Store student ID in the deleted profile
-		studentProfileDeleted.setProfilePic(student.getProfilePic());
-		studentProfileDeleted.setFullName(student.getFullName());
-		studentProfileDeleted.setMobileNumber(student.getMobileNumber());
-		studentProfileDeleted.setEmail(student.getEmail());
-		studentProfileDeleted.setWorkingStatus(student.getWorkingStatus());
-		studentProfileDeleted.setAddress(student.getAddress());
-		studentProfileDeleted.setQualification(student.getQualification());
-		studentProfileDeleted.setResume(student.getResume());
-		studentProfileDeleted.setDeletedAt(LocalDateTime.now());
+	    StudentProfileDeleted studentProfileDeleted = new StudentProfileDeleted();
+	    studentProfileDeleted.setStudentId(student.getId());
+	    studentProfileDeleted.setProfilePic(student.getProfilePic());
+	    studentProfileDeleted.setFullName(student.getFullName());
+	    studentProfileDeleted.setMobileNumber(student.getMobileNumber());
+	    studentProfileDeleted.setEmail(student.getEmail());
+	    studentProfileDeleted.setWorkingStatus(student.getWorkingStatus());
+	    studentProfileDeleted.setAddress(student.getAddress());
+	    studentProfileDeleted.setQualification(student.getQualification());
+	    studentProfileDeleted.setResume(student.getResume());
+	    studentProfileDeleted.setDeletedAt(LocalDateTime.now());
 
-		synchronized (this) {
-			// Save the deleted profile
-			studentProfileDeleted = studentProfileDeletedRepository.save(studentProfileDeleted);
+	    synchronized (this) {
+	        studentProfileDeletedRepository.save(studentProfileDeleted);
 
-			// Delete the student record
-			studentRepository.deleteById(id);
-		}
+	        // Delete related records
+	        studentRepository.deleteBatchStudentsByStudentId(id);
+	        studentRepository.deleteCourseStudentsByStudentId(id);
+	        studentRepository.deleteRatingReviewsForStudent(id);
+	        studentRepository.deleteRatingReviewsByStudent(id);
+//	        studentRepository.deleteMeetingBatchesByStudentId(id);
+	        studentRepository.deleteStudentRolesByStudentId(id);
+
+	        // Delete the student
+	        studentRepository.deleteById(id);
+	    }
 	}
+
 
 
 

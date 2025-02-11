@@ -14,6 +14,8 @@ import {
     Divider,
     Box,
     Typography,
+    Grid,
+    Button,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -43,7 +45,6 @@ function ManageBatches() {
                 }));
                 setBatches(fetchedBatches);
             } catch (error) {
-                // console.error('Error fetching batches data:', error);
                 showErrorToast('Error fetching batches');
             } finally {
                 setLoading(false);
@@ -81,8 +82,7 @@ function ManageBatches() {
                     showInfoToast('Failed to delete the batch. Please try again.');
                 }
             } catch (error) {
-                // console.error('Error deleting the batch:', error);
-                showErrorToast(`Unable To Delete something went wrong!.`);
+                showErrorToast('Unable To Delete something went wrong!');
             }
         }
         setIsConfirmDialogOpen(false); // Close the confirmation dialog
@@ -107,88 +107,94 @@ function ManageBatches() {
                 <Loading />
             ) : (
                 <Box sx={{ padding: 2 }}>
-                    <Typography variant="h4" gutterBottom>
-                        Hello, Admin!
-                    </Typography>
-                    <Typography variant="h6" gutterBottom>
+                    <Typography variant="h4" gutterBottom color='#3caacb' align="center">
                         Batches List
                     </Typography>
 
                     <Search onSearch={setSearchQuery} />
-                    <p className='col-12'>Number of Results: {filteredBatches?.length}</p>
+                    <Typography variant="body1" color="#3caacb" align="center" sx={{ marginBottom: 2 }}>
+                        Number of Results: {filteredBatches?.length}
+                    </Typography>
 
-                    <Box sx={{ marginBottom: 2 }}>
-                        <IconButton
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                        <Button
                             onClick={handleBatchCreateClick}
                             color="primary"
                             variant="contained"
                         >
                             Create New Batch
-                        </IconButton>
+                        </Button>
                     </Box>
 
-                    <List>
+                    <Grid container spacing={2}>
                         {filteredBatches.length > 0 ? (
                             filteredBatches.map((batch) => (
-                                <Box key={batch.id} sx={{ marginBottom: 2 }}>
-                                    <ListItem
-                                        secondaryAction={
-                                            <>
-                                                <IconButton
-                                                    edge="end"
-                                                    onClick={() => handleBatchEditClick(batch.id)}
-                                                    aria-label="edit"
-                                                >
-                                                    <EditIcon />
-                                                </IconButton>
-                                                <IconButton
-                                                    edge="end"
-                                                    onClick={() => handleDeleteBatch(batch.id)}
-                                                    aria-label="delete"
-                                                >
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </>
-                                        }
-                                    >
-                                        <ListItemAvatar>
-                                            <Avatar
-                                                src={
-                                                    batch?.trainerProfilePic
-                                                        ? `data:image/jpeg;base64,${batch.trainerProfilePic}`
-                                                        : batch?.courseCoverImage
-                                                            ? `data:image/jpeg;base64,${batch.courseCoverImage}`
-                                                            : profileImagePlaceholder
-                                                }
-                                                alt="Batch Profile"
-                                            />
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={`Course: ${batch.courseName}`}
-                                            secondary={
+                                <Grid item xs={12} sm={6} md={4} key={batch.id}>
+                                    <Box sx={{ padding: 2, borderRadius: 2, boxShadow: 3, bgcolor: '#f7f7f71b' }}>
+                                        <ListItem
+                                            secondaryAction={
                                                 <>
-                                                    <Box component="span" display="block" variant="body2">
-                                                        Batch ID: {batch.id}
-                                                    </Box>
-                                                    <Box component="span" display="block" variant="body2">
-                                                        Trainers: {batch.trainerNames}
-                                                    </Box>
-                                                    <Box component="span" display="block" variant="body2">
-                                                        Students Enrolled: {batch.studentsCount}
-                                                    </Box>
+                                                    <IconButton
+                                                        edge="end"
+                                                        onClick={() => handleBatchEditClick(batch.id)}
+                                                        aria-label="edit"
+                                                    >
+                                                        <EditIcon color='secondary' />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        edge="end"
+                                                        onClick={() => handleDeleteBatch(batch.id)}
+                                                        aria-label="delete"
+                                                    >
+                                                        <DeleteIcon color='warning' />
+                                                    </IconButton>
                                                 </>
                                             }
-                                        />
-                                    </ListItem>
-                                    <Divider />
-                                </Box>
+                                        >
+                                            <ListItemAvatar>
+                                                <Avatar
+                                                    src={
+                                                        batch?.trainerProfilePic
+                                                            ? `data:image/jpeg;base64,${batch.trainerProfilePic}`
+                                                            : batch?.courseCoverImage
+                                                                ? `data:image/jpeg;base64,${batch.courseCoverImage}`
+                                                                : profileImagePlaceholder
+                                                    }
+                                                    alt="Batch Profile"
+                                                />
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={
+                                                    <Typography variant="h6" color="#3caacb" sx={{ fontWeight: 'bold' }}>
+                                                        Course: {batch.courseName}
+                                                    </Typography>
+                                                }
+                                                secondary={
+                                                    <>
+                                                        <Box component="span" display="block" variant="body2" sx={{ color: '#F5EFFF' }}>
+                                                            Batch ID: {batch.id}
+                                                        </Box>
+                                                        <Box component="span" display="block" variant="body2" sx={{ color: '#F5EFFF' }}>
+                                                            Trainers: {batch.trainerNames}
+                                                        </Box>
+                                                        <Box component="span" display="block" variant="body2" sx={{ color: '#F5EFFF' }}>
+                                                            Students Enrolled: {batch.studentsCount}
+                                                        </Box>
+                                                    </>
+                                                }
+                                            />
+
+                                        </ListItem>
+                                        <Divider />
+                                    </Box>
+                                </Grid>
                             ))
                         ) : (
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography variant="body2" color="textSecondary" align="center" sx={{ width: '100%' }}>
                                 No batches available.
                             </Typography>
                         )}
-                    </List>
+                    </Grid>
 
                     <ConfirmationDialog
                         open={isConfirmDialogOpen}

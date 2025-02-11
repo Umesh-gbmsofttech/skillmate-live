@@ -52,10 +52,10 @@ function ReviewsSection({ course, user }) {
   }, [token, trainer, student, course, user]);
 
   return (
-    <Box sx={{ padding: '40px 20px', backgroundColor: '#f9f9f9' }}>
+    <Box sx={{ padding: '40px 20px', backgroundColor: '#1A2130' }}>
       {/* Title Section */}
-      <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold', color: '#333' }}>
-        Reviews
+      <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '30px', fontWeight: 'bold', color: '#A6CDC6' }}>
+        {!course ? 'Reviews' : ''}
       </Typography>
 
       {/* Reviews list container with horizontal scroll */}
@@ -65,6 +65,7 @@ function ReviewsSection({ course, user }) {
           gap: 2,
           overflowX: 'auto',
           paddingBottom: 2,
+          paddingTop: 2,
           scrollSnapType: 'x mandatory',
           scrollbarWidth: 'thin',
         }}
@@ -74,12 +75,10 @@ function ReviewsSection({ course, user }) {
             <Card
               key={index}
               sx={{
-                display: 'flex',
-                flexDirection: 'row',
                 minWidth: 280,
-                backgroundColor: '#fff',
-                padding: 2,
-                borderRadius: 2,
+                backgroundColor: '#FBF5DD',
+                padding: 1,
+                borderRadius: 3,
                 boxShadow: 3,
                 transition: 'transform 0.3s ease',
                 scrollSnapAlign: 'start',
@@ -88,37 +87,41 @@ function ReviewsSection({ course, user }) {
                 },
               }}
             >
-              <CardMedia
-                component="div"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 80,
-                  height: 80,
-                  marginBottom: 2,
-                }}
-              >
-                <Avatar
-                  src={
-                    review.ratingGiverTrainer?.profilePic
-                      ? `data:image/jpeg;base64,${review.ratingGiverTrainer.profilePic}`
-                      : review.ratingGiverStudent?.profilePic
-                        ? `data:image/jpeg;base64,${review.ratingGiverStudent.profilePic}`
-                        : userImage
-                  }
-                  alt="User"
-                  sx={{ width: 60, height: 60 }}
-                />
-              </CardMedia>
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-                  {review.ratingGiverTrainer?.fullName || review.ratingGiverStudent?.fullName || 'User'}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
-                  {review.reviewDate || 'No Date Provided'}
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 1 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <CardMedia
+                  component="div"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 80,
+                    height: 80,
+                    marginRight: 2,
+                  }}
+                >
+                  <Avatar
+                    src={
+                      review.ratingGiverTrainer?.profilePic
+                        ? `data:image/jpeg;base64,${review.ratingGiverTrainer.profilePic}`
+                        : review.ratingGiverStudent?.profilePic
+                          ? `data:image/jpeg;base64,${review.ratingGiverStudent.profilePic}`
+                          : userImage
+                    }
+                    alt="User"
+                    sx={{ width: 60, height: 60 }}
+                  />
+                </CardMedia>
+                <CardContent sx={{ flexGrow: 1, padding: 0 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+                    {review.ratingGiverTrainer?.fullName || review.ratingGiverStudent?.fullName || 'User'}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {review.reviewDate || 'No Date Provided'}
+                  </Typography>
+                </CardContent>
+              </Box>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 1, padding: 0 }}>
                   <Rating value={review.rating || 0} readOnly precision={0.5} sx={{ marginRight: 1 }} />
                   <Typography variant="body2">{`${review.rating || 0} / 5`}</Typography>
                 </Box>
@@ -130,7 +133,7 @@ function ReviewsSection({ course, user }) {
           ))
           : 'No reviews available'}
       </Box>
-    </Box>
+    </Box >
   );
 }
 

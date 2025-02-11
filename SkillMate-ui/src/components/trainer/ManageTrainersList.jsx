@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Fuse from 'fuse.js';
-import '../admin/AdminWelcome.css';
-import Search from '../Search';
 import axios from 'axios';
 import Loading from '../../Loading';
 import { useNavigate } from 'react-router-dom';
 import profileImagePlaceholder from '../../assets/profilePic.jpg';
+import { Grid, Typography, Button, Card, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { showSuccessToast, showErrorToast } from '../utility/ToastService';
+import Search from '../Search';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
-import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
 
 function ManageTrainersList() {
     const navigate = useNavigate();
@@ -36,33 +36,29 @@ function ManageTrainersList() {
                 setTrainers(fetchedTrainers);
                 setLoading(false);
             } catch (error) {
-                // console.error('Error fetching trainers data:', error);
                 showErrorToast('Error fetching trainers data!');
+                setLoading(false);
             }
         };
 
         fetchTrainers();
     }, []);
 
-    // Fuse.js configuration for search
     const fuse = new Fuse(trainers, {
         keys: ['fullName', 'technologies', 'experience'],
-        threshold: 0.3, // Adjust for more/less strict matching
+        threshold: 0.3,
         includeScore: true,
     });
 
-    // Filter trainers based on search query
     const filteredTrainers = searchQuery
-        ? fuse.search(searchQuery).map(result => result.item)
+        ? fuse.search(searchQuery).map((result) => result.item)
         : trainers;
 
-    // Handle delete trainer
-    const handleDeleteTrainer = async (trainerId) => {
+    const handleDeleteTrainer = (trainerId) => {
         setTrainerToDelete(trainerId);
-        setIsConfirmDialogOpen(true); // Open the confirmation dialog
+        setIsConfirmDialogOpen(true);
     };
 
-    // Handle confirming the delete action
     const handleConfirmDelete = async () => {
         if (trainerToDelete) {
             try {
@@ -70,22 +66,20 @@ function ManageTrainersList() {
                 if (response.status === 200) {
                     showSuccessToast('Trainer deleted successfully!');
                     setTrainers((prevTrainers) => prevTrainers.filter((trainer) => trainer.id !== trainerToDelete));
-                    setSearchQuery(''); // Clear search query
+                    setSearchQuery('');
                 } else {
                     showErrorToast('Failed to delete the trainer. Please try again.');
                 }
             } catch (error) {
-                // console.error('Error deleting the trainer:', error);
                 showErrorToast('An error occurred while trying to delete the trainer.');
             }
-            setIsConfirmDialogOpen(false); // Close the dialog after confirming deletion
+            setIsConfirmDialogOpen(false);
         }
     };
 
-    // Handle cancel action for deletion
     const handleCancel = () => {
-        setIsConfirmDialogOpen(false); // Close the dialog without deleting
-        setTrainerToDelete(null); // Reset the trainer to delete
+        setIsConfirmDialogOpen(false);
+        setTrainerToDelete(null);
     };
 
     return (
@@ -93,59 +87,90 @@ function ManageTrainersList() {
             {loading ? (
                 <Loading />
             ) : (
-                <div className="container trainers-list-container">
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="admin-welcome">
-                                <h1>Hello, Admin!</h1>
-                                <p>Trainer's List</p>
-                            </div>
-                        </div>
-                    </div>
+                <Grid container spacing={3} sx={{ padding: 3 }}>
+                    <Grid item xs={12}>
+                        <Typography variant="h4" align="center" color='#3caacb'>
+                            Trainer's List
+                        </Typography>
+                    </Grid>
 
-                    <div className="row">
-                        <div className="col-12">
-                            <Search onSearch={setSearchQuery} />
-                        </div>
-                        <p className='col-12'>Number of Results: {filteredTrainers.length}</p>
-                    </div>
+                    <Grid item xs={12}>
+                        <Search onSearch={setSearchQuery} />
+                    </Grid>
 
-                    <div className="row">
-                        <div className="col-12">
-                            <button onClick={() => navigate('/trainer-signup')} className="btn btn-success add__new-trainer-btn mb-5">
-                                Add New Trainer
-                            </button>
-                        </div>
-                    </div>
+                    <Grid item xs={12}>
+                        <Typography variant="body1" align="center" color='#3caacb'>
+                            Number of Results: {filteredTrainers.length}
+                        </Typography>
+                    </Grid>
 
-                    <div className="row ad__trainers-list">
-                        {filteredTrainers.length > 0 ? (
-                            filteredTrainers.map((trainer, index) => (
-                                <div key={index} className="col-12 col-md-6 col-lg-4 mb-3">
-                                    <div className="card">
-                                        <img className="card-img-top" src={trainer.profileImage} alt={`${trainer.fullName} profile`} />
-                                        <div className="card-body">
-                                            <h5 className="card-title">{trainer.fullName}</h5>
-                                            <p className="card-text">Experience: {trainer.experience}</p>
-                                            <p className="card-text">Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}</p>
-                                            <p className="card-text">Technologies: {trainer.technologies}</p>
-                                            <p className="card-text">Trainer ID: {trainer.id}</p>
-                                            <button className="btn btn-primary mr-2" onClick={() => navigate(`/trainer-profile-update/${trainer.id}`)}>
-                                                Edit
-                                            </button>
-                                            <button className="btn btn-danger" onClick={() => handleDeleteTrainer(trainer.id)}>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="col-12">
-                                <p>No trainers available.</p>
-                            </div>
-                        )}
-                    </div>
+                    <Grid item xs={12} textAlign="center">
+                        <Button variant="contained" color="primary" onClick={() => navigate('/trainer-signup')}>
+                            Add New Trainer
+                        </Button>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Grid container spacing={3}>
+                            {filteredTrainers.length > 0 ? (
+                                filteredTrainers.map((trainer) => (
+                                    <Grid key={trainer.id} item xs={12} sm={6} md={4} lg={3}>
+                                        <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                            <CardMedia
+                                                component="img"
+                                                height="200"
+                                                image={trainer.profileImage}
+                                                alt={`${trainer.fullName} profile`}
+                                            />
+                                            <CardContent sx={{ flexGrow: 1 }}>
+                                                <Typography variant="h6" gutterBottom>
+                                                    {trainer.fullName}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary">
+                                                    Experience: {trainer.experience}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary">
+                                                    Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary">
+                                                    Technologies: {trainer.technologies}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary">
+                                                    Trainer ID: {trainer.id}
+                                                </Typography>
+                                            </CardContent>
+                                            <Grid container justifyContent="space-around" sx={{ marginBottom: '8px' }} spacing={1}>
+                                                <Grid item>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={() => navigate(`/trainer-profile-update/${trainer.id}`)}
+                                                    >
+                                                        Edit
+                                                    </Button>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        onClick={() => handleDeleteTrainer(trainer.id)}
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </Card>
+                                    </Grid>
+                                ))
+                            ) : (
+                                <Grid item xs={12}>
+                                    <Typography variant="body1" align="center" color="textSecondary">
+                                        No trainers available.
+                                    </Typography>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </Grid>
 
                     <ConfirmationDialog
                         open={isConfirmDialogOpen}
@@ -153,7 +178,7 @@ function ManageTrainersList() {
                         onConfirm={handleConfirmDelete}
                         message="Are you sure you want to delete this trainer?"
                     />
-                </div>
+                </Grid>
             )}
         </>
     );

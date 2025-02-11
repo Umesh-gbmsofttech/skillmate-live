@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import './LiveSessions.css';
+import React, { useState } from 'react';
+import { Box, Typography, Grid, Card, CardContent, CardMedia, Button, CircularProgress } from '@mui/material';
 import logo from '../../assets/skillmate.jpg';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -25,20 +25,15 @@ function LiveSessions({ myCourses }) {
         }
     };
 
-
     // Function to create attendance record when student joins
     const createAttendance = async (courseId, inTime) => {
         setIsLoading(true);
         try {
             const attendanceData = {
                 inTime: inTime,
-                remark: `Meeting joing at ${new Date().toLocaleTimeString()}`, // You can adjust this remark if necessary
-                student: {
-                    id: userData.id,
-                },
-                course: {
-                    id: courseId,
-                }
+                remark: `Meeting joining at ${new Date().toLocaleTimeString()}`,
+                student: { id: userData.id },
+                course: { id: courseId },
             };
 
             const response = await axios.post('http://localhost:8080/attendances/create', attendanceData, {
@@ -56,86 +51,64 @@ function LiveSessions({ myCourses }) {
     };
 
     return (
-        <div className='live-session-container'>
-            <h1>Upcoming Live Sessions</h1>
-            <div className='session-list'>
+        <Box padding={4}>
+            <Typography variant="h4" color="primary" gutterBottom align="center">
+                Upcoming Live Sessions
+            </Typography>
+            {isLoading && (
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                    <CircularProgress />
+                </Box>
+            )}
+            <Grid container spacing={3} justifyContent="center">
                 {myCourses.filter(course => course?.meetings[0]?.meetingLink).length > 0 ? (
                     myCourses.filter(course => course?.meetings[0]?.meetingLink).map((course, index) => (
-                        <div key={index} className='session-card'>
-                            <img
-                                src={course.coverImage ? `data:image/png;base64,${course.coverImage}` : logo}
-                                alt={course.courseName}
-                                className='session-image'
-                            />
-                            <div className='session-info'>
-                                <h2 className='session-title'>{course.courseName}</h2>
-                                <p className='session-date'>Start Time: {course.meetings[0]?.fromTime || 'TBA'}</p>
-                                <p className='session-description'>{course.description}</p>
-                                <button
-                                    className='join-button'
-                                    onClick={() => handleJoinClick(course)}
-                                >
-                                    Join Now
-                                </button>
-                            </div>
-                        </div>
+                        <Grid item xs={12} sm={6} md={4} key={index}>
+                            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                <CardMedia
+                                    component="img"
+                                    alt={course.courseName}
+                                    height="200"
+                                    image={course.coverImage ? `data:image/png;base64,${course.coverImage}` : logo}
+                                    sx={{ objectFit: 'cover' }}
+                                />
+                                <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
+                                    <Typography variant="h6">{course.courseName}</Typography>
+                                    <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
+                                        Start Time: {course.meetings[0]?.fromTime || 'TBA'}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        {course.description}
+                                    </Typography>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{
+                                            marginTop: 2,
+                                            width: '80%',
+                                            '&:hover': {
+                                                transform: 'scale(1.05)',
+                                                backgroundColor: '#0056b3',
+                                            },
+                                        }}
+                                        onClick={() => handleJoinClick(course)}
+                                    >
+                                        Join Now
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     ))
                 ) : (
-                    <p>No live sessions available.</p>
+                    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                        <Typography variant="h6" color="textSecondary">
+                            No live sessions available.
+                        </Typography>
+                    </Box>
                 )}
-            </div>
-        </div>
+            </Grid>
+        </Box>
     );
 }
 
 export default LiveSessions;
-// import React, { useEffect } from 'react';
-// import './LiveSessions.css';
-// import logo from '../../assets/skillmate.jpg';
-
-// function LiveSessions({ myCourses }) {
-
-//     const handleJoinClick = (course) => {
-//         const meetingLink = course?.meetings[0]?.meetingLink;
-//         if (meetingLink) {
-//             window.open(meetingLink, '_blank', 'noopener,noreferrer');
-//         } else {
-//             console.log("Meeting link not available for the course:", course.courseName);
-//         }
-//     };
-
-//     return (
-//         <div className='live-session-container'>
-//             <h1>Upcoming Live Sessions</h1>
-//             <div className='session-list'>
-//                 {myCourses.filter(course => course?.meetings[0]?.meetingLink).length > 0 ? (
-//                     myCourses.filter(course => course?.meetings[0]?.meetingLink).map((course, index) => (
-//                         <div key={index} className='session-card'>
-//                             <img
-//                                 src={course.coverImage ? `data:image/png;base64,${course.coverImage}` : logo}
-//                                 alt={course.courseName}
-//                                 className='session-image'
-//                             />
-//                             <div className='session-info'>
-//                                 <h2 className='session-title'>{course.courseName}</h2>
-//                                 <p className='session-date'>Start Date: {course.meetings[0]?.fromTime || 'TBA'}</p>
-//                                 <p className='session-duration'>Duration: {course.duration || 'TBA'}</p>
-//                                 <p className='session-description'>{course.description}</p>
-//                                 <button
-//                                     className='join-button'
-//                                     onClick={() => handleJoinClick(course)}
-//                                 >
-//                                     Join Now
-//                                 </button>
-//                             </div>
-//                         </div>
-//                     ))
-//                 ) : (
-//                     <p>No live sessions available.</p>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// }
-
-// export default LiveSessions;

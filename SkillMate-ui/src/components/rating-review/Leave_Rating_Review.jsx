@@ -46,7 +46,7 @@ function LeaveRatingReview() {
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: 2, backgroundColor: '#1A2130' }}>
             {userType === 'trainer' && trainer && (
                 <>
                     <Card sx={{ display: 'flex', flexDirection: 'column', width: 440, padding: 3, borderRadius: 2, backgroundColor: '#C7EFFF', boxShadow: 3, mb: 2 }}>

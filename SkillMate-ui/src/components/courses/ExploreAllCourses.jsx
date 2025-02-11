@@ -31,18 +31,24 @@ function ExploreAllCourses() {
     }, []);
 
     return (
-        <div className={`explore-all-courses-section ${isVisible ? 'visible' : ''}`}>
-            <p className='explore-all-courses-section-big-text'>
-                Providing a holistic ecosystem for skill development, internships, and career growth.
-            </p>
-            <p className='explore-all-courses-section-little-text1'>
-                To address the skill gap in the IT sector by offering
-            </p>
-            <p className='explore-all-courses-section-little-text2'>
-                Affordable, quality training and guaranteed placement opportunities.
-            </p>
-            <button className='explore-courses' onClick={handleExploreAllCoursesClick}>Explore All Courses</button>
-        </div>
+        <>
+            <div className={`explore-all-courses-section ${isVisible ? 'visible' : ''}`}>
+                <p className='explore-all-courses-section-big-text'>
+                    Providing a holistic ecosystem for skill development, internships, and career growth.
+                </p>
+                <p className='explore-all-courses-section-little-text1'>
+                    To address the skill gap in the IT sector by offering
+                </p>
+                <p className='explore-all-courses-section-little-text2'>
+                    Affordable, quality training and guaranteed placement opportunities.
+                </p>
+                <button className='explore-courses' onClick={handleExploreAllCoursesClick}>Explore All Courses</button>
+                <div className='overlay'>
+
+                </div>
+            </div>
+        </>
+
     );
 }
 

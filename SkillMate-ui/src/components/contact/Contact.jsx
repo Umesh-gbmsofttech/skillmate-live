@@ -43,7 +43,7 @@ function Contact() {
         <Box sx={{ maxWidth: '100%', fontFamily: 'Arial, sans-serif', p: 2 }}>
             {course && (
                 <>
-                    <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, maxWidth: 1200, m: '40px auto', p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+                    <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, maxWidth: 1200, m: '40px auto', p: 2, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#f7f7f71b' }}>
                         <CardMedia
                             component="img"
                             sx={{ width: { xs: '100%', md: '50%' }, borderRadius: 2 }}
@@ -68,7 +68,7 @@ function Contact() {
 
                             <details>
                                 <summary>See full details of this course...</summary>
-                                <Typography variant="body2" sx={{ bgcolor: '#f5f5f5', p: 1, borderRadius: 1 }}>{course?.description}</Typography>
+                                <Typography variant="body2" sx={{ bgcolor: '#f7f7f71b', p: 1, borderRadius: 1 }}>{course?.description}</Typography>
                             </details>
 
                             <Box mt={2}>
@@ -91,13 +91,13 @@ function Contact() {
                     >
                         Leave a Rating and Review <img src={writeIcon} alt="Rate Us" style={{ marginLeft: 8, width: 24 }} />
                     </Button>
-                    <Typography variant="h4" align="center" fontWeight="bold" mt={4}>Latest Reviews</Typography>
+                    <Typography variant="h4" align="center" fontWeight="bold" mt={4} color='#3caacb'>Latest Reviews</Typography>
                     <ReviewsSection course={course} />
                 </>
             )}
 
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', p: 2, bgcolor: '#f9f9f9', mt: 4, borderRadius: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', p: 2, bgcolor: '#f9f9f9', mt: 4, borderRadius: 2, backgroundColor: '#1A2130' }}>
                 <Button onClick={handleWhatsAppClick} startIcon={<img src={whatsapp} alt="WhatsApp" style={{ width: 40, height: 40 }} />}>
                     <Typography variant="h6">09226224019</Typography>
                 </Button>

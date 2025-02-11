@@ -1,6 +1,6 @@
 .footer {
-    background-color: #f7f7f7;
-    color: rgb(0, 0, 0);
+    background-color: #16404D;
+    color: #FDFFE2;
     padding: 40px;
     display: flex;
     justify-content: space-around;
@@ -29,7 +29,7 @@
 
 .footer-list a {
     text-decoration: none;
-    color: #000000;
+    color: #FDFFE2;
 }
 
 .footer-item {
@@ -39,7 +39,8 @@
     margin: 8px 0;
     transition: color 0.3s;
     cursor: pointer;
-    transition: background-color 0.6s;
+    transition: background-color 0.2s;
+    padding-left: 10px;
 }
 
 .footer-item img {
@@ -50,8 +51,8 @@
 }
 
 .footer-item:hover {
-    color: #007BFF;
-    background-color: #7bdffa;
+    color: #006381;
+    background-color: hsla(0, 0%, 11%, 0.426);
 }
 
 @media (max-width: 768px) {

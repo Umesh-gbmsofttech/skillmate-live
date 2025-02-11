@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import './Navbar.css';
-import logo from '../../assets/skillmate1.jpg';
-import { useNavigate } from 'react-router-dom';
+import { Box, Button, IconButton, Menu, MenuItem, Typography, Avatar } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/authSlice';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
+import logo from '../../assets/skillmate1.jpg';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation(); // Get current location
 
   const userData = useSelector((state) => state.auth.userData);
   const username = useSelector((state) => state.auth.username);
@@ -26,7 +28,8 @@ function Navbar() {
     }
   }, [userData, username]);
 
-  const toggleMenu = () => {
+  const toggleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -64,177 +67,328 @@ function Navbar() {
     }
   };
 
+  // Function to check if the current path matches the link
+  const isActiveLink = (linkPath) => location.pathname === linkPath;
+
   return (
-    <nav className="navbar-container custom-navbar">
-      <div className="logo" onClick={() => handleNavigation('/')}>
-        <img src={logo} alt="Logo" />
-      </div>
-      <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
-        <li onClick={() => handleNavigation('/')}>Home</li>
-        <li onClick={() => handleNavigation('/courses')}>Courses</li>
-        <li onClick={() => handleNavigation('/community')}>Community</li>
-        <li onClick={() => handleNavigation('/resources')}>Resources</li>
-        <li onClick={() => handleNavigation('/subscriptions')}>Subscription</li>
-        <li onClick={() => handleNavigation('/contact')}>Contact</li>
-        {isAuthenticated ? (
-          <li onClick={handleLogout}>Logout</li>
-        ) : (
-          ''
-        )}
-        <li className="notification-btn">🔔</li>
-      </ul>
+    <Box display="flex" justifyContent="space-between" alignItems="center" padding="10px" bgcolor="#16404D" color="#A6CDC6" boxShadow="0 5px 10px rgba(0, 0, 0, 0.1)" position="relative">
+      <Box display="flex" alignItems="center" sx={{ cursor: 'pointer' }} onClick={() => handleNavigation('/')}>
+        <img src={logo} alt="Logo" width={40} height={40} style={{ borderRadius: '50%', objectFit: 'cover' }} />
+      </Box>
 
-      {isAuthenticated ? (
-        username !== 'ADMIN' ? (
-          <div className="user-profile" onClick={handleProfileClick}>
-            <img
-              src={profilePicUrl}
-              alt={userData ? userData.fullName : 'Profile'}
-              className="user-profile-pic"
-            />
-          </div>
-        ) : (
-          <button
-            onClick={() => handleNavigation('/admin-profile')}
-            className="sign-in-btn"
+      <Box display="flex" justifyContent="space-between" alignItems="center" gap={2}>
+        <Box display="flex" gap={2} fontSize="20px" fontWeight="bold" sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <Typography
+            onClick={() => handleNavigation('/')}
+            sx={{
+              position: 'relative',
+              display: 'inline-block',
+              '&:hover': {
+                color: '#F0F0F0',
+                cursor: 'pointer',
+              },
+              '&:hover::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '0%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              textDecoration: isActiveLink('/') ? 'underline' : 'none',
+            }}
           >
-            Admin
-          </button>
-        )
-      ) : (
-        <button
-          onClick={() => handleNavigation('/login/mobile')}
-          className="sign-in-btn"
-        >
-          Sign In
-        </button>
-      )}
+            Home
+          </Typography>
 
-      <button className={`menu-btn ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-        ☰
-      </button>
+          <Typography
+            onClick={() => handleNavigation('/courses')}
+            sx={{
+              position: 'relative',
+              display: 'inline-block',
+              '&:hover': {
+                color: '#F0F0F0',
+                cursor: 'pointer',
+              },
+              '&:hover::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '0%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              textDecoration: isActiveLink('/courses') ? 'underline' : 'none',
+            }}
+          >
+            Courses
+          </Typography>
+          <Typography
+            onClick={() => handleNavigation('/community')}
+            sx={{
+              position: 'relative',
+              display: 'inline-block',
+              '&:hover': {
+                color: '#F0F0F0',
+                cursor: 'pointer',
+              },
+              '&:hover::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '0%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              textDecoration: isActiveLink('/community') ? 'underline' : 'none',
+            }}
+          >
+            Community
+          </Typography>
+          {/* <Typography
+            onClick={() => handleNavigation('/resources')}
+            sx={{
+              position: 'relative',
+              display: 'inline-block',
+              '&:hover': {
+                color: '#F0F0F0',
+                cursor: 'pointer',
+              },
+              '&:hover::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '0%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              textDecoration: isActiveLink('/resources') ? 'underline' : 'none',
+            }}
+          >
+            Resources
+          </Typography> */}
+          <Typography
+            onClick={() => handleNavigation('/contact')}
+            sx={{
+              position: 'relative',
+              display: 'inline-block',
+              '&:hover': {
+                color: '#F0F0F0',
+                cursor: 'pointer',
+              },
+              '&:hover::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '0%',
+                height: '2px',
+                backgroundColor: '#FF8C00',
+                transition: 'width 0.3s ease',
+              },
+              textDecoration: isActiveLink('/contact') ? 'underline' : 'none',
+            }}
+          >
+            Contact
+          </Typography>
+          {isAuthenticated && (
+            <>
+              {/* <Typography
+                onClick={() => handleNavigation('/subscriptions')}
+                sx={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  '&:hover': {
+                    color: '#F0F0F0',
+                    cursor: 'pointer',
+                  },
+                  '&:hover::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '2px',
+                    backgroundColor: '#FF8C00',
+                    transition: 'width 0.3s ease',
+                  },
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '0%',
+                    height: '2px',
+                    backgroundColor: '#FF8C00',
+                    transition: 'width 0.3s ease',
+                  },
+                }}
+              >
+                Subscription
+              </Typography> */}
+              <Typography
+                onClick={handleLogout}
+                sx={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  '&:hover': {
+                    color: '#F0F0F0',
+                    cursor: 'pointer',
+                  },
+                  '&:hover::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '2px',
+                    backgroundColor: '#FF8C00',
+                    transition: 'width 0.3s ease',
+                  },
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '0%',
+                    height: '2px',
+                    backgroundColor: '#FF8C00',
+                    transition: 'width 0.3s ease',
+                  },
+                }}
+              >
+                Logout
+              </Typography>
+              {/* <IconButton sx={{ color: '#fff' }}>🔔</IconButton> */}
+            </>
+          )}
+        </Box>
 
+        {/* Profile or Sign In for larger screens */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          {isAuthenticated ? (
+            username !== 'ADMIN' ? (
+              <IconButton onClick={handleProfileClick}>
+                <Avatar src={profilePicUrl} alt={userData ? userData.fullName : 'Profile'} sx={{ width: 35, height: 35 }} />
+              </IconButton>
+            ) : (
+              <Button onClick={() => handleNavigation('/admin-profile')} variant="outlined" color="inherit">
+                Admin
+              </Button>
+            )
+          ) : (
+            <Button onClick={() => handleNavigation('/login/mobile')} variant="outlined" color="inherit">
+              Sign In
+            </Button>
+          )}
+        </Box>
+
+        {/* Hamburger Menu Icon for smaller screens */}
+        <IconButton sx={{ display: { xs: 'block', md: 'none' }, color: '#fff' }} onClick={toggleMenu}>
+          ☰
+        </IconButton>
+
+      </Box>
+      {/* Mobile Dropdown Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        anchorOrigin={{
+          vertical: 'bottom', // Positioning the menu directly below the icon
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+        }}
+      >
+        <MenuItem onClick={() => handleNavigation('/')}>Home</MenuItem>
+        <MenuItem onClick={() => handleNavigation('/courses')}>Courses</MenuItem>
+        <MenuItem onClick={() => handleNavigation('/community')}>Community</MenuItem>
+        <MenuItem onClick={() => handleNavigation('/resources')}>Resources</MenuItem>
+        <MenuItem onClick={() => handleNavigation('/contact')}>Contact</MenuItem>
+        {isAuthenticated && (
+          <>
+            <MenuItem onClick={() => handleNavigation('/subscriptions')}>Subscription</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </>
+        )}
+      </Menu>
+
+      {/* Confirmation Dialog for Logout */}
       <ConfirmationDialog
         open={isConfirmDialogOpen}
         onClose={handleCancelLogout}
         onConfirm={handleConfirmLogout}
         message="Are you sure you want to log out?"
       />
-    </nav>
+    </Box>
   );
 }
 
 export default Navbar;
-// import React, { useEffect, useState } from 'react';
-// import './Navbar.css';
-// import logo from '../../assets/skillmate1.jpg';
-// import { useNavigate } from 'react-router-dom';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { logout } from '../redux/authSlice';
-
-// function Navbar() {
-//   const [isMenuOpen, setIsMenuOpen] = useState(false);
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch();
-
-//   const userData = useSelector((state) => state.auth.userData);
-//   const username = useSelector((state) => state.auth.username); // for admin only
-//   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-
-//   // Log user data for debugging (optional)
-//   useEffect(() => {
-//     if (username) {
-//       console.log(username);
-//     }
-//     if (userData) {
-//       console.log(userData.fullName);
-//       console.log(userData.roles);
-//     }
-//   }, [userData, username]);
-
-//   const toggleMenu = () => {
-//     setIsMenuOpen(!isMenuOpen);
-//   };
-
-//   const handleNavigation = (route) => {
-//     navigate(route);
-//   };
-//   const handleLogout = (route) => {
-//     confirm(`Logout ${route}`) && dispatch(logout());
-//     // dispatch(logout());
-//     navigate(route);
-//   };
-
-//   // Fallback profile picture for users without one
-//   const profilePicUrl = userData && userData.profilePic
-//     ? `data:image/jpeg;base64,${userData.profilePic}`
-//     : logo; // Fallback to the logo if no profile picture
-
-//   const handleProfileClick = () => {
-//     console.log('profiel click', username)
-//     if (username || userData) {
-//       if (username === 'ADMIN') {
-//         handleNavigation('/admin-profile');
-//       }
-
-//       if (userData.roles) {
-//         if (userData.roles[0] === 'TRAINER') {
-//           handleNavigation('/trainer-profile');
-//         } else if (userData.roles[0] === 'STUDENT') {
-//           handleNavigation('/student-profile');
-//         }
-//       }
-//     }
-//   };
-
-//   return (
-//     <nav className="navbar-container custom-navbar">
-//       <div className="logo" onClick={() => handleNavigation('/')}>
-//         <img src={logo} alt="Logo" />
-//       </div>
-//       <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
-//         <li onClick={() => handleNavigation('/')}>Home</li>
-//         <li onClick={() => handleNavigation('/courses')}>Courses</li>
-//         <li onClick={() => handleNavigation('/community')}>Community</li>
-//         <li onClick={() => handleNavigation('/resources')}>Resources</li>
-//         <li onClick={() => handleNavigation('/subscriptions')}>Subscription</li>
-//         <li onClick={() => handleNavigation('/contact')}>Contact</li>
-//         {isAuthenticated ? <li onClick={() => handleLogout('/')}>Logout</li> : ''}
-//         <li className="notification-btn">🔔</li>
-//       </ul>
-
-//       {isAuthenticated ? (
-//         username !== 'ADMIN' ? (
-//           <div className="user-profile" onClick={handleProfileClick}>
-//             <img
-//               src={profilePicUrl}
-//               alt={userData ? userData.fullName : 'Profile'}
-//               className="user-profile-pic"
-//             />
-//           </div>
-//         ) : (
-//           <button
-//             onClick={() => handleNavigation('/admin-profile')}
-//             className="sign-in-btn"
-//           >
-//             Admin
-//           </button>
-//         )
-//       ) : (
-//         <button
-//           onClick={() => handleNavigation('/login/mobile')}
-//           className="sign-in-btn"
-//         >
-//           Sign In
-//         </button>
-//       )}
-
-//       <button className={`menu-btn ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-//         ☰
-//       </button>
-//     </nav>
-//   );
-// }
-
-// export default Navbar;

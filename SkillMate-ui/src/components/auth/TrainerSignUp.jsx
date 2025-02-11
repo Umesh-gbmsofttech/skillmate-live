@@ -138,8 +138,8 @@ const TrainerSignUp = () => {
     };
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f4f6f8">
-            <Box bgcolor="white" p={3} borderRadius={2} boxShadow={3} width="100%" maxWidth="600px">
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" padding='20px'>
+            <Box bgcolor="#f7f7f7eb" p={3} borderRadius={2} boxShadow={3} width="100%" maxWidth="600px">
                 <form onSubmit={handleSubmit}>
                     {username && <Typography variant="h6" align="center">Welcome, {username}</Typography>}
                     {!username && <Typography variant="h4" align="center" gutterBottom>Trainer Sign Up</Typography>}

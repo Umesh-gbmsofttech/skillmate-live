@@ -88,10 +88,10 @@ function EnquiryForm({ closeForm, contact }) {
           height: { xs: 'auto', md: '100%' }, // Full height on large screens
         }}
       >
-        <Typography variant="h6" align="center" color="white" sx={{ marginBottom: 2 }}>
+        <Typography variant="h6" align="center" color="#96c6e0" sx={{ marginTop: 4 }}>
           Fill your information and get free consultancy...
         </Typography>
-        <Typography variant="body2" align="center" color="white" sx={{ marginBottom: 2 }}>
+        <Typography variant="body2" align="center" color="#96c6e0" sx={{ marginTop: 0 }}>
           And sign up to explore more things
         </Typography>
         <TextField
@@ -156,7 +156,7 @@ function EnquiryForm({ closeForm, contact }) {
           <DialogContent sx={{ backgroundColor: '#394852', padding: 0 }}>
             {/* Close Button at Top Right */}
             <IconButton onClick={closeForm} sx={{ position: 'absolute', top: 5, right: 5, color: 'white' }}>
-              <FaTimes color='blue' />
+              <FaTimes color='#96c6e0' />
             </IconButton>
             {formContent}
           </DialogContent>

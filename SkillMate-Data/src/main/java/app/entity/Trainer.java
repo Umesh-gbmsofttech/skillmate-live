@@ -77,10 +77,11 @@ public class Trainer {
 	@JsonView(JsonResoponse_View.DetailedView.class)
 	private byte[] resume;
 
-	@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-//    @JsonView(JsonResoponse_View.BasicView.class)
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-//	@JsonView(JsonResoponse_View.BasicView.class)
+	@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	// @JsonView(JsonResoponse_View.BasicView.class)
+	// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+	// property = "id")
+	// @JsonView(JsonResoponse_View.BasicView.class)
 	private List<Student> students;
 
 	@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -91,19 +92,20 @@ public class Trainer {
 	@JsonView(JsonResoponse_View.BasicView.class)
 	private List<Attendance> attendance;
 
-//	@ManyToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	// @ManyToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch =
+	// FetchType.LAZY)
 	@ManyToMany
-//	@JsonView(JsonResoponse_View.DetailedView.class)
+	// @JsonView(JsonResoponse_View.DetailedView.class)
 	@JsonView(JsonResoponse_View.BasicView.class)
-//	@JsonIgnore
+	// @JsonIgnore
 	private List<Batch> batches;
 
 	@OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonView(JsonResoponse_View.BasicView.class)
 	private List<Meeting> meetings = new ArrayList<>();
 
-	@OneToMany(mappedBy = "toTrainer", cascade = { CascadeType.ALL}, fetch = FetchType.LAZY)
-//	@JsonView(JsonResoponse_View.BasicView.class)
+	@OneToMany(mappedBy = "toTrainer", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	// @JsonView(JsonResoponse_View.BasicView.class)
 	private List<RatingReviews> ratingReviews = new ArrayList<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)

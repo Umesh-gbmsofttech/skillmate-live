@@ -3,10 +3,11 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 5%;
+  /* padding: 0 5%; */
   /* Add some padding for responsiveness */
   box-sizing: border-box;
   /* opacity: 0.8; */
+  background-color: #1A2130;
 }
 
 /* Heading for the carousel */
@@ -14,7 +15,8 @@
   text-align: center;
   font-size: 2.5em;
   margin-bottom: 30px;
-  color: #333;
+  color: #3E5879;
+  margin-top: 30px;
 }
 
 /* Each slide item container */
@@ -34,15 +36,15 @@
 /* Styling for the images */
 .carousel-image {
   width: 100%;
-  height: 70vh;
+  height: 80vh;
   object-fit: cover;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   transition: transform 0.3s ease-in-out;
 }
 
 /* Hover effect for images */
 .carousel-image:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 /* Caption text on the image */
@@ -51,11 +53,11 @@
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  color: white;
+  color: #A294F9;
   font-size: 2em;
   font-weight: bold;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-  background-color: #d5d2d2;
+  background-color: #3E5879;
   opacity: 2.0;
 }
 
