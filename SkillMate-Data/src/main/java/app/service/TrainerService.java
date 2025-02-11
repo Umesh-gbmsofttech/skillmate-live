@@ -64,9 +64,7 @@ public class TrainerService {
 		return trainerRepository.findById(trainerId);
 	}
 
-	public Trainer updateTrainer(Long id, String fullName, String mobileNumber, String email, String address,
-			String qualification, String experience, String workingStatus, List<String> technologies,
-			MultipartFile profilePic, MultipartFile resume) {
+	public Trainer updateTrainer(Long id, Trainer updatedTrainer) {
 
 		Optional<Trainer> opTrainer = trainerRepository.findById(id);
 		if (opTrainer.isEmpty()) {
@@ -75,12 +73,12 @@ public class TrainerService {
 
 		Trainer dbTrainer = opTrainer.get();
 
-// Create a new TrainerProfileUpdated entry
+		// Create a new TrainerProfileUpdated entry
 		TrainerProfileUpdated trainerProfileUpdated = new TrainerProfileUpdated();
 		trainerProfileUpdated.setTrainerId(dbTrainer.getId());
 		trainerProfileUpdated.setUpdatedAt(LocalDateTime.now());
 
-// Store non-empty fields in TrainerProfileUpdated
+		// Store non-empty fields in TrainerProfileUpdated
 		if (dbTrainer.getFullName() != null)
 			trainerProfileUpdated.setFullName(dbTrainer.getFullName());
 		if (dbTrainer.getMobileNumber() != null)
@@ -102,48 +100,38 @@ public class TrainerService {
 		if (dbTrainer.getCompanyName() != null)
 			trainerProfileUpdated.setCompanyName(dbTrainer.getCompanyName());
 
-// Save the historical data
+		// Save the historical data
 		trainerProfileUpdatedRepository.save(trainerProfileUpdated);
 
-// Update Trainer with new values (only if they are not null)
-		if (fullName != null)
-			dbTrainer.setFullName(fullName);
-		if (mobileNumber != null)
-			dbTrainer.setMobileNumber(mobileNumber);
-		if (email != null)
-			dbTrainer.setEmail(email);
-		if (address != null)
-			dbTrainer.setAddress(address);
-		if (qualification != null)
-			dbTrainer.setQualification(qualification);
-		if (experience != null)
-			dbTrainer.setExperience(experience);
-		if (workingStatus != null)
-			dbTrainer.setWorkingStatus(workingStatus);
-		if (technologies != null)
-			dbTrainer.setTechnologies(technologies);
+		// Update Trainer with new values (only if they are not null)
+		if (updatedTrainer.getFullName() != null)
+			dbTrainer.setFullName(updatedTrainer.getFullName());
+		if (updatedTrainer.getMobileNumber() != null)
+			dbTrainer.setMobileNumber(updatedTrainer.getMobileNumber());
+		if (updatedTrainer.getEmail() != null)
+			dbTrainer.setEmail(updatedTrainer.getEmail());
+		if (updatedTrainer.getAddress() != null)
+			dbTrainer.setAddress(updatedTrainer.getAddress());
+		if (updatedTrainer.getQualification() != null)
+			dbTrainer.setQualification(updatedTrainer.getQualification());
+		if (updatedTrainer.getExperience() != null)
+			dbTrainer.setExperience(updatedTrainer.getExperience());
+		if (updatedTrainer.getWorkingStatus() != null)
+			dbTrainer.setWorkingStatus(updatedTrainer.getWorkingStatus());
+		if (updatedTrainer.getTechnologies() != null)
+			dbTrainer.setTechnologies(updatedTrainer.getTechnologies());
 
-// Handle profile picture upload
-		if (profilePic != null && !profilePic.isEmpty()) {
-			try {
-				byte[] profilePicBytes = profilePic.getBytes();
-				dbTrainer.setProfilePic(profilePicBytes);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		// Handle profile picture upload
+		if (updatedTrainer.getProfilePic() != null) {
+			dbTrainer.setProfilePic(updatedTrainer.getProfilePic());
 		}
 
-// Handle resume upload
-		if (resume != null && !resume.isEmpty()) {
-			try {
-				byte[] resumeBytes = resume.getBytes();
-				dbTrainer.setResume(resumeBytes);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		// Handle resume upload
+		if (updatedTrainer.getResume() != null) {
+			dbTrainer.setResume(updatedTrainer.getResume());
 		}
 
-// Save and return the updated trainer
+		// Save and return the updated trainer
 		return trainerRepository.save(dbTrainer);
 	}
 

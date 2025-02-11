@@ -184,7 +184,7 @@ function Meetings({ userData, trainerId, courses }) {
     };
 
     return (
-        <div style={{ padding: '40px 120px 10px 120px' }}>
+        <div style={{ padding: '40px 120px 10px 120px', width:'70%' }}>
             <Paper elevation={3} style={{ padding: '20px' }}>
                 <Typography variant="h5" gutterBottom>
                     Create a Meeting

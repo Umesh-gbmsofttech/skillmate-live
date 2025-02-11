@@ -24,6 +24,8 @@ function TrainerProfile() {
     const [loading, setLoading] = useState(true);
     const [showPDF, setShowPDF] = useState(false);
 
+    
+
     useEffect(() => {
         const fetchBatches = async () => {
             try {
@@ -82,7 +84,8 @@ function TrainerProfile() {
                             <Avatar
                                 src={userData?.profilePic ? `data:image/jpeg;base64,${userData.profilePic}` : defaultProfilePic}
                                 alt="Profile"
-                                sx={{ width: 120, height: 120, boxShadow: 3, border: '3px solid white' }}
+                                sx={{ width: 180, height: 220  , objectFit: 'cover', objectPosition: 'top' , borderRadius:'0',padding:'10px' }}
+
                             />
                             <Typography variant="h4" fontWeight="bold">
                                 Welcome, {userData?.fullName || 'Trainer'}
@@ -155,7 +158,10 @@ function TrainerProfile() {
                 </>
             )}
             {/* Courses & Batches */}
+            
+            <div style={{display:'flex', justifyContent:'center', width:'100%'}}>
             <Meetings userData={userData} courses={courses} trainerId={trainerId} />
+            </div>
 
             {/* Batch Selection */}
             <FormControl fullWidth sx={{ mt: 3, marginLeft: '120px', marginRight: '120px', color: 'white' }}>

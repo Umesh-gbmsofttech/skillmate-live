@@ -156,38 +156,14 @@ public class TrainerController {
 //		// Save the updated trainer object
 //		Trainer updatedTrainer = trainerService.updateTrainer(id, trainer);
 //		return ResponseEntity.ok(updatedTrainer);
-//	}
-	@PutMapping("/update/{id}")
-//	@JsonView(JsonResoponse_View.DetailedView.class)
-    public ResponseEntity<Trainer> updateTrainerProfile(
-        @PathVariable Long id,
-        @RequestParam(required = false) String fullName,
-        @RequestParam(required = false) String mobileNumber,
-        @RequestParam(required = false) String email,
-        @RequestParam(required = false) String address,
-        @RequestParam(required = false) String qualification,
-        @RequestParam(required = false) String experience,
-        @RequestParam(required = false) String workingStatus,
-        @RequestParam(required = false) List<String>  technologies,
-        @RequestParam(required = false) MultipartFile profilePic,
-        @RequestParam(required = false) MultipartFile resume) {
-        
-        // Call the service to update the trainer's profile
-        Trainer updatedTrainer = trainerService.updateTrainer(id, fullName, mobileNumber, email, address, qualification, 
-                                                              experience, workingStatus, technologies, profilePic, resume);
-        if (updatedTrainer == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedTrainer);
-    }
-
-
-
-
-
-
-
-
+@PutMapping("/update/{id}")
+public ResponseEntity<Trainer> updateTrainerProfile(@PathVariable Long id, @RequestBody Trainer trainer) {
+	Trainer updatedTrainer = trainerService.updateTrainer(id, trainer);
+	if (updatedTrainer == null) {
+		return ResponseEntity.notFound().build();
+	}
+	return ResponseEntity.ok(updatedTrainer);
+}
 
 //	@PutMapping(value = "/update/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
 //	public ResponseEntity<Object> updateTrainerProfile(@PathVariable Long id,

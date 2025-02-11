@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateCourse } from '../redux/courseActions';
 import axios from 'axios';
-import { Box, Typography, TextField, Button, Select, MenuItem, CircularProgress, Checkbox, ListItemText } from '@mui/material';
-import courseCoverImage from '../../assets/profilePic.jpg';
-import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
+import { Box, Typography, TextField, Button, CircularProgress } from '@mui/material';
+import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
 
 function AdEditCourse() {
@@ -75,11 +74,11 @@ function AdEditCourse() {
             if (response.status === 200) {
                 showSuccessToast('Course updated successfully'); // Debugging log
                 dispatch(updateCourse(updatedCourse));
-                // navigate('/admin-profile/manage-courses');
+                navigate('/admin-profile/manage-courses');
             }
-        } catch (error) {
+        } catch (e) {
             // console.error('Error updating course:', error.message);
-            showErrorToast('Error updating course!');
+            showErrorToast('Error updating course!',e);
         } finally {
             setLoading(false);
         }
@@ -90,10 +89,6 @@ function AdEditCourse() {
         const file = e.target.files[0];
         setProfilePic(file);  // Store the selected file for conversion later
         setPreviewImage(URL.createObjectURL(file));  // Set preview image directly from the file
-    };
-
-    const handleTrainerChange = (event) => {
-        setSelectedTrainerIds(event.target.value);
     };
 
     if (!courseData) {

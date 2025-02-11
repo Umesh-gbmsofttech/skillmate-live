@@ -1,10 +1,11 @@
 import { FaTimes } from 'react-icons/fa';
-import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Box, Button, TextField, Typography, IconButton, Dialog, DialogContent } from '@mui/material';
 import picture from '../../assets/professional.jpg';
-import { blue } from '@mui/material/colors';
+
 
 function EnquiryForm({ closeForm, contact }) {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -167,5 +168,10 @@ function EnquiryForm({ closeForm, contact }) {
     </>
   );
 }
+EnquiryForm.propTypes = {
+  closeForm: PropTypes.func.isRequired,
+  contact: PropTypes.bool.isRequired,
+};
 
 export default EnquiryForm;
+

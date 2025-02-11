@@ -71,7 +71,7 @@ function OurTopCourses() {
             </Typography>
             <Grid container spacing={4} justifyContent="center">
                 {courses?.map((course, index) => (
-                    <Grid item key={index} xs={12} sm={6} md={4}>
+                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                         <Box
                             ref={(el) => (cardRefs.current[index] = el)}
                             sx={{
@@ -82,6 +82,9 @@ function OurTopCourses() {
                                 opacity: 0,
                                 transform: 'translateY(50px)',
                                 transition: 'transform 0.8s ease, opacity 1.8s ease',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                height: '100%',
                                 '&.visible': {
                                     opacity: 1,
                                     transform: 'translateY(0)',
@@ -97,7 +100,7 @@ function OurTopCourses() {
                                 alt={course.courseName}
                                 style={{ width: '100%', height: 230, objectFit: 'cover' }}
                             />
-                            <Box sx={{ padding: 2, display: 'flex', flexDirection: 'column' }}>
+                            <Box sx={{ padding: 2, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                                 <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333', marginBottom: 1 }}>
                                     {course.courseName}
                                 </Typography>
@@ -107,33 +110,33 @@ function OurTopCourses() {
                                 <Typography variant="body2" sx={{ color: '#555', marginBottom: 1 }}>
                                     {course.rating || 'No reviews yet'}
                                 </Typography>
-                                <Button
-                                    onClick={() => handleBuyNowClick(course)}
-                                    variant="contained"
-                                    color="primary"
-                                    sx={{
-                                        marginTop: 1,
-                                        width: '100%',
-                                    }}
-                                >
-                                    Buy Now
-                                </Button>
-                                {username === 'ADMIN' && (
-                                    <IconButton
-                                        onClick={() => handleCourseEditClick(course)}
+                                <Box sx={{ marginTop: 'auto' }}>
+                                    <Button
+                                        onClick={() => handleBuyNowClick(course)}
+                                        variant="contained"
+                                        color="primary"
                                         sx={{
-                                            position: 'absolute',
-                                            top: 300,
-                                            right: 16,
-                                            width: 20,
-                                            height: 20,
-                                            // backgroundColor: '',
-                                            '&:hover': { transform: 'scale(1.1)', backgroundColor: 'yellowgreen', },
+                                            width: '100%',
                                         }}
                                     >
-                                        <EditIcon fontSize="small" />
-                                    </IconButton>
-                                )}
+                                        Buy Now
+                                    </Button>
+                                    {username === 'ADMIN' && (
+                                        <IconButton
+                                            onClick={() => handleCourseEditClick(course)}
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 300,
+                                                right: 16,
+                                                width: 20,
+                                                height: 20,
+                                                '&:hover': { transform: 'scale(1.1)', backgroundColor: 'yellowgreen' },
+                                            }}
+                                        >
+                                            <EditIcon fontSize="small" />
+                                        </IconButton>
+                                    )}
+                                </Box>
                             </Box>
                         </Box>
                     </Grid>

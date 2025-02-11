@@ -110,7 +110,7 @@ const StudentSection = () => {
                                             boxShadow: '0 5px 10px rgba(0, 0, 0, 0.3)',
                                         }}
                                     />
-
+                                    
                                     <CardContent sx={{ mt: 2 }}>
                                         <Typography variant="h6" fontWeight="bold">
                                             {student.fullName}

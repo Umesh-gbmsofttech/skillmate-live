@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, TextField, Button, CircularProgress, Typography, Checkbox, FormControlLabel, MenuItem } from '@mui/material';
-import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
+import { showSuccessToast, showErrorToast } from '../utility/ToastService';
+import { useSelector } from 'react-redux';
 
 function TrainerProfileUpdate() {
+    const token = useSelector((state) => state.auth.token);
     const [formData, setFormData] = useState({
         fullName: '',
         mobileNumber: '',
@@ -51,7 +53,6 @@ function TrainerProfileUpdate() {
 
                 setLoading(false);
             } catch (error) {
-                // console.error('Error fetching trainer data:', error);
                 showErrorToast('Error fetching trainer data!');
                 setLoading(false);
             }
@@ -86,9 +87,10 @@ function TrainerProfileUpdate() {
         const file = e.target.files[0];
         if (file) {
             convertToBase64(file).then((base64Image) => {
+                const base64Data = base64Image.split(',')[1]; // Strip the prefix
                 setFormData((prevData) => ({
                     ...prevData,
-                    profilePic: base64Image // Update profilePic in formData
+                    profilePic: base64Data // Update profilePic in formData
                 }));
                 setPreviewImage(base64Image); // Update preview image immediately
             });
@@ -111,7 +113,7 @@ function TrainerProfileUpdate() {
             reader.onloadend = () => {
                 setFormData((prevData) => ({
                     ...prevData,
-                    resume: reader.result // Store base64 encoded resume
+                    resume: reader.result.split(',')[1] // Store base64 encoded resume without prefix
                 }));
                 setPdfFile(reader.result); // Preview the resume as base64
             };
@@ -122,16 +124,17 @@ function TrainerProfileUpdate() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:8080/trainers/update/${trainerId}`, formData);
-            console.log(response);
-            if (response.status == 200 && response.ok) {
+            const response = await axios.put(`http://localhost:8080/trainers/update/${trainerId}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
                 showSuccessToast('Trainer updated successfully!');
-                // navigate('/admin-dashboard/manage-trainers');
             } else {
                 showErrorToast('Trainer not updated!');
             }
         } catch (error) {
-            // console.error('Error updating trainer data:', error);
             showErrorToast('An error occurred while updating the trainer.');
         }
     };
@@ -211,7 +214,7 @@ function TrainerProfileUpdate() {
                         margin="normal"
                     />
                     <TextField
-                        label="Experince"
+                        label="Experience"
                         name="experience"
                         value={formData.experience}
                         onChange={handleChange}
@@ -299,7 +302,6 @@ function TrainerProfileUpdate() {
                         </Button>
                     </div>
 
-
                     <Box sx={{ textAlign: 'center', marginTop: 4 }}>
                         <Button
                             variant="contained"
@@ -310,7 +312,6 @@ function TrainerProfileUpdate() {
                         >
                             {loading ? 'Updating...' : 'Update Trainer'}
                         </Button>
-
                     </Box>
                 </Box>
             </form>

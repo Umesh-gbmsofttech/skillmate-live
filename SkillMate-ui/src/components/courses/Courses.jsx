@@ -93,7 +93,8 @@ function Courses() {
         ) : filteredCourses.length > 0 ? (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 3 }}>
             {filteredCourses.map((course) => (
-              <Card key={course.id} sx={{ width: 300, boxShadow: 3, backgroundColor: '#71BBB2' }}>
+              <Card key={course.id} sx={{ width: 300, boxShadow: 3, backgroundColor: '#71BBB2', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 2 }}>
+                
                 <CardMedia
                   component="img"
                   height="250"
@@ -109,6 +110,16 @@ function Courses() {
                     Rating: {course.rating}
                   </Typography>
                 </CardContent>
+                {username === 'ADMIN' && (
+                 
+                 <img
+                   onClick={() => handleCourseEditClick(course)}
+                   src={editIcon}
+                   alt="edit"
+                   style={{ width: 20, height: 20, cursor: 'pointer',position: 'relative', top: '0%', right: '-88%' }}
+                 />
+              
+             )}
                 <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2 }}>
                   <Button
                     variant="contained"
@@ -126,16 +137,7 @@ function Courses() {
                     BUY NOW
                   </Button>
                 </Box>
-                {username === 'ADMIN' && (
-                  <Box sx={{ position: 'relative', top: '-30%', right: '-88%' }}>
-                    <img
-                      onClick={() => handleCourseEditClick(course)}
-                      src={editIcon}
-                      alt="edit"
-                      style={{ width: 20, height: 20, cursor: 'pointer' }}
-                    />
-                  </Box>
-                )}
+                
               </Card>
             ))}
 

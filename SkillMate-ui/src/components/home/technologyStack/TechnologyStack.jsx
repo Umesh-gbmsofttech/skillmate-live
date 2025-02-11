@@ -46,11 +46,12 @@ const TechCard = styled(Card)(({ theme }) => ({
     width: '180px',
     height: '250px',
     textAlign: 'center',
-    padding: '0px 10px 0 10px',
+    padding: '10px',
     transition: 'box-shadow 0.3s ease',
     position: 'relative',
     marginTop: '20px',
     color: '#16404D',
+    
     '&:hover': {
         boxShadow: '0 0 20px #676767',
     },
@@ -89,7 +90,10 @@ const TechDescription = styled(Box)(({ theme }) => ({
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
     opacity: 0,
     transition: 'opacity 0.3s ease-in-out',
+    
 }));
+
+
 
 const TechnologyStack = () => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -129,8 +133,9 @@ const TechnologyStack = () => {
                         <TechCard
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
+                            sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' ,justifyContent:'space-between' }}
                         >
-                            <Box sx={{ position: 'relative' }}>
+                        
                                 <Typography
                                     variant="h6"
                                     sx={{
@@ -149,7 +154,7 @@ const TechnologyStack = () => {
                                     src={technology.imageUrl}
                                     alt={technology.technologyName}
                                 />
-                            </Box>
+                           
                         </TechCard>
 
                         {/* Hoverable description that appears outside of the card */}

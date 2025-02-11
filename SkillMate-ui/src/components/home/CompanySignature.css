@@ -3,8 +3,8 @@
     justify-content: space-evenly;
     align-items: center;
     padding: 10px 20px;
-    background-color: #FF6A6A;
-    color: #1A2130;
+    background-color: #1A2130;
+    color: #c0cdea;
     font-size: 14px;
     font-family: Arial, sans-serif;
 }
@@ -14,7 +14,7 @@
 }
 
 .GBM-softtech-signature a {
-    color: #1A2130;
+    color: #c0cdea;
     text-decoration: none;
     font-weight: bold;
 }

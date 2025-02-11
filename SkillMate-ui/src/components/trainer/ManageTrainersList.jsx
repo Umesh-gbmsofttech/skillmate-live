@@ -105,7 +105,7 @@ function ManageTrainersList() {
                     </Grid>
 
                     <Grid item xs={12} textAlign="center">
-                        <Button variant="contained" color="primary" onClick={() => navigate('/trainer-signup')}>
+                        <Button variant="contained" color="primary" onClick={() => navigate('/trainer-signup')} size="small">
                             Add New Trainer
                         </Button>
                     </Grid>
@@ -114,28 +114,29 @@ function ManageTrainersList() {
                         <Grid container spacing={3}>
                             {filteredTrainers.length > 0 ? (
                                 filteredTrainers.map((trainer) => (
-                                    <Grid key={trainer.id} item xs={12} sm={6} md={4} lg={3}>
+                                    <Grid key={trainer.id} item xs={12} sm={6} md={4} lg={2.5}>
                                         <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                                             <CardMedia
                                                 component="img"
-                                                height="200"
+                                                height="250"
                                                 image={trainer.profileImage}
                                                 alt={`${trainer.fullName} profile`}
+                                                sx={{ objectFit: 'cover', objectPosition: 'top' }}
                                             />
-                                            <CardContent sx={{ flexGrow: 1 }}>
+                                            <CardContent sx={{ flexGrow: 1 }} style={{padding:"8px"}} >
                                                 <Typography variant="h6" gutterBottom>
                                                     {trainer.fullName}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary">
+                                                <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
                                                     Experience: {trainer.experience}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary">
+                                                <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
                                                     Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary">
+                                                <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
                                                     Technologies: {trainer.technologies}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary">
+                                                <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
                                                     Trainer ID: {trainer.id}
                                                 </Typography>
                                             </CardContent>
@@ -144,6 +145,7 @@ function ManageTrainersList() {
                                                     <Button
                                                         variant="contained"
                                                         color="primary"
+                                                        size='small'
                                                         onClick={() => navigate(`/trainer-profile-update/${trainer.id}`)}
                                                     >
                                                         Edit
@@ -153,6 +155,7 @@ function ManageTrainersList() {
                                                     <Button
                                                         variant="contained"
                                                         color="secondary"
+                                                        size='small'
                                                         onClick={() => handleDeleteTrainer(trainer.id)}
                                                     >
                                                         Delete

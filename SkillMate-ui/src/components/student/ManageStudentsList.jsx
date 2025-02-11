@@ -52,6 +52,7 @@ function ManageStudentsList() {
                 } else {
                     showErrorToast('Failed to delete the student. Please try again.');
                 }
+            // eslint-disable-next-line no-unused-vars
             } catch (error) {
                 showErrorToast('An error occurred while trying to delete the student.');
             }
@@ -83,7 +84,7 @@ function ManageStudentsList() {
         <Grid container spacing={3} sx={{ padding: 3 }}>
             <Grid item xs={12}>
                 <Typography variant="h4" align="center" color='#3caacb'>
-                    Student's List
+                    Student&apos;s List
                 </Typography>
             </Grid>
 
@@ -113,25 +114,26 @@ function ManageStudentsList() {
                         </Grid>
                     ) : (
                         filteredStudents.map((student) => (
-                            <Grid key={student.id} item xs={12} sm={6} md={4} lg={3}>
+                            <Grid key={student.id} item xs={12} sm={6} md={4} lg={2}>
                                 <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                                     <CardMedia
                                         component="img"
-                                        height="200"
-                                        image={student.profileImage || defaultProfileImage}
+                                        height="210"
+                
+                                        image={student.profilePic ? `data:image/jpeg;base64,${student.profilePic}` : defaultProfileImage}
                                         alt={`${student.fullName} profile`}
                                     />
-                                    <CardContent sx={{ flexGrow: 1 }}>
+                                    <CardContent sx={{ flexGrow: 1 }} style={{padding:"8px"}}>
                                         <Typography variant="h6" gutterBottom>
                                             {student.fullName}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
                                             Average Attendance: {student.attendanceByDays || 'N/A'} {student.attendanceAverage || ''}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography variant="body2" color="textSecondary"style={{fontSize:"13px"}}>
                                             Batches: {Array.isArray(student.batches) ? student.batches.map(batch => batch.id).join(', ') : 'N/A'}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
                                             Remark By Trainer: {student.remarkByTrainer || 'N/A'}
                                         </Typography>
                                     </CardContent>
