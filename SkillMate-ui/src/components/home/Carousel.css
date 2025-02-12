@@ -1,4 +1,6 @@
 /* Outer container for the carousel */
+
+
 .carousel-container {
   width: 100%;
   margin-left: auto;
@@ -8,6 +10,9 @@
   box-sizing: border-box;
   /* opacity: 0.8; */
   background-color: #1A2130;
+  /* max-width: 100vw; */
+  overflow: hidden;
+ 
 }
 
 /* Heading for the carousel */
@@ -82,7 +87,7 @@
   color: #fff;
   background-color: rgba(9, 9, 9, 0.5);
   border-radius: 50%;
-  padding: 10px;
+  padding: 0px;
   z-index: 10;
   transition: background-color 0.3s ease;
   text-indent: -9999px;

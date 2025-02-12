@@ -25,7 +25,7 @@ function Subscription() {
 
     return (
         <div className='subscription-container'>
-            <Carousel />
+            {/* <Carousel /> */}
             <BuyCourse course={course} />
             {!admin ?
                 <>

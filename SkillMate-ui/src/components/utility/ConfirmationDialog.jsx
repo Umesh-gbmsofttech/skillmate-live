@@ -16,11 +16,11 @@ export default function ConfirmationDialog({ open, onClose, onConfirm, message }
                 '& .MuiDialogTitle-root': {
                     fontSize: '1.25rem', // Larger title font size
                     fontWeight: 'bold', // Make the title bold
-                    color: '#333', // Darker text color for the title
+                    color: '#999', // Darker text color for the title
                 },
                 '& .MuiDialogContentText-root': {
                     fontSize: '1rem', // Slightly larger content text
-                    color: '#555', // Subtle text color
+                    color: '#888', // Subtle text color
                     padding: '10px 0', // Padding for spacing between title and message
                 },
                 // '& .MuiDialogActions-root': {
@@ -36,14 +36,16 @@ export default function ConfirmationDialog({ open, onClose, onConfirm, message }
             <DialogActions>
                 <Button
                     onClick={onClose}
-                    color="secondary" // Slightly muted color for Cancel button
+                     // Slightly muted color for Cancel button
                     sx={{
                         padding: '8px 16px', // Adjust button padding
                         fontWeight: 'bold', // Make Cancel text bold
                         textTransform: 'none',
-                        backgroundColor: '#70f75e',
+                        backgroundColor: 'transparent',
+                        color:"#fff",
                         '&:hover': {
-                            backgroundColor: '#1aa711',
+                            backgroundColor: 'transparent',
+                            color:'#FBFFE4'
                         },
                     }}
                 >
@@ -53,11 +55,11 @@ export default function ConfirmationDialog({ open, onClose, onConfirm, message }
                     onClick={onConfirm}
                     color="black"
                     sx={{
-                        padding: '8px 16px',
+                        padding: '6px 14px',
                         fontWeight: 'bold',
-                        backgroundColor: '#ed0505', // Custom blue color
+                        backgroundColor: '#D91656', // Custom blue color
                         '&:hover': {
-                            backgroundColor: '#ad0505', // Darker blue on hover
+                            backgroundColor:'rgba(217, 22, 86,0.8)', // Darker blue on hover
                         },
                         textTransform: 'none', // Remove uppercasing on text
                     }}

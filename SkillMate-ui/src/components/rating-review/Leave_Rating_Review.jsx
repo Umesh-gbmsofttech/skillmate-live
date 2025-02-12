@@ -12,7 +12,7 @@ function LeaveRatingReview() {
     const location = useLocation();
     const dispatch = useDispatch();
 
-    // Access trainer and student from Redux
+    // Access trainer and student from Redux 
     const trainer = useSelector((state) => state.communityData.trainer);
     const student = useSelector((state) => state.communityData.student);
 
@@ -51,7 +51,7 @@ function LeaveRatingReview() {
                 <>
                     <Card sx={{ display: 'flex', flexDirection: 'column', width: 440, padding: 3, borderRadius: 2, backgroundColor: '#C7EFFF', boxShadow: 3, mb: 2 }}>
                         <Avatar
-                            sx={{ width: '100%', height: 180, borderRadius: 1, objectFit: 'cover' }}
+                            sx={{ width: '100%', height: 180, borderRadius: 2, objectFit: 'contain', objectPosition:'top' }}
                             src={trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : altImage}
                             alt="Trainer Image"
                         />

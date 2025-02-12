@@ -59,7 +59,7 @@ const TrainerSection = () => {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 5 }}>
+        <Container maxWidth="lg" sx={{ mt: 5, backgroundColor:'linearGradient((green),(red))' }}>
             {loading ? (
                 <Loading />
             ) : error ? (
@@ -68,7 +68,7 @@ const TrainerSection = () => {
                 </Typography>
             ) : (
                 <>
-                    <Typography variant="h4" align="center" fontWeight="bold" gutterBottom color='#3caacb'>
+                    <Typography variant="h4" align="center"   fontWeight="bold" gutterBottom color='#3caacb'>
                         Meet Our Expert Trainers
                     </Typography>
                     {/* Info Section */}
@@ -82,7 +82,7 @@ const TrainerSection = () => {
                             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
                         }}
                     >
-                        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
+                        <Typography variant="h4" fontWeight="bold"  color="primary" gutterBottom>
                             Our Trainers
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
