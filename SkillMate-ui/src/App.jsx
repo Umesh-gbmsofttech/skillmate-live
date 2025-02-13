@@ -52,6 +52,7 @@ import SoftwareEngineer from './components/home/footer/career/SoftwareEngineer';
 import FrontendDeveloper from './components/home/footer/career/FrontendDeveloper';
 import BackendDeveloper from './components/home/footer/career/BackendDeveloper';
 import FullstackDeveloper from './components/home/footer/career/FullstackDeveloper';
+import Chatbot from './components/home/chatbot/Chatbot';
 
 
 function App() {
@@ -106,6 +107,7 @@ function App() {
             <ReviewsSection />
             <TechnologyStack />
             <OurStudentsPlacedIn />
+            <Chatbot/>
           </>
         } />
         <Route path="/navbar" element={<Navbar />} />
