@@ -52,11 +52,15 @@ import SoftwareEngineer from './components/home/footer/career/SoftwareEngineer';
 import FrontendDeveloper from './components/home/footer/career/FrontendDeveloper';
 import BackendDeveloper from './components/home/footer/career/BackendDeveloper';
 import FullstackDeveloper from './components/home/footer/career/FullstackDeveloper';
+<<<<<<< HEAD
 import UiUxDesign from './components/home/footer/explore/UiUxDesign';
 import CollaborativeDesignTools from './components/home/footer/explore/CollaborativeDesignTools';
 import DesignSystems from './components/home/footer/explore/DesignSystems';
 import Prototyping_Wireframing from './components/home/footer/explore/Prototyping_Wireframing';
 import WebDevelopmentTools from './components/home/footer/explore/WebDevelopmentTools';
+=======
+import Chatbot from './components/home/chatbot/Chatbot';
+>>>>>>> 7d1968d608e871550683b49111b9ad3414246b07
 
 
 function App() {
@@ -111,6 +115,7 @@ function App() {
             <ReviewsSection />
             <TechnologyStack />
             <OurStudentsPlacedIn />
+            <Chatbot/>
           </>
         } />
         <Route path="/navbar" element={<Navbar />} />
