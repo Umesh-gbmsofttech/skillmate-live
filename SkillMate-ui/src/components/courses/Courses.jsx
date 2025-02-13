@@ -10,7 +10,7 @@ import referAndEarn from '../../assets/refer-earn.png';
 import editIcon from '../../assets/editIcon.png';
 import Search from '../Search';
 import Loading from '../../Loading';
-
+import baseUrl from '../urls/baseUrl'
 import ConfirmationDialog from '../utility/ConfirmationDialog';
 import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
 
@@ -29,7 +29,7 @@ function Courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/courses/fetch', {
+        const response = await axios.get(`${baseUrl}courses/fetch`, {
           headers: { 'Content-Type': 'application/json' },
         });
         showSuccessToast('Courses fetched successfully!');

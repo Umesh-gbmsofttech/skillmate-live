@@ -4,14 +4,37 @@ import CodeIcon from '@mui/icons-material/Code';
 import ResponsiveIcon from '@mui/icons-material/Devices';
 import designImage from '../../../../assets/profilePic.jpg';
 import testingImage from '../../../../assets/profilePic.jpg';
-// import testingImage from '../../../../assets/testingImage.jpg';  // Replace with relevant image
+import backGroundImage from '../../../../assets/Designer.jpeg'; // Background image
 
 function FrontendDeveloper() {
     return (
-        <Box sx={{ padding: 4, color: 'white', backgroundColor: '#1a1a1a' }}>
+        <Box
+            sx={{
+                padding: 2,
+                color: 'white',
+                backgroundImage: `url(${backGroundImage})`, // Applying background image
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundAttachment: 'fixed',
+                position: 'relative',
+                zIndex: 1,
+            }}
+        >
+            {/* Overlay */}
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Overlay with opacity
+                    zIndex: -1, // Ensures overlay is behind the content
+                }}
+            />
 
             {/* Hero Section */}
-            <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
                 <Typography variant="h3" fontWeight={'bold'} gutterBottom>
                     Frontend Developer
                 </Typography>
@@ -24,7 +47,7 @@ function FrontendDeveloper() {
             </Box>
 
             {/* Frontend Technologies Section */}
-            <Box sx={{ marginBottom: 6 }}>
+            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
                 <Typography variant="h5" gutterBottom>
                     Key Frontend Technologies
                 </Typography>
@@ -33,7 +56,7 @@ function FrontendDeveloper() {
                 </Typography>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a' }}>
+                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
                                     Frontend Frameworks & Libraries
@@ -51,7 +74,7 @@ function FrontendDeveloper() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a' }}>
+                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
                                     Styling & Design
@@ -69,7 +92,7 @@ function FrontendDeveloper() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a' }}>
+                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
                                     Build & Deployment Tools
@@ -90,7 +113,7 @@ function FrontendDeveloper() {
             </Box>
 
             {/* Real Projects Section */}
-            <Box sx={{ marginBottom: 6 }}>
+            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
                 <Typography variant="h5" gutterBottom>
                     Real Projects You Will Work On
                 </Typography>
@@ -150,7 +173,6 @@ function FrontendDeveloper() {
                     </Card>
                 </Grid>
             </Grid>
-
 
             {/* Final Call to Action */}
             <Box sx={{ textAlign: 'center', marginTop: 6 }}>

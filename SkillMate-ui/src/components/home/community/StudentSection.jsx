@@ -49,7 +49,7 @@ const StudentSection = () => {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 5 }}>
+        <Container maxWidth="lg" sx={{ mt: 5, backgroundColor: 'linearGradient((green),(red))' }}>
             {loading ? (
                 <Loading />
             ) : error ? (
@@ -90,8 +90,8 @@ const StudentSection = () => {
                                         textAlign: 'center',
                                         transition: '0.3s',
                                         backgroundColor: '#FBF5DD',
-                                        '&:hover': {
-                                            boxShadow: '0px 8px 16px rgba(68, 45, 204, 0.3)',
+                                        "&:hover": {
+                                            boxShadow: "0px 8px 16px rgba(254, 254, 254, 0.6)",
                                         },
                                         position: 'relative',
                                     }}
@@ -110,7 +110,7 @@ const StudentSection = () => {
                                             boxShadow: '0 5px 10px rgba(0, 0, 0, 0.3)',
                                         }}
                                     />
-                                    
+
                                     <CardContent sx={{ mt: 2 }}>
                                         <Typography variant="h6" fontWeight="bold">
                                             {student.fullName}

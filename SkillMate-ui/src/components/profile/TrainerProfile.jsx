@@ -8,9 +8,6 @@ import Loading from '../../Loading';
 import Meetings from '../trainer/Meetings';
 import Attendances from '../trainer/Attendances';
 import defaultProfilePic from '../../assets/skillmate.jpg';
-import viewEye from '../../assets/view-eye.png';
-import hideEye from '../../assets/hide-eye.png';
-import editIcon from '../../assets/editIcon.png';
 
 function TrainerProfile() {
     const [showProfile, setShowProfile] = useState(false);

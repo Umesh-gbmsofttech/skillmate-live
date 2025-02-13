@@ -20,6 +20,8 @@
     "font-awesome": "^4.7.0",
     "formik": "^2.4.6",
     "fuse.js": "^7.0.0",
+    "google-auth-library": "^9.15.1",
+    "googleapis": "^144.0.0",
     "jwt-decode": "^4.0.0",
     "pdfjs-dist": "^4.10.38",
     "razorpay": "^2.9.5",

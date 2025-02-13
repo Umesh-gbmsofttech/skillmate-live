@@ -52,6 +52,11 @@ import SoftwareEngineer from './components/home/footer/career/SoftwareEngineer';
 import FrontendDeveloper from './components/home/footer/career/FrontendDeveloper';
 import BackendDeveloper from './components/home/footer/career/BackendDeveloper';
 import FullstackDeveloper from './components/home/footer/career/FullstackDeveloper';
+import UiUxDesign from './components/home/footer/explore/UiUxDesign';
+import CollaborativeDesignTools from './components/home/footer/explore/CollaborativeDesignTools';
+import DesignSystems from './components/home/footer/explore/DesignSystems';
+import Prototyping_Wireframing from './components/home/footer/explore/Prototyping_Wireframing';
+import WebDevelopmentTools from './components/home/footer/explore/WebDevelopmentTools';
 
 
 function App() {
@@ -148,6 +153,12 @@ function App() {
         <Route path="/careers/frontend-developer" element={<FrontendDeveloper />} />
         <Route path="/careers/backend-developer" element={<BackendDeveloper />} />
         <Route path="/careers/fullstack-developer" element={<FullstackDeveloper />} />
+        {/* Footer Explore section */}
+        <Route path="/explore/ui-ux-design" element={<UiUxDesign />} />
+        <Route path="/explore/collaborative-design-tools" element={<CollaborativeDesignTools />} />
+        <Route path="/explore/design-systems" element={<DesignSystems />} />
+        <Route path="/explore/prototyping-wireframing" element={<Prototyping_Wireframing />} />
+        <Route path="/explore/web-development-tools" element={<WebDevelopmentTools />} />
 
       </Routes>
 

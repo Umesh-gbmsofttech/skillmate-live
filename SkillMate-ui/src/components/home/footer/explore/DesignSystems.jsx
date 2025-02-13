@@ -1,12 +1,10 @@
 import React from 'react';
 import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
-import CloudIcon from '@mui/icons-material/Cloud';
-import ApiIcon from '@mui/icons-material/Api';
-import databaseImage from '../../../../assets/profilePic.jpg';
-import cloudImage from '../../../../assets/profilePic.jpg';
+import systemDesignImage from '../../../../assets/profilePic.jpg';  // Replace with an image related to system design
+import architectureImage from '../../../../assets/profilePic.jpg';  // Replace with an image related to system architecture or design
 import backGroundImage from '../../../../assets/Designer.jpeg'; // Background image
 
-function BackendDeveloper() {
+function DesignSystems() {
     return (
         <Box
             sx={{
@@ -36,37 +34,39 @@ function BackendDeveloper() {
             {/* Hero Section */}
             <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
                 <Typography variant="h3" fontWeight={'bold'} gutterBottom>
-                    Backend Developer
+                    Design Systems
                 </Typography>
                 <Typography variant="h6" paragraph>
-                    As a Backend Developer, you’ll design and build scalable server-side applications, work with databases, and integrate cloud services. Your main responsibility will be to create powerful APIs and backend systems that power dynamic web applications.
+                    A design system provides a unified set of design standards, patterns, and principles that help teams build consistent and cohesive digital products. Whether for large-scale web applications or mobile platforms, system design encompasses both front-end and back-end components.
                 </Typography>
                 <Button variant="contained" color="primary" sx={{ marginTop: 2 }}>
                     Apply Now
                 </Button>
             </Box>
 
-            {/* Backend Technologies Section */}
+            {/* Key Skills & Tools for System Design Section */}
             <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
                 <Typography variant="h5" gutterBottom>
-                    Key Backend Technologies
+                    Key Skills and Tools
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    As a Backend Developer, you’ll work with various technologies to build robust and scalable backend services. Here are the main tools and frameworks you’ll be using:
+                    As a System Designer or Engineer, you'll be proficient in various tools and methodologies to design scalable and maintainable systems. Here are some of the core skills and tools used in system design:
                 </Typography>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={4}>
                         <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
-                                    Back-End Frameworks
+                                    Architecture Design
                                 </Typography>
                                 <Typography variant="body2" paragraph>
-                                    - <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Node.js</a> with <a href="https://expressjs.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Express.js</a>
+                                    - <a href="https://martinfowler.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Martin Fowler's Patterns</a>
                                     <br />
-                                    - <a href="https://www.djangoproject.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Django</a> (Python)
+                                    - <a href="https://en.wikipedia.org/wiki/Microservices" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Microservices</a>
                                     <br />
-                                    - <a href="https://flask.palletsprojects.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Flask</a> (Python)
+                                    - <a href="https://aws.amazon.com/architecture/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>AWS Architecture</a>
+                                    <br />
+                                    - <a href="https://www.12factor.net/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>12-Factor App Principles</a>
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -75,16 +75,16 @@ function BackendDeveloper() {
                         <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
-                                    Databases
+                                    Design Principles & Patterns
                                 </Typography>
                                 <Typography variant="body2" paragraph>
-                                    - <a href="https://www.mongodb.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MongoDB</a> (NoSQL)
+                                    - <a href="https://refactoring.guru/design-patterns" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Design Patterns</a>
                                     <br />
-                                    - <a href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>PostgreSQL</a> (SQL)
+                                    - <a href="https://en.wikipedia.org/wiki/Scalability" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Scalability Principles</a>
                                     <br />
-                                    - <a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MySQL</a> (SQL)
+                                    - <a href="https://www.cio.com/article/287347/it-architecture-the-top-5-it-architecture-models-to-know.html" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>IT Architecture Models</a>
                                     <br />
-                                    - <a href="https://redis.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Redis</a> (In-memory data store)
+                                    - <a href="https://www.patterns.dev/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Patterns.dev</a>
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -93,16 +93,16 @@ function BackendDeveloper() {
                         <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
-                                    Cloud & Deployment
+                                    System Design Tools
                                 </Typography>
                                 <Typography variant="body2" paragraph>
-                                    - <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>AWS</a> (Amazon Web Services)
+                                    - <a href="https://www.lucidchart.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Lucidchart</a>
                                     <br />
-                                    - <a href="https://cloud.google.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Google Cloud</a>
+                                    - <a href="https://draw.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Draw.io</a>
                                     <br />
-                                    - <a href="https://www.heroku.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Heroku</a>
+                                    - <a href="https://www.cacoo.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Cacoo</a>
                                     <br />
-                                    - <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Docker</a> for containerization
+                                    - <a href="https://www.dbdiagram.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>DBDiagram.io</a>
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -110,39 +110,39 @@ function BackendDeveloper() {
                 </Grid>
             </Box>
 
-            {/* Real Projects Section */}
+            {/* System Design Projects Section */}
             <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
                 <Typography variant="h5" gutterBottom>
-                    Real Projects You Will Work On
+                    System Design Projects
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    As a Backend Developer, you’ll have the opportunity to work on the following types of projects:
+                    As a system designer or engineer, you will be responsible for designing systems that are efficient, scalable, and maintainable. Some of the typical projects you'll work on include:
                 </Typography>
                 <ul>
-                    <li><Typography variant="body1">Designing and building RESTful APIs for web and mobile applications.</Typography></li>
-                    <li><Typography variant="body1">Integrating databases and ensuring efficient data retrieval and storage.</Typography></li>
-                    <li><Typography variant="body1">Creating microservices to break down large monolithic applications.</Typography></li>
-                    <li><Typography variant="body1">Ensuring security through authentication, authorization, and encryption.</Typography></li>
-                    <li><Typography variant="body1">Automating the deployment pipeline using CI/CD practices with Jenkins, GitLab, or similar tools.</Typography></li>
+                    <li><Typography variant="body1">Designing microservices architectures for large-scale applications.</Typography></li>
+                    <li><Typography variant="body1">Building robust databases and optimizing query performance for high-volume systems.</Typography></li>
+                    <li><Typography variant="body1">Designing scalable cloud architectures using platforms like AWS, GCP, or Azure.</Typography></li>
+                    <li><Typography variant="body1">Optimizing system performance and ensuring fault tolerance and disaster recovery capabilities.</Typography></li>
+                    <li><Typography variant="body1">Creating service-oriented architectures (SOA) and APIs for efficient data exchange.</Typography></li>
                 </ul>
             </Box>
 
-            {/* Cloud Services & Deployment Section */}
+            {/* System Design in Action Section */}
             <Grid container spacing={4} sx={{ marginBottom: 6, height: '100%', display: 'flex', alignItems: 'stretch' }}>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <CardMedia
                             component="img"
                             height="200"
-                            image={cloudImage}
-                            alt="Cloud Deployment"
+                            image={systemDesignImage}
+                            alt="System Design"
                         />
                         <CardContent>
                             <Typography variant="h6" gutterBottom>
-                                Cloud Services & Deployment
+                                Design and Architecture Process
                             </Typography>
                             <Typography variant="body2" paragraph>
-                                Backend developers often work with cloud services for hosting, storage, and other backend operations. You will be responsible for deploying services and applications on platforms like AWS, Google Cloud, and Azure.
+                                Our system designers follow a rigorous process to ensure that every solution is optimal. From understanding the requirements to implementing scalable and reliable systems, we use a combination of design principles, tools, and testing methods to deliver high-performance systems.
                             </Typography>
                             <Button variant="outlined" color="primary">
                                 Learn More
@@ -155,15 +155,15 @@ function BackendDeveloper() {
                         <CardMedia
                             component="img"
                             height="200"
-                            image={databaseImage}
-                            alt="Database Management"
+                            image={architectureImage}
+                            alt="System Architecture"
                         />
                         <CardContent>
                             <Typography variant="h6" gutterBottom>
-                                Database Management
+                                Scalable Architecture
                             </Typography>
                             <Typography variant="body2" paragraph>
-                                You'll be responsible for designing and managing both SQL and NoSQL databases, optimizing queries, and ensuring the integrity and scalability of the data layer.
+                                Building a scalable architecture is critical for growth. Our designers focus on ensuring that systems can scale easily while maintaining reliability and speed. We leverage tools like cloud-native architectures, containers, and service orchestration to ensure our systems perform at scale.
                             </Typography>
                             <Button variant="outlined" color="primary">
                                 Learn More
@@ -176,11 +176,11 @@ function BackendDeveloper() {
             {/* Final Call to Action */}
             <Box sx={{ textAlign: 'center', marginTop: 6 }}>
                 <Button variant="contained" color="primary" size="large">
-                    Explore Backend Developer Opportunities
+                    Explore System Design Opportunities
                 </Button>
             </Box>
         </Box>
     );
 }
 
-export default BackendDeveloper;
+export default DesignSystems;

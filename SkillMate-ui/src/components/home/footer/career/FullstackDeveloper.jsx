@@ -1,18 +1,41 @@
 import React from 'react';
 import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
-import CodeIcon from '@mui/icons-material/Code';
 import workspaceImage from '../../../../assets/profilePic.jpg';
 import techImage from '../../../../assets/profilePic.jpg';
 import developmentImage from '../../../../assets/profilePic.jpg';
 // import techImage from '../../../../assets/techImage.jpg';  // You can replace this with a relevant tech stack image
 // import developmentImage from '../../../../assets/profilePic.jpg';  // Replace with an image that relates to development work
+import backGroundImage from '../../../../assets/Designer.jpeg'; // Add the same background image
 
 function FullstackDeveloper() {
     return (
-        <Box sx={{ padding: 4, color: 'white', backgroundColor: '#1a1a1a' }}>
+        <Box
+            sx={{
+                padding: 2,
+                color: 'white',
+                backgroundImage: `url(${backGroundImage})`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundAttachment: 'fixed',
+                position: 'relative', // To position the overlay
+                zIndex: 1,
+            }}
+        >
+            {/* Overlay */}
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust opacity (0.5 is the opacity value)
+                    zIndex: -1, // Ensures overlay is behind the content
+                }}
+            />
 
             {/* Hero Section */}
-            <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
                 <Typography variant="h3" fontWeight={'bold'} gutterBottom>
                     Full Stack Developer
                 </Typography>
@@ -25,7 +48,7 @@ function FullstackDeveloper() {
             </Box>
 
             {/* Technical Skills Section */}
-            <Box sx={{ marginBottom: 6 }}>
+            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
                 <Typography variant="h5" gutterBottom>
                     Key Skills and Technologies
                 </Typography>
@@ -34,7 +57,7 @@ function FullstackDeveloper() {
                 </Typography>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a' }}>
+                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
                                     Front-End Technologies
@@ -50,7 +73,7 @@ function FullstackDeveloper() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a' }}>
+                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
                                     Back-End Technologies
@@ -66,7 +89,7 @@ function FullstackDeveloper() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a' }}>
+                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
                                     Deployment and Tools
@@ -87,7 +110,7 @@ function FullstackDeveloper() {
             </Box>
 
             {/* Real Projects Section */}
-            <Box sx={{ marginBottom: 6 }}>
+            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
                 <Typography variant="h5" gutterBottom>
                     Real Projects You Will Work On
                 </Typography>

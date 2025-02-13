@@ -5,13 +5,37 @@ import BuildIcon from '@mui/icons-material/Build';
 import cloudImage from '../../../../assets/profilePic.jpg';
 import testingImage from '../../../../assets/profilePic.jpg';
 // import testingImage from '../../../../assets/testingImage.jpg';  // Replace with relevant image
+import backGroundImage from '../../../../assets/Designer.jpeg';
 
 function SoftwareEngineer() {
   return (
-    <Box sx={{ padding: 4, color: 'white', backgroundColor: '#2a2a2a' }}>
+    <Box
+      sx={{
+        padding: 2,
+        color: 'white',
+        backgroundImage: `url(${backGroundImage})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        position: 'relative',  // To position the overlay
+        zIndex: 1,
+      }}
+    >
+      {/* Overlay */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Adjust opacity (0.5 is the opacity value)
+          zIndex: -1,  // Ensures overlay is behind the content
+        }}
+      />
 
       {/* Hero Section */}
-      <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
+      <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
         <Typography variant="h3" fontWeight={'bold'} gutterBottom>
           Software Engineer
         </Typography>
@@ -24,7 +48,7 @@ function SoftwareEngineer() {
       </Box>
 
       {/* Software Development Practices Section */}
-      <Box sx={{ marginBottom: 6 }}>
+      <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
         <Typography variant="h5" gutterBottom>
           Key Software Development Practices
         </Typography>
@@ -33,7 +57,7 @@ function SoftwareEngineer() {
         </Typography>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={4}>
-            <Card sx={{ backgroundColor: '#333' }}>
+            <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Software Development Methodologies
@@ -49,7 +73,7 @@ function SoftwareEngineer() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Card sx={{ backgroundColor: '#333' }}>
+            <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Version Control & Collaboration
@@ -65,7 +89,7 @@ function SoftwareEngineer() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Card sx={{ backgroundColor: '#333' }}>
+            <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Development Tools & Environments
@@ -84,7 +108,7 @@ function SoftwareEngineer() {
       </Box>
 
       {/* Software Engineering Skills Section */}
-      <Box sx={{ marginBottom: 6 }}>
+      <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
         <Typography variant="h5" gutterBottom>
           Key Skills You’ll Apply
         </Typography>
@@ -105,8 +129,9 @@ function SoftwareEngineer() {
         <Grid item xs={12} md={6}>
           <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <CardMedia
+              sx={{ objectFit: 'fill', objectPosition: 'top' }}
               component="img"
-              height="200"
+              height="350"
               image={cloudImage}
               alt="Cloud Infrastructure"
             />
@@ -126,8 +151,9 @@ function SoftwareEngineer() {
         <Grid item xs={12} md={6}>
           <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <CardMedia
+              sx={{ objectFit: 'fill', objectPosition: 'top' }}
               component="img"
-              height="200"
+              height="350"
               image={testingImage}
               alt="Software Testing"
             />
