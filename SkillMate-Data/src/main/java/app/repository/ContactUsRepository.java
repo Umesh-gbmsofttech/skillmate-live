@@ -1,10 +1,9 @@
 package app.repository;
 
-import app.entity.ContactUs;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface ContactUsRepository extends JpaRepository<ContactUs, Long> {
+import app.entity.ContactUs;
 
+public interface ContactUsRepository extends JpaRepository<ContactUs,Long>{
+    
 }

@@ -1,20 +1,9 @@
 package app.controller;
 
-import app.dto.MeetingBatchDTO;
-import app.dto.MeetingDto;
-import app.entity.Attendance;
-import app.entity.Batch;
 import app.entity.Course;
 import app.entity.JsonResoponse_View;
-import app.entity.Meeting;
 import app.entity.Student;
-import app.entity.StudentProfileUpdated;
-import app.exception.EntityNotFoundException;
 import app.jwt.JwtResponse;
-import app.repository.AttendanceRepository;
-import app.repository.CourseRepository;
-import app.repository.StudentRepository;
-import app.service.MeetingService;
 import app.service.StudentService;
 import jakarta.validation.Valid;
 
@@ -28,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-//import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -40,164 +27,31 @@ public class StudentController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
-	@Autowired
-	StudentRepository studentRepository;
-	
-	@Autowired
-	private AttendanceRepository attendanceRepository;
-	
-	@Autowired
-	CourseRepository courseRepository;
-	@Autowired
-	MeetingService meetingService;
 	
 	@Autowired
 	private StudentService studentService;
 
 	//create student and return jwt token and user data
 	@PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@JsonView(JsonResoponse_View.DetailedView.class)
 	public ResponseEntity<Object> createStudent(@Valid @RequestBody Student student) {
 		try {
-			JwtResponse jwtResponse = studentService.createStudent(student);
+			JwtResponse jwtResponse = studentService.saveStudent(student);
 			return new ResponseEntity<>(jwtResponse, HttpStatus.CREATED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	@PutMapping("/students/{id}/add-course")
-	@JsonView(JsonResoponse_View.DetailedView.class)
-    public ResponseEntity<?> addCourseToStudent(@PathVariable Long id, @RequestBody Long courseId) {
-        Student student = studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Student not found"));
-        Course course = courseRepository.findById(courseId).orElseThrow(() -> new EntityNotFoundException("Course not found"));
-        student.getCourses().add(course);
-        studentRepository.save(student);
-        return ResponseEntity.ok("Course added to student");
-    }
-
-
-//	@GetMapping("/fetch/my-courses/{id}")
-//	@JsonView(JsonResoponse_View.DetailedView.class)
-//	public ResponseEntity<List<Course>> getAllMyCourses(@PathVariable Long id) {
-//	    try {
-//	        Student student = studentRepository.findById(id)
-//	                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
-//
-//	        List<Course> courses = student.getCourses();
-//	        System.out.println(courses.size()+"-----------------");//it should be 2 because student 1 is having 2courses
-//
-//	        if (courses.isEmpty()) {
-//	            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//	        }
-//
-//	        // Fetch the latest valid meeting for each course
-//	        courses.forEach(course -> {
-//	            Meeting latestMeeting = meetingService.getLatestMeetingForCourse(course.getId());
-//	            if(latestMeeting != null ) {
-//	            	
-//	            }
-//	            
-//	            System.out.println("-------------" + course.getId() + "------------");
-//	            if (latestMeeting != null) {
-//	                System.out.println("Meeting Found: " + latestMeeting.getId() + ", From Time: " + latestMeeting.getFromTime());
-//	            } else {
-//	                System.out.println("No valid meeting found for course " + course.getId());
-//	            }
-//	        });
-//
-//	        return new ResponseEntity<>(courses, HttpStatus.OK);
-//	    } catch (Exception e) {
-//	        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//	    }
-//	}
-//	@GetMapping("/fetch/my-courses/{id}")
-//	@JsonView(JsonResoponse_View.DetailedView.class)
-//	public ResponseEntity<List<Course>> getAllMyCourses(@PathVariable Long id) {
-//	    try {
-//	        // Fetch student by ID
-//	        Student student = studentRepository.findById(id)
-//	                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
-//
-//	        // Get the list of courses for the student
-//	        List<Course> courses = student.getCourses();
-//
-//	        // If no courses found, return HTTP NO_CONTENT
-//	        if (courses == null || courses.isEmpty()) {
-//	            return ResponseEntity.noContent().build();
-//	        }
-//
-//	        // Iterate over courses and fetch the latest meeting for each course
-//	        courses.forEach(course -> {
-//	            Meeting latestMeeting = meetingService.getLatestMeetingForCourse(course.getId());
-//	            if (latestMeeting != null) {
-//	                course.getMeetings().clear();
-//	                course.getMeetings().add(latestMeeting);
-//	            } else {
-//	                course.getMeetings().clear();
-//	            }
-//	        });
-//
-//	        // Return the list of courses with their latest meetings
-//	        return ResponseEntity.ok(courses);
-//	    } catch (EntityNotFoundException e) {
-//	        // Return 404 if student is not found
-//	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//	    } catch (Exception e) {
-//	        // Log the error for better debugging
-//	        logger.error("Error fetching courses for student with ID: {}", id, e);
-//	        // Return 500 if any internal error occurs
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//	    }
-//	}
 
 
 	@GetMapping("/fetch/my-courses/{id}")
-	@JsonView(JsonResoponse_View.DetailedView.class)
 	public ResponseEntity<List<Course>> getAllMyCourses(@PathVariable Long id) {
-	    try {
-	        // Fetch student by ID
-	        Student student = studentRepository.findById(id)
-	                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
-
-	        // Get the list of courses for the student
-	        List<Course> courses = student.getCourses();
-
-	        // If no courses found, return HTTP NO_CONTENT
-	        if (courses == null || courses.isEmpty()) {
-	            return ResponseEntity.noContent().build();
-	        }
-
-	        // Iterate over courses and fetch the latest meeting for each course
-	        courses.forEach(course -> {
-	            MeetingBatchDTO latestMeetingDTO = meetingService.getLatestMeetingForCourse(course.getId());
-	            if (latestMeetingDTO != null) {
-	                course.getMeetings().clear();
-	                course.getMeetings().add(latestMeetingDTO.getMeeting());
-	                // Optionally use batchId as needed
-	                Long batchId = latestMeetingDTO.getBatchId();
-	            } else {
-	                course.getMeetings().clear();
-	            }
-	        });
-
-	        // Return the list of courses with their latest meetings
-	        return ResponseEntity.ok(courses);
-	    } catch (EntityNotFoundException e) {
-	        // Return 404 if student is not found
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-	    } catch (Exception e) {
-	        // Log the error for better debugging
-	        logger.error("Error fetching courses for student with ID: {}", id, e);
-	        // Return 500 if any internal error occurs
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	    }
+		return null;
 	}
 
 	
 	// Get all Students
 	@GetMapping("/fetch")
-	@JsonView(JsonResoponse_View.DetailedView.class)
 	public ResponseEntity<List<Student>> getAllStudents() {
 		try {
 			List<Student> students = studentService.getAllStudents();
@@ -210,7 +64,6 @@ public class StudentController {
 
 	// Get a Student by ID
 	@GetMapping("/fetch/{id}")
-	@JsonView(JsonResoponse_View.DetailedView.class)
 	public ResponseEntity<Student> getStudentById(@PathVariable("id") Long id) {
 		Optional<Student> studentData = studentService.getStudentById(id);
 		if (studentData.isPresent()) {
@@ -219,31 +72,20 @@ public class StudentController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-//	// Get a Student's courses by student ID
-//	@GetMapping("/courses/{id}")
-//	@JsonView(JsonResoponse_View.DetailedView.class)
-//	public ResponseEntity<Student> getCoursesByStudentId(@PathVariable("id") Long id) {
-//		Optional<List<Student>> courses = studentService.getCoursesByStudentId(id);
-//		if (courses.isPresent()) {
-//			return new ResponseEntity<>(courses.get(), HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//	}
 
-	@PutMapping("/update/{id}")
-	@JsonView(JsonResoponse_View.DetailedView.class)
-	public ResponseEntity<Student> updateStudentProfile(@PathVariable("id") Long id,
-			@Valid @RequestBody Student updatedStudent) {
-		try {
-			Student updatedProfile = studentService.updateStudentWithHistory(id, updatedStudent);
-			return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
-		} catch (RuntimeException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
+	// @PutMapping("/update/{id}")
+	// @JsonView(JsonResoponse_View.DetailedView.class)
+	// public ResponseEntity<Student> updateStudentProfile(@PathVariable("id") Long id,
+	// 		@Valid @RequestBody Student updatedStudent) {
+	// 	try {
+	// 		Student updatedProfile = studentService.updateStudentWithHistory(id, updatedStudent);
+	// 		return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
+	// 	} catch (RuntimeException e) {
+	// 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	// 	}
+	// }
 
-	@DeleteMapping("delete/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
 		try {
 			studentService.deleteStudent(id);
@@ -253,53 +95,4 @@ public class StudentController {
 		}
 	}
 	
-	@GetMapping("/batch/{batchId}")
-	@JsonView(JsonResoponse_View.DetailedView.class)
-	public ResponseEntity<List<Student>> getBatchesStudentId(@PathVariable("batchId") Long batchId) {
-	    List<Student> students = studentService.getAllBatchesByBatchId(batchId);
-	    logger.info("Batch id received: {}", batchId);
-	    logger.info("Number of students found: {}", students.size());
-	    for (Student student : students) {
-	        logger.info("Student ID: {}", student.getId());
-	    }
-	    return ResponseEntity.ok(students);
-	}
-
-//	@PutMapping("/students/{studentId}")
-//	public ResponseEntity<Attendance> updateStudentAttendanceDetails(
-//	    @PathVariable Long studentId, 
-//	    @RequestBody Map<String, Object> updatedFields) {
-//	    
-//	    // Step 1: Retrieve the student from the repository (if needed for validation)
-//	    Student student = studentRepository.findById(studentId)
-//	        .orElseThrow(); 
-//	    // Step 2: Retrieve the attendance record for the student
-//	    Attendance attendance = attendanceRepository.findByStudent(student)
-//	        .orElseThrow();
-//
-//	    // Step 3: Update the attendance fields based on the input
-//	    updatedFields.forEach((key, value) -> {
-//	        switch (key) {
-//	            case "inTime":
-//	                attendance.setOutTime((String) value);
-//	                break;
-//	            case "outTime":
-//	                attendance.setOutTime((String) value);
-//	                break;
-//	            case "remark":
-//	                attendance.setRemark((String) value);
-//	                break;
-//	            default:
-//	                break;
-//	        }
-//	    });
-//	    
-//	    // Step 4: Save the updated attendance record
-//	    attendanceRepository.save(attendance);
-//	    
-//	    // Step 5: Return the updated attendance record
-//	    return ResponseEntity.ok(attendance);
-//	}
-
-
 }

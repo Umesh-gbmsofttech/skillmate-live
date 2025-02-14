@@ -1,199 +1,46 @@
 package app.service;
 
-import app.dto.MeetingDto;
-import app.entity.Meeting;
 import app.entity.Role;
 import app.entity.Trainer;
-import app.entity.TrainerProfileDeleted;
-import app.entity.TrainerProfileUpdated;
 import app.jwt.AuthService;
 import app.jwt.JwtResponse;
-import app.repository.TrainerProfileDeletedRepository;
-import app.repository.TrainerProfileUpdatedRepository;
 import app.repository.TrainerRepository;
 import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class TrainerService {
 
-	@Autowired
-	private AuthService authService; // Inject AuthService
+    @Autowired
+    private TrainerRepository trainerRepository;
+    @Autowired
+    AuthService authService;
 
-	@Autowired
-	private TrainerRepository trainerRepository;
+    public JwtResponse saveTrainer(Trainer trainer) {
+        if(trainer.getRoles()==null){
+            trainer.setRoles(new HashSet<>());
+        }
+        trainer.getRoles().add(Role.TRAINER);
+        Trainer saved= trainerRepository.save(trainer);
+        String token=authService.generateToken(authService.getTrainerUserDetails(saved));
+        return JwtResponse.builder().token(token).userData(saved).build();
+    }
 
-	@Autowired
-	private TrainerProfileUpdatedRepository trainerProfileUpdatedRepository;
+    public List<Trainer> getAllTrainers() {
+        return trainerRepository.findAll();
+    }
 
-	@Autowired
-	private TrainerProfileDeletedRepository trainerProfileDeletedRepository;
+    public Optional<Trainer> getTrainerById(Long id) {
+        return trainerRepository.findById(id);
+    }
 
-	// Create a new Trainer with role and return JWT token and user details
-	public JwtResponse createTrainer(Trainer trainer) {
-		if (trainer.getRoles() == null) {
-			trainer.setRoles(new HashSet<>());
-		}
-		trainer.getRoles().add(Role.TRAINER);
-		Trainer savedTrainer = trainerRepository.save(trainer);
-		// Generate JWT token for the saved trainer using AuthService
-		String token = authService.generateToken(authService.getTrainerUserDetails(savedTrainer));
-		// Return JWT token and user details
-		return JwtResponse.builder().token(token).userData(savedTrainer).build();
-	}
-
-	// Get all Trainers
-	public List<Trainer> getAllTrainers() {
-		return trainerRepository.findAll();
-	}
-
-	// Get Trainer by ID
-	public Optional<Trainer> getTrainerById(Long trainerId) {
-		return trainerRepository.findById(trainerId);
-	}
-
-	public Trainer updateTrainer(Long id, Trainer updatedTrainer) {
-
-		Optional<Trainer> opTrainer = trainerRepository.findById(id);
-		if (opTrainer.isEmpty()) {
-			return null; // Trainer not found
-		}
-
-		Trainer dbTrainer = opTrainer.get();
-
-		// Create a new TrainerProfileUpdated entry
-		TrainerProfileUpdated trainerProfileUpdated = new TrainerProfileUpdated();
-		trainerProfileUpdated.setTrainerId(dbTrainer.getId());
-		trainerProfileUpdated.setUpdatedAt(LocalDateTime.now());
-
-		// Store non-empty fields in TrainerProfileUpdated
-		if (dbTrainer.getFullName() != null)
-			trainerProfileUpdated.setFullName(dbTrainer.getFullName());
-		if (dbTrainer.getMobileNumber() != null)
-			trainerProfileUpdated.setMobileNumber(dbTrainer.getMobileNumber());
-		if (dbTrainer.getEmail() != null)
-			trainerProfileUpdated.setEmail(dbTrainer.getEmail());
-		if (dbTrainer.getAddress() != null)
-			trainerProfileUpdated.setAddress(dbTrainer.getAddress());
-		if (dbTrainer.getQualification() != null)
-			trainerProfileUpdated.setQualification(dbTrainer.getQualification());
-		if (dbTrainer.getExperience() != null)
-			trainerProfileUpdated.setExperience(dbTrainer.getExperience());
-		if (dbTrainer.getWorkingStatus() != null)
-			trainerProfileUpdated.setWorkingStatus(dbTrainer.getWorkingStatus());
-		if (dbTrainer.getProfilePic() != null)
-			trainerProfileUpdated.setProfilePic(dbTrainer.getProfilePic());
-		if (dbTrainer.getResume() != null)
-			trainerProfileUpdated.setResume(dbTrainer.getResume());
-		if (dbTrainer.getCompanyName() != null)
-			trainerProfileUpdated.setCompanyName(dbTrainer.getCompanyName());
-
-		// Save the historical data
-		trainerProfileUpdatedRepository.save(trainerProfileUpdated);
-
-		// Update Trainer with new values (only if they are not null)
-		if (updatedTrainer.getFullName() != null)
-			dbTrainer.setFullName(updatedTrainer.getFullName());
-		if (updatedTrainer.getMobileNumber() != null)
-			dbTrainer.setMobileNumber(updatedTrainer.getMobileNumber());
-		if (updatedTrainer.getEmail() != null)
-			dbTrainer.setEmail(updatedTrainer.getEmail());
-		if (updatedTrainer.getAddress() != null)
-			dbTrainer.setAddress(updatedTrainer.getAddress());
-		if (updatedTrainer.getQualification() != null)
-			dbTrainer.setQualification(updatedTrainer.getQualification());
-		if (updatedTrainer.getExperience() != null)
-			dbTrainer.setExperience(updatedTrainer.getExperience());
-		if (updatedTrainer.getWorkingStatus() != null)
-			dbTrainer.setWorkingStatus(updatedTrainer.getWorkingStatus());
-		if (updatedTrainer.getTechnologies() != null)
-			dbTrainer.setTechnologies(updatedTrainer.getTechnologies());
-
-		// Handle profile picture upload
-		if (updatedTrainer.getProfilePic() != null) {
-			dbTrainer.setProfilePic(updatedTrainer.getProfilePic());
-		}
-
-		// Handle resume upload
-		if (updatedTrainer.getResume() != null) {
-			dbTrainer.setResume(updatedTrainer.getResume());
-		}
-
-		// Save and return the updated trainer
-		return trainerRepository.save(dbTrainer);
-	}
-
-//    @Transactional
-//    public void updateTrainerProfile(Long id, Trainer updatedTrainer) {
-//        Trainer existingTrainer = trainerRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Trainer not found with ID: " + id));
-//
-//        // Update the trainer's fields (including profilePic if provided)
-//        existingTrainer.setFullName(updatedTrainer.getFullName());
-//        existingTrainer.setEmail(updatedTrainer.getEmail());
-//        existingTrainer.setMobileNumber(updatedTrainer.getMobileNumber());
-//        existingTrainer.setWorkingStatus(updatedTrainer.getWorkingStatus());
-//        existingTrainer.setExperience(updatedTrainer.getExperience());
-//        existingTrainer.setCompanyName(updatedTrainer.getCompanyName());
-//        existingTrainer.setAddress(updatedTrainer.getAddress());
-//        existingTrainer.setQualification(updatedTrainer.getQualification());
-//        existingTrainer.setResume(updatedTrainer.getResume());
-//
-//        if (updatedTrainer.getProfilePic() != null) {
-//            existingTrainer.setProfilePic(updatedTrainer.getProfilePic());
-//        }
-//
-//        // Save the updated trainer to the database
-//        trainerRepository.save(existingTrainer);
-//    }
-
-	@Transactional
-	public synchronized void deleteTrainer(Long id) {
-	    Trainer trainer = trainerRepository.findById(id)
-	            .orElseThrow(() -> new RuntimeException("Trainer not found with ID: " + id));
-
-	    TrainerProfileDeleted trainerProfileDeleted = new TrainerProfileDeleted();
-	    trainerProfileDeleted.setTrainerId(trainer.getId());
-	    trainerProfileDeleted.setProfilePic(trainer.getProfilePic());
-	    trainerProfileDeleted.setFullName(trainer.getFullName());
-	    trainerProfileDeleted.setMobileNumber(trainer.getMobileNumber());
-	    trainerProfileDeleted.setEmail(trainer.getEmail());
-	    trainerProfileDeleted.setWorkingStatus(trainer.getWorkingStatus());
-	    trainerProfileDeleted.setExperience(trainer.getExperience());
-	    trainerProfileDeleted.setCompanyName(trainer.getCompanyName());
-	    trainerProfileDeleted.setAddress(trainer.getAddress());
-	    trainerProfileDeleted.setQualification(trainer.getQualification());
-	    trainerProfileDeleted.setResume(trainer.getResume());
-	    synchronized (this) {
-
-	    trainerProfileDeletedRepository.save(trainerProfileDeleted);
-
-	    trainerRepository.deleteBatchTrainersByTrainerId(id);
-	    trainerRepository.deleteCourseTrainersByTrainerId(id);
-	    trainerRepository.deleteStudentTrainersByTrainerId(id);
-	    trainerRepository.deleteTrainerTechnologiesByTrainerId(id);
-	    trainerRepository.deleteRatingReviewsForTrainer(id);
-	    trainerRepository.deleteRatingReviewsByTrainer(id);
-	    trainerRepository.deleteMeetingStudentsByTrainerId(id);
-	    trainerRepository.deleteMeetingBatchesByTrainerId(id);
-	    trainerRepository.deleteMeetingsByTrainerId(id);
-	    trainerRepository.deleteTrainerRolesByTrainerId(id);
-
-	    trainerRepository.deleteById(id);
-	    }
-	}
-
-
+    public void deleteTrainer(Long id) {
+        trainerRepository.deleteById(id);
+    }
 }

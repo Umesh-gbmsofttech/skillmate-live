@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import app.service.RatingReviewService;
-import app.entity.RatingReviews;
+import app.entity.RatingReview;
 import app.jwt.AuthService;
 import app.jwt.CustomUserDetailsService;
 import app.jwt.JwtHelper;
@@ -30,15 +30,15 @@ public class AdminReview_LoginController {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    @PostMapping("/review/create")
-    public RatingReviews createAdminReview(
-            @RequestParam String reviewText,
-            @RequestParam(required = false) Long trainerId,
-            @RequestParam(required = false) Long courseId,
-            @RequestParam(required = false) Long studentId) {
+    // @PostMapping("/review/create")
+    // public RatingReview createAdminReview(
+    //         @RequestParam String reviewText,
+    //         @RequestParam(required = false) Long trainerId,
+    //         @RequestParam(required = false) Long courseId,
+    //         @RequestParam(required = false) Long studentId) {
         
-        return ratingReviewService.createAdminReview(reviewText, courseId, trainerId, studentId);
-    }
+    //     return ratingReviewService.createAdminReview(reviewText, courseId, trainerId, studentId);
+    // }
     
     @PostMapping("/login")
     public String adminLogin(@RequestBody LoginRequest loginRequest) {

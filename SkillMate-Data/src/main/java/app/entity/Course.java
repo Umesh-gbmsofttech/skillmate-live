@@ -1,34 +1,12 @@
 package app.entity;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Transient;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.Set;
 
 @Entity
+@Table(name = "course")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,62 +15,21 @@ public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(JsonResoponse_View.BasicView.class)
     private Long id;
 
     @Lob
-    @Column(columnDefinition = "LONGTEXT")
-    @JsonView(JsonResoponse_View.BasicView.class)
-    private String coverImage;
+    private byte[] image;
 
-    @JsonView(JsonResoponse_View.BasicView.class)
-    private String courseName;
-    @JsonView(JsonResoponse_View.BasicView.class)
-    private String price;
-    @JsonView(JsonResoponse_View.BasicView.class)
+    private String title;
     private String description;
-    @JsonView(JsonResoponse_View.BasicView.class)
-    private String days;
+    private int days;
 
-    @ManyToMany
-    @JsonView(JsonResoponse_View.DetailedView.class) // new added
-    @JoinTable(name = "course_trainers", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "trainer_id"))
-    private List<Trainer> trainer;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Assignment> assignments;
 
-    @OneToMany
-    // @JsonIgnore
-    List<Batch> batch;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Enrollment> enrollments;
 
-    @ManyToMany
-    @JoinTable(name = "course_students", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    @JsonView(JsonResoponse_View.DetailedView.class)
-    private List<Student> students;
-
-    @OneToMany(mappedBy = "course", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Attendance> attendance;
-
-    @OneToMany(mappedBy = "toCourse", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-    // @JsonView(JsonResoponse_View.BasicView.class)
-    private List<RatingReviews> ratingReviews = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "courses", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
-    @JsonView(JsonResoponse_View.BasicView.class)
-    private List<Meeting> meetings = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "course")
-    // @JsonView(JsonResoponse_View.DetailedView.class)
-    List<Batch> batches;
-
-    Long batchId;
-
-    public Course(String coverImageBase64, String courseName, String price, String description, String days) {
-        this.coverImage = coverImageBase64;
-        this.courseName = courseName;
-        this.price = price;
-        this.description = description;
-        this.days = days;
-    }
-
-    @Transient
-    private Meeting latestMeeting; // Non-persistent field for the latest meeting
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RatingReview> reviews;
 }
