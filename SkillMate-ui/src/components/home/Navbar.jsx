@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/authSlice';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
-import logo from '../../assets/skillmate1.jpg';
+import logo from '../../assets/skillmate.jpg';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -83,7 +83,7 @@ function Navbar() {
             sx={{
               position: 'relative',
               display: 'inline-block',
-              textDecoration: isActiveLink('/') ? 'underline' : 'none', // For active link
+              textDecoration: isActiveLink('/') ? 'underline' : 'none',
               '&:hover': {
                 color: '#F0F0F0',
                 cursor: 'pointer',
@@ -103,7 +103,7 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: isActiveLink('/') ? '0%' : '0%', // Active link should show underline immediately
+                width: isActiveLink('/') ? '0%' : '0%',
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
@@ -138,7 +138,7 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: isActiveLink('/courses') ? '0%' : '0%', // Active link should show underline immediately
+                width: isActiveLink('/courses') ? '0%' : '0%',
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
@@ -173,7 +173,7 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: isActiveLink('/community') ? '0%' : '0%', // Active link should show underline immediately
+                width: isActiveLink('/community') ? '0%' : '0%',
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
@@ -207,7 +207,7 @@ function Navbar() {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                width: isActiveLink('/contact') ? '0%' : '0%', // Active link should show underline immediately
+                width: isActiveLink('/contact') ? '0%' : '0%',
                 height: '2px',
                 backgroundColor: '#FF8C00',
                 transition: 'width 0.3s ease',
@@ -251,22 +251,20 @@ function Navbar() {
               >
                 Logout
               </Typography>
-              {/* <IconButton sx={{ color: '#fff' }}>🔔</IconButton> */}
             </>
           )}
         </Box>
 
-        {/* Profile or Sign In for larger screens */}
         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
           {isAuthenticated ? (
-            username !== 'ADMIN' ? (
+            username === 'ADMIN' ? (
+              <Button onClick={() => handleNavigation('/admin-profile')} variant="outlined" color="inherit">
+                {username}
+              </Button>
+            ) : (
               <IconButton onClick={handleProfileClick}>
                 <Avatar src={profilePicUrl} alt={userData ? userData.fullName : 'Profile'} sx={{ width: 35, height: 35 }} />
               </IconButton>
-            ) : (
-              <Button onClick={() => handleNavigation('/admin-profile')} variant="outlined" color="inherit">
-                Admin
-              </Button>
             )
           ) : (
             <Button onClick={() => handleNavigation('/login/mobile')} variant="outlined" color="inherit">
@@ -276,11 +274,30 @@ function Navbar() {
         </Box>
 
         {/* Hamburger Menu Icon for smaller screens */}
-        <IconButton sx={{ display: { xs: 'block', md: 'none' }, color: '#fff' }} onClick={toggleMenu}>
-          ☰
-        </IconButton>
-
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 2 }}>
+          {isAuthenticated ? (
+            username === 'ADMIN' ? (
+              <Button onClick={() => handleNavigation('/admin-profile')} variant="outlined" color="inherit">
+                {username}
+              </Button>
+            ) : (
+              <IconButton onClick={handleProfileClick}>
+                <Avatar src={profilePicUrl} alt={userData ? userData.fullName : 'Profile'} sx={{ width: 35, height: 35 }} />
+              </IconButton>
+            )
+          ) : (
+            <Button onClick={() => handleNavigation('/login/mobile')} variant="outlined" color="inherit">
+              Sign In
+            </Button>
+          )}
+          <IconButton sx={{ color: '#fff' }} onClick={toggleMenu}>
+            ☰
+          </IconButton>
+        </Box>
       </Box>
+
+
+
       {/* Mobile Dropdown Menu */}
       <Menu
         anchorEl={anchorEl}
@@ -290,7 +307,7 @@ function Navbar() {
           'aria-labelledby': 'basic-button',
         }}
         anchorOrigin={{
-          vertical: 'bottom', // Positioning the menu directly below the icon
+          vertical: 'bottom',
           horizontal: 'center',
         }}
         transformOrigin={{
@@ -304,7 +321,6 @@ function Navbar() {
         <MenuItem onClick={() => handleNavigation('/')}>Home</MenuItem>
         <MenuItem onClick={() => handleNavigation('/courses')}>Courses</MenuItem>
         <MenuItem onClick={() => handleNavigation('/community')}>Community</MenuItem>
-        <MenuItem onClick={() => handleNavigation('/resources')}>Resources</MenuItem>
         <MenuItem onClick={() => handleNavigation('/contact')}>Contact</MenuItem>
         {isAuthenticated && (
           <>

@@ -33,6 +33,7 @@ const LoginWithEmail = () => {
         body: JSON.stringify({ email }),
       });
 
+      console.log(response)
       if (response.ok) {
         dispatch(setIsOtpSent(true));
         showSuccessToast('OTP sent successfully!');
@@ -55,7 +56,7 @@ const LoginWithEmail = () => {
     dispatch(setError(null));
     setLoading(true);
     try {
-      const response = await fetch(`${urls.login.verifyOtpEmail}?identifier=${email}&otp=${otp}&type=email`, {
+      const response = await fetch(`${urls.login.verifyOtpEmail}?identifier=${email}&otp=${otp.trim()}&type=email`, {
         method: 'POST',
       });
 

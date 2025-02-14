@@ -15,6 +15,7 @@ public class WebConfig {
 	public CorsFilter corsFilter() {
 	    CorsConfiguration config = new CorsConfiguration();
 	    config.addAllowedOrigin("http://localhost:5173"); // Allow your frontend's origin
+	    config.addAllowedOrigin("http://localhost:5174"); // Allow your frontend's origin
 	    config.addAllowedOrigin("http://localhost:3000"); // Allow React frontend if needed
 	    config.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
 	    config.addAllowedHeader("*"); // Allow all headers
@@ -31,7 +32,7 @@ public class WebConfig {
 	        @Override
 	        public void addCorsMappings(CorsRegistry registry) {
 	            registry.addMapping("/**")
-	                    .allowedOrigins("http://localhost:5173", "http://localhost:3000")
+	                    .allowedOrigins("http://localhost:5173","http://localhost:5174", "http://localhost:3000")
 	                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 	                    .allowedHeaders("*")
 	                    .allowCredentials(true);

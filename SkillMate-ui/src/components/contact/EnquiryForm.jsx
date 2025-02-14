@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Box, Button, TextField, Typography, IconButton, Dialog, DialogContent } from '@mui/material';
-import picture from '../../assets/professional.jpg';
+// import picture from '../../assets/professional.jpg';
+// import picture from '../../assets/professional1.png';
+// import picture from '../../assets/professional2.png';
+import picture from '../../assets/professional3.png';
 
 
 function EnquiryForm({ closeForm, contact }) {
@@ -47,6 +50,7 @@ function EnquiryForm({ closeForm, contact }) {
         flexDirection: { xs: 'column', md: 'row' },
         gap: 2,
         backgroundColor: '#394852',
+        // backgroundColor: '#6f7e87',
         width: '100%',
         padding: 2,
         height: 'auto',

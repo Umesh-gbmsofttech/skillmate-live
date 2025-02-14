@@ -52,7 +52,7 @@ const LoginWithMobile = () => {
     dispatch(setError(null));
     setLoading(true);
     try {
-      const response = await fetch(`${urls.login.verifyOtpNumber}?identifier=${mobileNumber}&otp=${otp}&type=mobile`, {
+      const response = await fetch(`${urls.login.verifyOtpNumber}?identifier=${mobileNumber}&otp=${otp.trim()}&type=mobile`, {
         method: 'POST',
       });
 
