@@ -5,7 +5,7 @@ function CompanySignature() {
     return (
         // Display content in flex row
         <div className='GBM-softtech-signature'>
-            <p>Copyright © 2024. All rights reserved.</p>
+            <p>Copyright © 2025. All rights reserved.</p>
             <a href='https://gbmsofttech.com/' target='_blank' rel="noopener noreferrer">
                 Proudly Scaled by GBM SoftTech
             </a>

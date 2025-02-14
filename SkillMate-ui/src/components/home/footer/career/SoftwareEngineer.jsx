@@ -129,7 +129,7 @@ function SoftwareEngineer() {
         <Grid item xs={12} md={6}>
           <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <CardMedia
-              sx={{ objectFit: 'fill', objectPosition: 'top' }}
+              sx={{ objectFit: 'cover', objectPosition: 'top' }}
               component="img"
               height="350"
               image={cloudImage}
@@ -151,7 +151,7 @@ function SoftwareEngineer() {
         <Grid item xs={12} md={6}>
           <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <CardMedia
-              sx={{ objectFit: 'fill', objectPosition: 'top' }}
+              sx={{ objectFit: 'cover', objectPosition: 'top' }}
               component="img"
               height="350"
               image={testingImage}
