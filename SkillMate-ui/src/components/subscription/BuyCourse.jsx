@@ -8,6 +8,8 @@ import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import { Box, Grid, Typography, Button, Card, CardMedia, CardContent, Collapse } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import writeIcon from '../../assets/writeIcon.png';
+import baseUrl from '../urls/baseUrl'
+
 
 function BuyCourse({ course }) {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ function BuyCourse({ course }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/payment/create', {
+      const response = await axios.post(`${baseUrl}payment/create`, {
         amount: course.price,
         currency: 'INR',
       });
@@ -68,7 +70,7 @@ function BuyCourse({ course }) {
 
   const handlePaymentVerification = async (paymentId) => {
     try {
-      const response = await axios.post('http://localhost:8080/payment/verify', {
+      const response = await axios.post(`${baseUrl}payment/verify`, {
         paymentId,
       });
       if (response.data === 'Payment verified and captured successfully.') {
@@ -87,22 +89,31 @@ function BuyCourse({ course }) {
   const handleUpdateCourse = async () => {
     const studentId = userData.id;
     const courseId = course.id;
+
     try {
-      const response = await axios.put(`http://localhost:8080/courses/update/${courseId}`, {
-        ...course,
-        students: [{ id: studentId }],
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.post(
+        `${baseUrl}enrollments/enroll`,
+        {
+          studentId: { id: studentId },
+          course: { id: courseId },
+          status: "Active",
+        },
+        {
+          params: { studentId: studentId, courseId: courseId },  // Query params
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (response.status === 200) {
         dispatch(addToMyCourses(course));
       }
     } catch (error) {
       console.error('Error updating course:', error);
-      showErrorToast('Failed to buy the course. Please try again.');
+      showErrorToast('Failed to enroll in the course. Please try again.');
     }
   };
+
+
 
   const handleRateUsClick = () => {
     navigate('/rating-reviews/page/card', { state: { course } });
@@ -115,18 +126,18 @@ function BuyCourse({ course }) {
           <CardMedia
             component="img"
             sx={{ width: '50%', borderRadius: 2 }}
-            image={`data:image/jpeg;base64,${course.coverImage}`}
+            image={`data:image/jpeg;base64,${course.image}`}
             alt={course.courseName}
           />
           <CardContent sx={{ flex: '1', paddingLeft: 4 }}>
             <Typography variant="h4" fontWeight="bold" gutterBottom>
-              {course.courseName}
+              {course.title}
             </Typography>
             <Typography variant="h6" color="primary" gutterBottom>
               Price: ₹{course.price}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              Duration: {course.duration} days
+              Duration: {course.days} days
             </Typography>
             <Button variant="contained" color="primary" fullWidth sx={{ mb: 2 }} onClick={handleBuyCourse}>
               Buy Now

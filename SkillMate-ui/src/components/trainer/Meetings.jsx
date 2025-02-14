@@ -27,7 +27,7 @@ function Meetings({ userData, trainerId, courses }) {
             let allStudents = [];
             for (let batch of trainerBatches) {
                 try {
-                    const response = await axios.get(`http://localhost:8080/students/batch/${batch.id}`, {
+                    const response = await axios.get(`${baseUrl}students/batch/${batch.id}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     allStudents = [...allStudents, ...response.data];
@@ -41,7 +41,7 @@ function Meetings({ userData, trainerId, courses }) {
                 allStudents.map(async (student) => {
                     try {
                         if (student?.id !== '' && student?.id !== undefined) {
-                            const coursesResponse = await axios.get(`http://localhost:8080/students/fetch/my-courses/${student.id}`, {
+                            const coursesResponse = await axios.get(`${baseUrl}students/my-courses/${student.id}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             });
                             student.courses = coursesResponse.data;
@@ -63,7 +63,7 @@ function Meetings({ userData, trainerId, courses }) {
     useEffect(() => {
         const fetchBatches = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/batches/by-trainer/${trainerId}`, {
+                const response = await axios.get(`${baseUrl}batches/by-trainer/${trainerId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setTrainerBatches(response.data);
@@ -130,7 +130,7 @@ function Meetings({ userData, trainerId, courses }) {
 
         // Submit meeting details with selected students
         try {
-            const response = await axios.post("http://localhost:8080/meetings/create", {
+            const response = await axios.post("${baseUrl}meetings", {
                 meetingLink: meetingDetails.meetingLink,
                 fromTime: meetingDetails.fromTime,
                 toTime: meetingDetails.toTime,

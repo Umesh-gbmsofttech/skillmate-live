@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Typography, TextField, Button, CircularProgress, Grid, Container, Paper } from '@mui/material';
 import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
+import baseUrl from '../urls/baseUrl'
+
 
 function AddCourseForm() {
   const [title, setTitle] = useState('');
@@ -67,7 +69,7 @@ function AddCourseForm() {
       };
 
       try {
-        const response = await fetch('http://localhost:8080/courses/create', {
+        const response = await fetch(`${baseUrl}courses/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

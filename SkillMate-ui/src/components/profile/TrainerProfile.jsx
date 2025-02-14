@@ -8,6 +8,8 @@ import Loading from '../../Loading';
 import Meetings from '../trainer/Meetings';
 import Attendances from '../trainer/Attendances';
 import defaultProfilePic from '../../assets/skillmate.jpg';
+import baseUrl from '../urls/baseUrl'
+
 
 function TrainerProfile() {
     const [showProfile, setShowProfile] = useState(false);
@@ -26,7 +28,7 @@ function TrainerProfile() {
     useEffect(() => {
         const fetchBatches = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/batches/by-trainer/${trainerId}`, {
+                const response = await axios.get(`${baseUrl}batches/by-trainer/${trainerId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setBatches(response.data);
@@ -44,7 +46,7 @@ function TrainerProfile() {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/courses/trainer/${trainerId}`, {
+                const response = await axios.get(`${baseUrl}courses/trainer/${trainerId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setCourses(response.data);

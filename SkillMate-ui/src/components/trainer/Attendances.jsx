@@ -27,7 +27,7 @@ function Attendances({ batch }) {
             setLoading(true);
             try {
                 const response = await axios.get(
-                    `http://localhost:8080/students/batch/${batch}`,
+                    `${baseUrl}students/batch/${batch}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setStudents(response.data);
@@ -50,7 +50,7 @@ function Attendances({ batch }) {
             try {
                 for (const student of students) {
                     const response = await axios.get(
-                        `http://localhost:8080/attendances/student/${student.id}/latest`,
+                        `${baseUrl}attendances/student/${student.id}/latest`,
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
                     updatedAttendances[student.id] = [response.data]; // Store as an array
@@ -70,7 +70,7 @@ function Attendances({ batch }) {
         setLoading(true);
         try {
             const response = await axios.get(
-                `http://localhost:8080/attendances/student/${studentId}`,
+                `${baseUrl}attendances/student/${studentId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setAttendances((prev) => ({
@@ -90,7 +90,7 @@ function Attendances({ batch }) {
         try {
             const updatedRecord = editedAttendance[recordId];
             await axios.put(
-                `http://localhost:8080/attendances/update/${recordId}`,
+                `${baseUrl}attendances/update/${recordId}`,
                 updatedRecord,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -104,7 +104,7 @@ function Attendances({ batch }) {
 
             // Refresh attendance records
             const response = await axios.get(
-                `http://localhost:8080/attendances/student/${studentId}/latest`,
+                `${baseUrl}attendances/student/${studentId}/latest`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setAttendances((prev) => ({

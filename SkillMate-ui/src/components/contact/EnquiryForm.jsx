@@ -8,6 +8,7 @@ import { Box, Button, TextField, Typography, IconButton, Dialog, DialogContent }
 // import picture from '../../assets/professional1.png';
 // import picture from '../../assets/professional2.png';
 import picture from '../../assets/professional3.png';
+import baseUrl from '../urls/baseUrl'
 
 
 function EnquiryForm({ closeForm, contact }) {
@@ -31,7 +32,7 @@ function EnquiryForm({ closeForm, contact }) {
   const handleEnquirySubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/contact-us/create', formData);
+      const response = await axios.post(`${baseUrl}contact-us`, formData);
       console.log('Enquiry submitted successfully:', response.data);
       alert('Enquiry submitted successfully!');
       setFormData({ fullName: '', email: '', contactNumber: '', qualification: '', query: '' });

@@ -19,7 +19,7 @@
 //     useEffect(() => {
 //         const fetchReviews = async () => {
 //             try {
-//                 const response = await fetch('http://localhost:8080/rating-reviews/fetch', {
+//                 const response = await fetch('${baseUrl}rating-reviews/fetch', {
 //                     method: 'GET',
 //                     headers: {
 //                         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@
 //         setIsSubmitting(true);
 
 //         try {
-//             const response = await fetch('http://localhost:8080/rating-reviews/create', {
+//             const response = await fetch('${baseUrl}rating-reviews/create', {
 //                 method: 'POST',
 //                 headers: {
 //                     'Content-Type': 'application/json',
@@ -83,7 +83,7 @@
 //         }
 
 //         try {
-//             const response = await fetch(`http://localhost:8080/rating-reviews/student/${studentId}`, {
+//             const response = await fetch(`${baseUrl}rating-reviews/student/${studentId}`, {
 //                 method: 'GET',
 //                 headers: {
 //                     'Content-Type': 'application/json',
@@ -110,7 +110,7 @@
 //         }
 
 //         try {
-//             const response = await fetch(`http://localhost:8080/rating-reviews/trainer/${trainerId}`, {
+//             const response = await fetch(`${baseUrl}rating-reviews/trainer/${trainerId}`, {
 //                 method: 'GET',
 //                 headers: {
 //                     'Content-Type': 'application/json',
@@ -137,7 +137,7 @@
 //         }
 
 //         try {
-//             const response = await fetch(`http://localhost:8080/rating-reviews/course/${courseId}`, {
+//             const response = await fetch(`${baseUrl}rating-reviews/course/${courseId}`, {
 //                 method: 'GET',
 //                 headers: {
 //                     'Content-Type': 'application/json',
@@ -159,7 +159,7 @@
 //     // Admin endpoint to create rating-review
 //     const handleAdminCreateReview = async () => {
 //         try {
-//             const response = await fetch('http://localhost:8080/rating-reviews/admin/create', {
+//             const response = await fetch('${baseUrl}rating-reviews/admin/create', {
 //                 method: 'POST',
 //                 headers: {
 //                     'Content-Type': 'application/json',

@@ -1,6 +1,5 @@
 package app.controller;
 
-import app.entity.JsonResoponse_View;
 import app.entity.Trainer;
 import app.service.TrainerService;
 import jakarta.validation.Valid;
@@ -9,10 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.annotation.JsonView;
 import app.jwt.JwtResponse;
 import java.util.List;
 import java.util.Optional;
@@ -22,14 +19,12 @@ import java.util.Optional;
 public class TrainerController {
 
 	private static final Logger logger = LoggerFactory.getLogger(TrainerController.class);
-	
-
 
 	@Autowired
 	private TrainerService trainerService;
 
-//	create trainer and return jwt token and user data
-	@PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	// create trainer and return jwt token and user data
+	@PostMapping
 	public ResponseEntity<Object> createTrainer(@Valid @RequestBody Trainer trainer) {
 		try {
 			JwtResponse jwtResponse = trainerService.saveTrainer(trainer);
@@ -40,7 +35,7 @@ public class TrainerController {
 		}
 	}
 
-	@GetMapping("/fetch")
+	@GetMapping
 	public ResponseEntity<List<Trainer>> getAllTrainers() {
 		try {
 			List<Trainer> trainers = trainerService.getAllTrainers();
@@ -51,7 +46,7 @@ public class TrainerController {
 		}
 	}
 
-	@GetMapping("/fetch/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<Trainer> getTrainerById(@PathVariable("id") Long id) {
 		Optional<Trainer> trainerData = trainerService.getTrainerById(id);
 		if (trainerData.isPresent()) {
@@ -60,17 +55,18 @@ public class TrainerController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	 @PutMapping("/update/{id}")
-	 public ResponseEntity<Trainer> updateTrainerProfile(@PathVariable Long id, @RequestBody Trainer trainer) {
-	 	Trainer updatedTrainer = trainerService.updateTrainer(id, trainer);
-	 	if (updatedTrainer == null) {
-	 		return ResponseEntity.notFound().build();
-	 	}
-	 	return ResponseEntity.ok(updatedTrainer);
-	 }
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Trainer> updateTrainerProfile(@PathVariable Long id, @RequestBody Trainer trainer) {
+		Trainer updatedTrainer = trainerService.updateTrainer(id, trainer);
+		if (updatedTrainer == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(updatedTrainer);
+	}
 
 	// Delete a Trainer
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteTrainer(@PathVariable Long id) {
 		try {
 			trainerService.deleteTrainer(id);

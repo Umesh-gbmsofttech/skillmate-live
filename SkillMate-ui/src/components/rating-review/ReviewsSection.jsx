@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Card, CardContent, CardMedia, Typography, Rating, Box, Avatar } from '@mui/material';
 import userImage from '../../assets/skillmate.jpg'; // Default image for fallback
+import baseUrl from '../urls/baseUrl'
+
 
 function ReviewsSection({ course, user }) {
   const token = useSelector((state) => state.auth.token); // Get token from Redux state
@@ -18,13 +20,13 @@ function ReviewsSection({ course, user }) {
 
       // Set URL based on whether it's a trainer, student, or course
       if (user?.roles == 'TRAINER') {
-        url = `http://localhost:8080/rating-reviews/trainer/${trainer?.id}`;
+        url = `${baseUrl}rating-reviews/trainer/${trainer?.id}`;
       } else if (user?.roles == 'STUDENT') {
-        url = `http://localhost:8080/rating-reviews/student/${student?.id}`;
+        url = `${baseUrl}rating-reviews/student/${student?.id}`;
       } else if (course) {
-        url = `http://localhost:8080/rating-reviews/course/${course.id}`;
+        url = `${baseUrl}rating-reviews/course/${course.id}`;
       } else {
-        url = `http://localhost:8080/rating-reviews/fetch`; // Default URL for fetching reviews if no specific entity
+        url = `${baseUrl}rating-reviews/fetch`; // Default URL for fetching reviews if no specific entity
       }
 
       if (url) {

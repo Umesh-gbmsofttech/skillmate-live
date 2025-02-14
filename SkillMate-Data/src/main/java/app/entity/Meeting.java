@@ -22,7 +22,7 @@ public class Meeting {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();;
     private int duration;
     private String meetingLink;
     private LocalTime startTime;

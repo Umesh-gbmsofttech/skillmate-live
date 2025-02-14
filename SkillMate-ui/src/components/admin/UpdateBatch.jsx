@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Grid, Card, CardContent, CardMedia, Button, Typography, Select, MenuItem, Checkbox, ListItemText, FormControl, InputLabel } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import defaultProfileImage from '../../assets/profilePic.jpg';
+import baseUrl from '../urls/baseUrl'
+
 
 function UpdateBatch() {
   const { batchId } = useParams(); // Get the batchId from the route params
@@ -19,11 +21,11 @@ function UpdateBatch() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const fetchBatchUrl = `http://localhost:8080/batches/fetch/${batchId}`;
-  const getTrainersUrl = 'http://localhost:8080/trainers/fetch';
-  const getCoursesUrl = 'http://localhost:8080/courses/fetch';
-  const getStudentsUrl = 'http://localhost:8080/students/fetch';
-  const updateBatchUrl = `http://localhost:8080/batches/update/${batchId}`;
+  const fetchBatchUrl = `${baseUrl}batches/${batchId}`;
+  const getTrainersUrl = `${baseUrl}trainers`;
+  const getCoursesUrl = `${baseUrl}courses`;
+  const getStudentsUrl = `${baseUrl}students`;
+  const updateBatchUrl = `${baseUrl}batches/${batchId}`;
 
   useEffect(() => {
     const fetchData = async () => {

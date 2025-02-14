@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, TextField, Button, CircularProgress, Typography, MenuItem } from '@mui/material';
+import baseUrl from '../urls/baseUrl'
+
 
 function StudentProfileUpdate() {
     const [formData, setFormData] = useState({
@@ -27,7 +29,7 @@ function StudentProfileUpdate() {
     useEffect(() => {
         const fetchStudentData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/students/fetch/${studentId}`);
+                const response = await axios.get(`${baseUrl}students/${studentId}`);
                 const student = response.data;
                 console.log(pdfFile);
                 setFormData({
@@ -120,7 +122,7 @@ function StudentProfileUpdate() {
         }
 
         try {
-            const response = await axios.put(`http://localhost:8080/students/update/${studentId}`, formData);
+            const response = await axios.put(`${baseUrl}students/${studentId}`, formData);
             alert('Student updated successfully!');
             navigate('/admin-profile/manage-students');
         } catch (error) {

@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/authSlice';
 import urls from '../urls/Urls';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService'; // Import toast functions
+import baseUrl from '../urls/baseUrl'
+
 
 const AdminLogin = () => {
     const [username, setUsername] = useState('');
@@ -27,7 +29,7 @@ const AdminLogin = () => {
         const adminData = { username, password };
 
         // Make login request
-        fetch(urls.admin.login, {
+        fetch(`${baseUrl}admin/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(adminData),

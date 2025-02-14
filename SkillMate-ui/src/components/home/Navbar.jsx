@@ -51,8 +51,8 @@ function Navbar() {
     setIsConfirmDialogOpen(false);
   };
 
-  const profilePicUrl = userData && userData.profilePic
-    ? `data:image/jpeg;base64,${userData.profilePic}`
+  const profilePicUrl = userData && userData.image
+    ? `data:image/jpeg;base64,${userData.image}`
     : logo;
 
   const handleProfileClick = () => {

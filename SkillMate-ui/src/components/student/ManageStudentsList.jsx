@@ -8,6 +8,8 @@ import defaultProfileImage from '../../assets/profilePic.jpg';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import Search from '../Search';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
+import baseUrl from '../urls/baseUrl'
+
 
 function ManageStudentsList() {
     const navigate = useNavigate();
@@ -24,7 +26,7 @@ function ManageStudentsList() {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/students/fetch');
+                const response = await axios.get(`${baseUrl}students`);
                 setStudents(response.data);
                 console.log(response.data);
                 setLoading(false);
@@ -45,7 +47,7 @@ function ManageStudentsList() {
     const handleConfirmDelete = async () => {
         if (studentToDelete) {
             try {
-                const response = await axios.delete(`http://localhost:8080/students/delete/${studentToDelete}`);
+                const response = await axios.delete(`${baseUrl}students/${studentToDelete}`);
                 if (response.status === 200) {
                     showSuccessToast('Student deleted successfully!');
                     setStudents((prev) => prev.filter((student) => student.id !== studentToDelete));

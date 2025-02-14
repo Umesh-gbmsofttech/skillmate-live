@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { Box, Typography, Button, IconButton, Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit'; // MUI Edit icon
+import baseUrl from '../urls/baseUrl'
+
 
 function OurTopCourses() {
     const navigate = useNavigate();
@@ -31,7 +33,7 @@ function OurTopCourses() {
             const fetchCourses = async () => {
                 setLoading(true);
                 try {
-                    const response = await axios.get('http://localhost:8080/courses/fetch', {
+                    const response = await axios.get(`${baseUrl}courses`, {
                         headers: {
                             'Content-Type': 'application/json',
                         },
@@ -96,7 +98,7 @@ function OurTopCourses() {
                             }}
                         >
                             <img
-                                src={`data:image/jpeg;base64,${course.coverImage}`}
+                                src={`data:image/jpeg;base64,${course.image}`}
                                 alt={course.courseName}
                                 style={{ width: '100%', height: 230, objectFit: 'cover' }}
                             />

@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.entity.Course;
 import app.entity.Enrollment;
 import app.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,17 @@ public class EnrollmentController {
     @DeleteMapping("/{id}")
     public void deleteEnrollment(@PathVariable Long id) {
         enrollmentService.deleteEnrollment(id);
+    }
+    
+    // API to enroll a student in a course
+    @PostMapping("/enroll")
+    public Enrollment enrollStudentInCourse(@RequestParam Long studentId, @RequestParam Long courseId) {
+        return enrollmentService.enrollStudentInCourse(studentId, courseId);
+    }
+
+    // API to get all courses a student is enrolled in
+    @GetMapping("/enrolled/{studentId}")
+    public List<Course> getCoursesForStudent(@PathVariable Long studentId) {
+        return enrollmentService.getCoursesForStudent(studentId);
     }
 }

@@ -8,6 +8,8 @@ import Loading from '../../Loading';
 import Fuse from 'fuse.js';
 import { showSuccessToast, showErrorToast, showWarningToast, showInfoToast } from '../utility/ToastService';
 import Search from '../Search';
+import baseUrl from '../urls/baseUrl'
+
 
 function ManageCoursesList() {
     const navigate = useNavigate();
@@ -25,7 +27,7 @@ function ManageCoursesList() {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/courses/fetch', {
+                const response = await axios.get(`${baseUrl}courses`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -74,7 +76,7 @@ function ManageCoursesList() {
     const handleConfirmDelete = async () => {
         if (courseToDelete) {
             try {
-                const response = await axios.delete(`http://localhost:8080/courses/delete/${courseToDelete}`, {
+                const response = await axios.delete(`${baseUrl}courses/${courseToDelete}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -160,7 +162,7 @@ function ManageCoursesList() {
                                     />
                                     <CardContent sx={{ flexGrow: 1 }}>
                                         <Typography variant="h6" gutterBottom>
-                                            {course.courseName}
+                                            {course.title}
                                         </Typography>
                                         <Typography variant="body2" color="textSecondary">
                                             Duration: {course.days}

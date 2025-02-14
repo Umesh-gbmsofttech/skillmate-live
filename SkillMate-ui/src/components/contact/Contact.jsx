@@ -9,6 +9,7 @@ import EnquiryForm from './EnquiryForm';
 import logo from '../../assets/skillmate.jpg';
 import whatsapp from '../../assets/whatsapp.png';
 import writeIcon from '../../assets/writeIcon.png';
+import baseUrl from '../urls/baseUrl'
 
 function Contact() {
     const navigate = useNavigate();
@@ -34,7 +35,7 @@ function Contact() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8080/sendEmail', formData)
+        axios.post(`${baseUrl}sendEmail`, formData)
             .then(() => showSuccessToast('Query submitted successfully!'))
             .catch(() => showErrorToast('Error submitting query!'));
     };
@@ -51,7 +52,7 @@ function Contact() {
                             alt="Course Image"
                         />
                         <CardContent sx={{ width: { xs: '100%', md: '50%' } }}>
-                            <Typography variant="h4" fontWeight="bold" mb={2}>Course: {course?.courseName}</Typography>
+                            <Typography variant="h4" fontWeight="bold" mb={2}>Course: {course?.title}</Typography>
                             <Typography variant="h5" color="primary" mb={2}>Price: {course?.price}</Typography>
                             <Typography variant="body1" color="text.secondary" mb={2}>Duration: {course?.days} days</Typography>
 

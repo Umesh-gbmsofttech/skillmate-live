@@ -36,7 +36,7 @@ public class Trainer {
     @ElementCollection
     private Set<String> technologies;
 
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 

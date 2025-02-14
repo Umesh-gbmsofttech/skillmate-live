@@ -4,6 +4,8 @@ import { setUserData } from '../redux/authSlice';
 import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 import { TextField, Button, Checkbox, FormControl, InputLabel, Select, MenuItem, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Link } from 'react-router-dom';
+import baseUrl from '../urls/baseUrl'
+
 
 const TrainerSignUp = () => {
     const [name, setName] = useState('');
@@ -116,7 +118,7 @@ const TrainerSignUp = () => {
 
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/trainers/create', {
+            const response = await fetch(`${baseUrl}trainers`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

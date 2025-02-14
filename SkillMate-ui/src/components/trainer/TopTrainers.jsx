@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Box, Card, CardContent, CardMedia, Typography, CircularProgress, useMediaQuery } from '@mui/material';
 import logo from '../../assets/skillmate.jpg';
 import { keyframes } from '@mui/system';
+import baseUrl from '../urls/baseUrl';
 
 const fadeInUp = keyframes`
     0% {
@@ -34,7 +35,7 @@ function TopTrainers({ sectionHeading, student, trainer }) {
                         setLoading(true);
                         try {
                                 if (trainer === 'trainer') {
-                                        const response = await fetch('http://localhost:8080/trainers/fetch', {
+                                        const response = await fetch(`${baseUrl}trainers`, {
                                                 method: 'GET',
                                                 headers: {
                                                         'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ function TopTrainers({ sectionHeading, student, trainer }) {
                                         setTrainers(data);
                                 }
                                 if (student) {
-                                        const response = await fetch('http://localhost:8080/students/fetch', {
+                                        const response = await fetch(`${baseUrl}students`, {
                                                 method: 'GET',
                                                 headers: {
                                                         'Content-Type': 'application/json',
@@ -63,6 +64,8 @@ function TopTrainers({ sectionHeading, student, trainer }) {
                 };
                 fetchData();
         }, [token, trainer, student]);
+        // console.log('trainers: top: ', trainers)
+        // console.log('students: top: ', students)
 
         let lastScrollY = window.scrollY;
         useEffect(() => {
@@ -149,7 +152,7 @@ function TopTrainers({ sectionHeading, student, trainer }) {
                                                 >
                                                         <CardMedia
                                                                 component="img"
-                                                                image={person.profilePic ? `data:image/jpeg;base64,${person.profilePic}` : logo}
+                                                                image={person.image ? `data:image/jpeg;base64,${person.image}` : logo}
                                                                 alt={person.name || 'Person'}
                                                                 sx={{
                                                                         height: 210,

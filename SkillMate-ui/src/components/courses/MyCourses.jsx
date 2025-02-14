@@ -4,6 +4,8 @@ import { Box, Typography, Grid, Card, CardContent, CardMedia, CircularProgress }
 import logo from '../../assets/skillmate.jpg';
 import axios from 'axios';
 import LiveSessions from '../subscription/LiveSessions';
+import baseUrl from '../urls/baseUrl'
+
 
 function MyCourses() {
     const token = useSelector((state) => state.auth.token);
@@ -16,9 +18,10 @@ function MyCourses() {
 
     const fetchCourses = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/students/fetch/my-courses/${userData.id}`, {
+            const response = await axios.get(`${baseUrl}enrollments/enrolled/${userData.id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+            console.log(response.data)
             setMyCourses(response.data);
         } catch (error) {
             setError('Error fetching courses.');
@@ -76,7 +79,7 @@ function MyCourses() {
                 ))}
             </Grid>
 
-            <LiveSessions myCourses={myCourses} />
+            {/* <LiveSessions myCourses={myCourses} /> */}
         </Box>
     );
 }

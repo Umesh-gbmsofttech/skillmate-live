@@ -11,6 +11,8 @@ import {
   loginSuccess,
 } from '../redux/authSlice';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
+import baseUrl from '../urls/baseUrl'
+
 
 const LoginWithEmail = () => {
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ const LoginWithEmail = () => {
     dispatch(setError(null));
     setLoading(true);
     try {
-      const response = await fetch(urls.login.sendOtpEmail, {
+      const response = await fetch(`${baseUrl}auth/otp/email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -56,7 +58,7 @@ const LoginWithEmail = () => {
     dispatch(setError(null));
     setLoading(true);
     try {
-      const response = await fetch(`${urls.login.verifyOtpEmail}?identifier=${email}&otp=${otp.trim()}&type=email`, {
+      const response = await fetch(`${baseUrl}auth/verifyOtp?identifier=${email}&otp=${otp.trim()}&type=email`, {
         method: 'POST',
       });
 

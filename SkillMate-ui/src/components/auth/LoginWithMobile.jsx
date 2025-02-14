@@ -11,6 +11,8 @@ import {
   loginSuccess,
 } from '../redux/authSlice';
 import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
+import baseUrl from '../urls/baseUrl'
+
 
 const LoginWithMobile = () => {
   const dispatch = useDispatch();
@@ -26,7 +28,7 @@ const LoginWithMobile = () => {
     dispatch(setError(null));
     setLoading(true);
     try {
-      const response = await fetch(urls.login.sendOtpNumber, {
+      const response = await fetch(`${baseUrl}auth/otp/mobile`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobileNumber }),
@@ -52,7 +54,7 @@ const LoginWithMobile = () => {
     dispatch(setError(null));
     setLoading(true);
     try {
-      const response = await fetch(`${urls.login.verifyOtpNumber}?identifier=${mobileNumber}&otp=${otp.trim()}&type=mobile`, {
+      const response = await fetch(`${baseUrl}auth/verifyOtp?identifier=${mobileNumber}&otp=${otp.trim()}&type=mobile`, {
         method: 'POST',
       });
 

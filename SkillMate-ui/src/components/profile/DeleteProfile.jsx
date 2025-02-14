@@ -1,5 +1,7 @@
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
+import baseUrl from '../urls/baseUrl'
+
 
 
 function DeleteProfile() {
@@ -12,7 +14,7 @@ function DeleteProfile() {
         try {
             // check the logged in user's role student/trainer/admin and then hit on of them url accordingly
             // id is the the mobile number of the logged in user
-            const response = await fetch(`http://localhost:8080/student/delete/${user.id || user.MoNo || user.mobile}`, `http://localhost:8080/trainer/delete/${user.id || user.MoNo || user.mobile}`, `http://localhost:8080/admin/delete/${user.id || user.MoNo || user.mobile}`, {
+            const response = await fetch(`${baseUrl}students/${user.id || user.MoNo || user.mobile}`, `${baseUrl}trainers/${user.id || user.MoNo || user.mobile}`, `${baseUrl}admin/${user.id || user.MoNo || user.mobile}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 // body: JSON.stringify({ mobile }),

@@ -89,7 +89,7 @@ function RatingCard() {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/rating-reviews/create', {
+            const response = await fetch(`${baseUrl}rating-reviews/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -302,7 +302,7 @@ export default RatingCard;
 //         }
 
 //         try {
-//             const response = await fetch('http://localhost:8080/rating-reviews/create', {
+//             const response = await fetch(`${baseUrl}rating-reviews/create`, {
 //                 method: 'POST',
 //                 headers: {
 //                     'Content-Type': 'application/json',

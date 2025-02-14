@@ -8,6 +8,7 @@ import { Grid, Typography, Button, Card, CardContent, CardMedia, Dialog, DialogA
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import Search from '../Search';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
+import baseUrl from '../urls/baseUrl';
 
 function ManageTrainersList() {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ function ManageTrainersList() {
     useEffect(() => {
         const fetchTrainers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/trainers/fetch');
+                const response = await axios.get(`${baseUrl}trainers`);
                 const fetchedTrainers = response.data.map((trainer) => ({
                     id: trainer.id,
                     name: trainer.name,
@@ -62,7 +63,7 @@ function ManageTrainersList() {
     const handleConfirmDelete = async () => {
         if (trainerToDelete) {
             try {
-                const response = await axios.delete(`http://localhost:8080/trainers/delete/${trainerToDelete}`);
+                const response = await axios.delete(`${baseUrl}trainers/${trainerToDelete}`);
                 if (response.status === 200) {
                     showSuccessToast('Trainer deleted successfully!');
                     setTrainers((prevTrainers) => prevTrainers.filter((trainer) => trainer.id !== trainerToDelete));

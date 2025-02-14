@@ -8,10 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import app.otplogin.MobileOtpService;
-import app.entity.JsonResoponse_View;
 import app.otplogin.EmailOtpRequest;
 import app.otplogin.EmailService;
 import app.repository.TrainerRepository;
@@ -72,7 +69,6 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verifyOtp")
-    @JsonView(JsonResoponse_View.DetailedView.class)
     public ResponseEntity<?> verifyOtp(@RequestParam String identifier, @RequestParam String otp, @RequestParam String type) {
         boolean isOtpValid = validateOtp(identifier, otp, type);
         if (!isOtpValid) {

@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Box, TextField, Button, CircularProgress, Typography, Checkbox, FormControlLabel, MenuItem } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import { useSelector } from 'react-redux';
+import baseUrl from '../urls/baseUrl'
+
 
 function TrainerProfileUpdate() {
     const token = useSelector((state) => state.auth.token);
@@ -28,7 +30,7 @@ function TrainerProfileUpdate() {
     useEffect(() => {
         const fetchTrainerData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/trainers/fetch/${trainerId}`);
+                const response = await axios.get(`${baseUrl}trainers/${trainerId}`);
                 const trainer = response.data;
                 setFormData({
                     name: trainer.name || '',
@@ -124,7 +126,7 @@ function TrainerProfileUpdate() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:8080/trainers/update/${trainerId}`, formData, {
+            const response = await axios.put(`${baseUrl}trainers/${trainerId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

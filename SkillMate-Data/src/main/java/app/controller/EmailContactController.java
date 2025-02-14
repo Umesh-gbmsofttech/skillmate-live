@@ -8,18 +8,17 @@ import app.otplogin.EmailServiceContactUs;
 
 @RestController
 @RequestMapping("/sendEmail")
-public class EmailContactController  {
+public class EmailContactController {
 
-   
     @Autowired
     private EmailServiceContactUs emailServiceContactUs;
 
     @PostMapping
     public String sendEmail(@RequestBody ContactForm contactForm) {
-        String recipient = "rrboyking9923@gmail.com";
+        String recipient = "skillmate001@gmail.com";
         String subject = "New Query from Contact Us Form";
         String messageBody = "Query: " + contactForm.getQuery() + "\n\n" +
-                             "Selected Option: " + contactForm.getSelectedOption();
+                "Selected Option: " + contactForm.getSelectedOption();
 
         emailServiceContactUs.sendEmail(recipient, subject, messageBody);
 

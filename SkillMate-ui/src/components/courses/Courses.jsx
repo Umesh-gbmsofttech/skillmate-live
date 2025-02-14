@@ -29,7 +29,7 @@ function Courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`${baseUrl}courses/fetch`, {
+        const response = await axios.get(`${baseUrl}courses`, {
           headers: { 'Content-Type': 'application/json' },
         });
         showSuccessToast('Courses fetched successfully!');

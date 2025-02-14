@@ -1,7 +1,5 @@
 package app.entity;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +14,6 @@ public class ContactUs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(JsonResoponse_View.BasicView.class)
     private Long id;
 
     @NotEmpty(message = "Full name is required")

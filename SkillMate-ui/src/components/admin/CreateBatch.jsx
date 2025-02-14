@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Loading from '../../Loading';
 import { Select, MenuItem, Checkbox, ListItemText, FormControl, InputLabel, Button } from '@mui/material';
 import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
+import baseUrl from '../urls/baseUrl'
 
 function CreateBatch() {
     const [batches, setBatches] = useState([]);
@@ -23,10 +24,10 @@ function CreateBatch() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const batchResponse = await axios.get(`http://localhost:8080/batches/fetch`);
-                // const studentResponse = await axios.get(`http://localhost:8080/students/fetch`);
-                const trainerResponse = await axios.get(`http://localhost:8080/trainers/fetch`);
-                const courseResponse = await axios.get(`http://localhost:8080/courses/fetch`);
+                const batchResponse = await axios.get(`${baseUrl}batches/fetch`);
+                // const studentResponse = await axios.get(`${baseUrl}students/fetch`);
+                const trainerResponse = await axios.get(`${baseUrl}trainers/fetch`);
+                const courseResponse = await axios.get(`${baseUrl}courses/fetch`);
                 setBatches(batchResponse.data);
                 // setStudents(studentResponse.data);
                 setTrainers(trainerResponse.data);
@@ -45,7 +46,7 @@ function CreateBatch() {
         const fetchStudentsByCourse = async () => {
             if (newBatch.courseIds.length > 0) {
                 try {
-                    const studentCoursesResponse = await axios.get(`http://localhost:8080/courses/fetch/students/of/course/${newBatch.courseIds[0]}`);
+                    const studentCoursesResponse = await axios.get(`${baseUrl}courses/fetch/students/of/course/${newBatch.courseIds[0]}`);
                     if (studentCoursesResponse.status === 200) {
                         setStudents(studentCoursesResponse.data);
                     } else { 
@@ -85,13 +86,13 @@ function CreateBatch() {
             };
 
             const courseUpdateResponse = await axios.put(
-                `http://localhost:8080/courses/update/${newBatch.courseIds[0]}`,
+                `${baseUrl}courses/update/${newBatch.courseIds[0]}`,
                 updatedCourse
             );
             showSuccessToast('Course updated successfully');
 
             // Create the batch after updating the course
-            const batchResponse = await axios.post(`http://localhost:8080/batches/create`, batchData);
+            const batchResponse = await axios.post(`${baseUrl}batches/create`, batchData);
             showSuccessToast('Batch created successfully!');
             setLoading(false);
             navigate('/admin-profile');
@@ -206,10 +207,10 @@ export default CreateBatch;
 //     useEffect(() => {
 //         const fetchData = async () => {
 //             try {
-//                 const batchResponse = await axios.get(`http://localhost:8080/batches/fetch`);
-//                 const studentResponse = await axios.get(`http://localhost:8080/students/fetch`);
-//                 const trainerResponse = await axios.get(`http://localhost:8080/trainers/fetch`);
-//                 const courseResponse = await axios.get(`http://localhost:8080/courses/fetch`);
+//                 const batchResponse = await axios.get(`${baseUrl}batches/fetch`);
+//                 const studentResponse = await axios.get(`${baseUrl}students/fetch`);
+//                 const trainerResponse = await axios.get(`${baseUrl}trainers/fetch`);
+//                 const courseResponse = await axios.get(`${baseUrl}courses/fetch`);
 //                 // const studentCoursesResponse = await axios.get(`http://127.0.0.1:8080/courses/student/${newBatch?.student.id}`);//
 //                 const studentCoursesResponse = await axios.get(`http://127.0.0.1:8080/courses/fetch/students/of/course/${newBatch?.course.id}`);//to get list fo students by course id
 
@@ -252,13 +253,13 @@ export default CreateBatch;
 //             };
 
 //             const courseUpdateResponse = await axios.put(
-//                 `http://localhost:8080/courses/update/${newBatch.courseIds[0]}`,
+//                 `${baseUrl}courses/update/${newBatch.courseIds[0]}`,
 //                 updatedCourse
 //             );
 //             showSuccessToast('Course updated successfully');
 
 //             // Create the batch after updating the course
-//             const batchResponse = await axios.post(`http://localhost:8080/batches/create`, batchData);
+//             const batchResponse = await axios.post(`${baseUrl}batches/create`, batchData);
 //             showSuccessToast('Batch created successfully!');
 //             setLoading(false);
 //             navigate('/admin-profile');

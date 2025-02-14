@@ -22,6 +22,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import profileImagePlaceholder from '../../assets/profilePic.jpg';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
 import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
+import baseUrl from '../urls/baseUrl'
+
 
 function ManageBatches() {
     const navigate = useNavigate();
@@ -34,7 +36,7 @@ function ManageBatches() {
     useEffect(() => {
         const fetchBatches = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/batches/fetch');
+                const response = await axios.get(`${baseUrl}/batches/fetch`);
                 const fetchedBatches = response.data.map((batch) => ({
                     id: batch.id,
                     courseName: batch.course?.map(course => course.courseName).join(', ') || 'Not specified',
@@ -73,7 +75,7 @@ function ManageBatches() {
     const handleConfirmDelete = async () => {
         if (batchToDelete) {
             try {
-                const response = await axios.delete(`http://localhost:8080/batches/delete/${batchToDelete}`);
+                const response = await axios.delete(`${baseUrl}batches/delete/${batchToDelete}`);
                 if (response.status === 200) {
                     showSuccessToast('Batch deleted successfully!');
                     setBatches((prevBatches) => prevBatches.filter((batch) => batch.id !== batchToDelete));

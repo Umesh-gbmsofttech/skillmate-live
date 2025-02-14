@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Button, CircularProgress, Select, MenuItem, InputLabel, FormControl, Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Checkbox } from '@mui/material';
 import { setUserData } from '../redux/authSlice';
 import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
+import baseUrl from '../urls/baseUrl'
+
 
 const StudentSignUp = () => {
     const [name, setName] = useState('');
@@ -79,7 +81,7 @@ const StudentSignUp = () => {
 
         const studentData = { name, mobileNumber, email, address, qualification, image: profilePic, resume, workingStatus };
 
-        fetch('http://localhost:8080/students/create', {
+        fetch(`${baseUrl}students`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

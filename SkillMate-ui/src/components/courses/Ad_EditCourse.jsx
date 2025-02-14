@@ -67,7 +67,7 @@ function AdEditCourse() {
         setLoading(true);
         try {
             const response = await axios.put(
-                `http://localhost:8080/courses/update/${courseData.id}`,
+                `${baseUrl}courses/update/${courseData.id}`,
                 updatedCourse
             );
 
