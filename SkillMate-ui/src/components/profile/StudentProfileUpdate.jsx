@@ -5,7 +5,7 @@ import { Box, TextField, Button, CircularProgress, Typography, MenuItem } from '
 
 function StudentProfileUpdate() {
     const [formData, setFormData] = useState({
-        fullName: '',
+        name: '',
         mobileNumber: '',
         email: '',
         address: '',
@@ -14,7 +14,7 @@ function StudentProfileUpdate() {
         attendanceByDays: '',
         attendanceAverage: '',
         remarkByTrainer: '',
-        profilePic: '', // To store base64 image data
+        image: '', // To store base64 image data
         resume: '', // To store base64 PDF data or URL
     });
     const [loading, setLoading] = useState(true);
@@ -31,18 +31,18 @@ function StudentProfileUpdate() {
                 const student = response.data;
                 console.log(pdfFile);
                 setFormData({
-                    fullName: student.fullName || '',
+                    name: student.name || '',
                     mobileNumber: student.mobileNumber || '',
                     email: student.email || '',
                     address: student.address || '',
                     qualification: student.qualification || '',
                     workingStatus: student.workingStatus || '',
                     resume: student.resume || '',
-                    profilePic: student.profilePic || '',
+                    image: student.image || '',
                 });
 
                 // Show profile picture preview (existing one)
-                setPreviewImage(student.profilePic ? `data:image/png;base64,${student.profilePic}` : 'default-avatar.png');
+                setPreviewImage(student.image ? `data:image/png;base64,${student.image}` : 'default-avatar.png');
 
                 setLoading(false);
             } catch (error) {
@@ -72,7 +72,7 @@ function StudentProfileUpdate() {
             convertToBase64(file).then((base64Image) => {
                 setFormData((prevData) => ({
                     ...prevData,
-                    profilePic: base64Image // Update profilePic in formData
+                    image: base64Image // Update image in formData
                 }));
                 setPreviewImage(base64Image); // Update preview image immediately
             });
@@ -114,7 +114,7 @@ function StudentProfileUpdate() {
         e.preventDefault();
 
         // Simple validation checks
-        if (!formData.fullName || !formData.mobileNumber || !formData.email) {
+        if (!formData.name || !formData.mobileNumber || !formData.email) {
             alert('Please fill in all required fields!');
             return;
         }
@@ -160,8 +160,8 @@ function StudentProfileUpdate() {
                     {/* Form Fields */}
                     <TextField
                         label="Full Name"
-                        name="fullName"
-                        value={formData.fullName}
+                        name="name"
+                        value={formData.name}
                         onChange={handleChange}
                         fullWidth
                         variant="outlined"

@@ -23,6 +23,7 @@ public class Course {
     private String title;
     private String description;
     private int days;
+    private int price;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Assignment> assignments;

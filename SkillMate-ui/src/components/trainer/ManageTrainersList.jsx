@@ -23,14 +23,14 @@ function ManageTrainersList() {
                 const response = await axios.get('http://localhost:8080/trainers/fetch');
                 const fetchedTrainers = response.data.map((trainer) => ({
                     id: trainer.id,
-                    fullName: trainer.fullName,
+                    name: trainer.name,
                     experience: trainer.experience,
                     ratingsAverage: '4.5',
                     stars: '⭐⭐⭐⭐⭐',
                     rateByUsers: '(10,321)',
                     technologies: trainer.technologies ? trainer.technologies.join(', ') : 'Not specified',
-                    profileImage: trainer.profilePic
-                        ? `data:image/png;base64,${trainer.profilePic}`
+                    profileImage: trainer.image
+                        ? `data:image/png;base64,${trainer.image}`
                         : profileImagePlaceholder,
                 }));
                 setTrainers(fetchedTrainers);
@@ -45,7 +45,7 @@ function ManageTrainersList() {
     }, []);
 
     const fuse = new Fuse(trainers, {
-        keys: ['fullName', 'technologies', 'experience'],
+        keys: ['name', 'technologies', 'experience'],
         threshold: 0.3,
         includeScore: true,
     });
@@ -120,23 +120,23 @@ function ManageTrainersList() {
                                                 component="img"
                                                 height="250"
                                                 image={trainer.profileImage}
-                                                alt={`${trainer.fullName} profile`}
+                                                alt={`${trainer.name} profile`}
                                                 sx={{ objectFit: 'cover', objectPosition: 'top' }}
                                             />
-                                            <CardContent sx={{ flexGrow: 1 }} style={{padding:"8px"}} >
+                                            <CardContent sx={{ flexGrow: 1 }} style={{ padding: "8px" }} >
                                                 <Typography variant="h6" gutterBottom>
-                                                    {trainer.fullName}
+                                                    {trainer.name}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
+                                                <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
                                                     Experience: {trainer.experience}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
+                                                <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
                                                     Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
+                                                <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
                                                     Technologies: {trainer.technologies}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
+                                                <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
                                                     Trainer ID: {trainer.id}
                                                 </Typography>
                                             </CardContent>

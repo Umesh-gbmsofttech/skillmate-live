@@ -85,7 +85,7 @@ function TrainerProfile() {
 
                             />
                             <Typography variant="h4" fontWeight="bold">
-                                Welcome, {userData?.fullName || 'Trainer'}
+                                Welcome, {userData?.name || 'Trainer'}
                             </Typography>
                             <Box>
                                 <IconButton onClick={() => setShowProfile(!showProfile)} color="primary">
@@ -108,7 +108,7 @@ function TrainerProfile() {
                                     border: '1px solid #e0e0e0',
                                 }}
                             >
-                                {[{ label: 'Full Name', value: userData?.fullName },
+                                {[{ label: 'Full Name', value: userData?.name },
                                 { label: 'Mobile Number', value: userData?.mobileNumber },
                                 { label: 'Email', value: userData?.email },
                                 { label: 'Address', value: userData?.address },

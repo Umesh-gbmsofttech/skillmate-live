@@ -59,7 +59,7 @@ const LoginWithMobile = () => {
       if (response.ok) {
         const result = await response.json();
         showSuccessToast('OTP verified successfully!');
-        showSuccessToast(`welcome ${result.userData.fullName}`);
+        showSuccessToast(`welcome ${result.userData.name}`);
         // Save token and user data to Redux store
         dispatch(loginSuccess({
           token: result.token,
@@ -245,7 +245,7 @@ export default LoginWithMobile;
 //         // console.log(result.token);
 //         // console.log(result.userData);
 //         showSuccessToast('OTP verified successfully!');
-//         showSuccessToast(`welcome ${result.userData.fullName}`);
+//         showSuccessToast(`welcome ${result.userData.name}`);
 //         // Save token and user data to Redux store
 //         dispatch(loginSuccess({
 //           token: result.token,

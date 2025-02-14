@@ -52,7 +52,7 @@ function ManageStudentsList() {
                 } else {
                     showErrorToast('Failed to delete the student. Please try again.');
                 }
-            // eslint-disable-next-line no-unused-vars
+                // eslint-disable-next-line no-unused-vars
             } catch (error) {
                 showErrorToast('An error occurred while trying to delete the student.');
             }
@@ -74,7 +74,7 @@ function ManageStudentsList() {
     }
 
     const fuse = new Fuse(students, {
-        keys: ['fullName', 'technologies', 'experience'],
+        keys: ['name', 'technologies', 'experience'],
         threshold: 0.3,
     });
 
@@ -119,21 +119,21 @@ function ManageStudentsList() {
                                     <CardMedia
                                         component="img"
                                         height="210"
-                
-                                        image={student.profilePic ? `data:image/jpeg;base64,${student.profilePic}` : defaultProfileImage}
-                                        alt={`${student.fullName} profile`}
+
+                                        image={student.image ? `data:image/jpeg;base64,${student.image}` : defaultProfileImage}
+                                        alt={`${student.name} profile`}
                                     />
-                                    <CardContent sx={{ flexGrow: 1 }} style={{padding:"8px"}}>
+                                    <CardContent sx={{ flexGrow: 1 }} style={{ padding: "8px" }}>
                                         <Typography variant="h6" gutterBottom>
-                                            {student.fullName}
+                                            {student.name}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
+                                        <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
                                             Average Attendance: {student.attendanceByDays || 'N/A'} {student.attendanceAverage || ''}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary"style={{fontSize:"13px"}}>
+                                        <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
                                             Batches: {Array.isArray(student.batches) ? student.batches.map(batch => batch.id).join(', ') : 'N/A'}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary" style={{fontSize:"13px"}}>
+                                        <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
                                             Remark By Trainer: {student.remarkByTrainer || 'N/A'}
                                         </Typography>
                                     </CardContent>

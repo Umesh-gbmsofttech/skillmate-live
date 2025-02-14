@@ -156,7 +156,7 @@ function Attendances({ batch }) {
                                                 attendanceRecords.map((record) => (
                                                     <TableRow key={`${student.id}-${record.id}`}>
                                                         <TableCell>{index + 1}</TableCell>
-                                                        <TableCell>{student.fullName}</TableCell>
+                                                        <TableCell>{student.name}</TableCell>
                                                         <TableCell>
                                                             {student.courses?.map((course) => course.courseName).join(", ") || "N/A"}
                                                         </TableCell>
@@ -213,7 +213,7 @@ function Attendances({ batch }) {
                                             ) : (
                                                 <TableRow key={student.id}>
                                                     <TableCell>{index + 1}</TableCell>
-                                                    <TableCell>{student.fullName}</TableCell>
+                                                    <TableCell>{student.name}</TableCell>
                                                     <TableCell>
                                                         {student.courses?.map((course) => course.courseName).join(", ") || "N/A"}
                                                     </TableCell>

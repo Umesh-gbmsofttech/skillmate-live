@@ -99,78 +99,78 @@ function TopTrainers({ sectionHeading, student, trainer }) {
                 );
         } else {
                 content = (
-                                <Box sx={{ backgroundColor: '#1A2130', padding: 2 }}>
-                                        <Typography
-                                                variant="h4"
-                                                sx={{ fontWeight: 'bold', color: '#A6CDC6', marginBottom: 3, textAlign: 'center' }}
-                                        >
-                                                {sectionHeading}
-                                        </Typography>
-                                        <Box
-                                                sx={{
-                                                        display: 'flex',
-                                                        flexWrap: 'wrap',
-                                                        justifyContent: 'center',
-                                                        gap: 2,
-                                                        // Conditionally apply styles based on screen size
-                                                        flexDirection: 'row',
-                                                        overflowX: isMobileOrTablet ? 'auto' : 'unset', // Add horizontal scroll for mobile/tablet
-                                                        paddingBottom: isMobileOrTablet ? 2 : 0, // Some padding to prevent cutting off content
-                                                        '&::-webkit-scrollbar': {
-                                                                height: '8px',
-                                                        },
-                                                        '&::-webkit-scrollbar-thumb': {
-                                                                background: '#888',
-                                                                borderRadius: '10px',
-                                                        },
-                                                        '&::-webkit-scrollbar-thumb:hover': {
-                                                                background: '#555',
-                                                        },
-                                                }}
-                                        >
-                                                {[...trainers, ...students].map((person, index) => (
-                                                        <Card
-                                                                key={person.id || index}
+                        <Box sx={{ backgroundColor: '#1A2130', padding: 2 }}>
+                                <Typography
+                                        variant="h4"
+                                        sx={{ fontWeight: 'bold', color: '#A6CDC6', marginBottom: 3, textAlign: 'center' }}
+                                >
+                                        {sectionHeading}
+                                </Typography>
+                                <Box
+                                        sx={{
+                                                display: 'flex',
+                                                flexWrap: 'wrap',
+                                                justifyContent: 'center',
+                                                gap: 2,
+                                                // Conditionally apply styles based on screen size
+                                                flexDirection: 'row',
+                                                overflowX: isMobileOrTablet ? 'auto' : 'unset', // Add horizontal scroll for mobile/tablet
+                                                paddingBottom: isMobileOrTablet ? 2 : 0, // Some padding to prevent cutting off content
+                                                '&::-webkit-scrollbar': {
+                                                        height: '8px',
+                                                },
+                                                '&::-webkit-scrollbar-thumb': {
+                                                        background: '#888',
+                                                        borderRadius: '10px',
+                                                },
+                                                '&::-webkit-scrollbar-thumb:hover': {
+                                                        background: '#555',
+                                                },
+                                        }}
+                                >
+                                        {[...trainers, ...students].map((person, index) => (
+                                                <Card
+                                                        key={person.id || index}
+                                                        sx={{
+                                                                maxWidth: 160,
+                                                                boxShadow: 3,
+                                                                backgroundColor: '#FBF5DD',
+                                                                borderRadius: 2,
+                                                                overflow: 'hidden',
+                                                                textAlign: 'center',
+                                                                opacity: 0,
+                                                                animation: `${fadeInUp} 1s ease ${index * 0.1}s forwards`,
+                                                                '&:hover': {
+                                                                        transform: 'scale(1.05)',
+                                                                        boxShadow: 6,
+                                                                },
+                                                        }}
+                                                        onClick={() => handleCardClick(person)}
+                                                >
+                                                        <CardMedia
+                                                                component="img"
+                                                                image={person.profilePic ? `data:image/jpeg;base64,${person.profilePic}` : logo}
+                                                                alt={person.name || 'Person'}
                                                                 sx={{
-                                                                        maxWidth: 160,
-                                                                        boxShadow: 3,
-                                                                        backgroundColor: '#FBF5DD',
+                                                                        height: 210,
+
+                                                                        objectFit: 'contain', // Changed from 'cover' to 'contain'
                                                                         borderRadius: 2,
-                                                                        overflow: 'hidden',
-                                                                        textAlign: 'center',
-                                                                        opacity: 0,
-                                                                        animation: `${fadeInUp} 1s ease ${index * 0.1}s forwards`,
-                                                                        '&:hover': {
-                                                                                transform: 'scale(1.05)',
-                                                                                boxShadow: 6,
-                                                                        },
                                                                 }}
-                                                                onClick={() => handleCardClick(person)}
-                                                        >
-                                                                <CardMedia
-                                                                        component="img"
-                                                                        image={person.profilePic ? `data:image/jpeg;base64,${person.profilePic}` : logo}
-                                                                        alt={person.fullName || 'Person'}
-                                                                        sx={{
-                                                                                height: 210,
-                                                                            
-                                                                                objectFit: 'contain', // Changed from 'cover' to 'contain'
-                                                                                borderRadius: 2,
-                                                                        }}
-                                                                />
-                                                                <CardContent>
-                                                                        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-                                                                                {person.fullName}
-                                                                        </Typography>
-                                                                        <Typography variant="body2" color="textSecondary">
-                                                                                {person.details || 'No details available'}
-                                                                        </Typography>
-                                                                </CardContent>
-                                                        </Card>
-                                                ))}
-                                        </Box>
+                                                        />
+                                                        <CardContent>
+                                                                <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+                                                                        {person.name}
+                                                                </Typography>
+                                                                <Typography variant="body2" color="textSecondary">
+                                                                        {person.details || 'No details available'}
+                                                                </Typography>
+                                                        </CardContent>
+                                                </Card>
+                                        ))}
                                 </Box>
-                        );
+                        </Box>
+                );
         }
 
         return <>{content}</>;

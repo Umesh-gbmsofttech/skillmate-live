@@ -17,7 +17,7 @@ function StudentProfile() {
     const { username } = location.state || { username: 'Admin' };
 
     const user = {
-        name: userData?.fullName || 'John Doe',
+        name: userData?.name || 'John Doe',
         email: userData?.email || 'johndoe@example.com',
         mobile: userData?.mobileNumber || '+1 123-456-7890',
         address: userData?.address || '123 Main St, City, State, Zip',

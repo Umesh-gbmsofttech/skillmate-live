@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateCourse } from '../redux/courseActions';
@@ -8,7 +8,7 @@ import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
 
 function AdEditCourse() {
-    const [courseName, setCourseName] = useState('');
+    const [title, setTitle] = useState('');
     const [days, setDays] = useState('');
     const [time, setTime] = useState('');
     const [price, setPrice] = useState('');
@@ -23,14 +23,14 @@ function AdEditCourse() {
 
     useEffect(() => {
         if (courseData) {
-            setCourseName(courseData.courseName);
+            setTitle(courseData.title);
             setDays(courseData.days);
             setTime(courseData.time);
             setPrice(courseData.price);
             setDescription(courseData.description);
-            setProfilePic(courseData.coverImage || courseCoverImage);
+            setProfilePic(courseData.image || courseCoverImage);
             // Set preview image from existing course data
-            setPreviewImage(courseData.coverImage ? `data:image/jpeg;base64,${courseData.coverImage}` : courseCoverImage);
+            setPreviewImage(courseData.image ? `data:image/jpeg;base64,${courseData.image}` : courseCoverImage);
         }
     }, [courseData]);
 
@@ -56,12 +56,12 @@ function AdEditCourse() {
 
         const updatedCourse = {
             ...courseData,
-            courseName,
+            title,
             days,
             time,
             price,
             description,
-            coverImage: coverImageBase64, // Send only the base64 string without prefix
+            image: coverImageBase64, // Send only the base64 string without prefix
         };
 
         setLoading(true);
@@ -78,7 +78,7 @@ function AdEditCourse() {
             }
         } catch (e) {
             // console.error('Error updating course:', error.message);
-            showErrorToast('Error updating course!',e);
+            showErrorToast('Error updating course!', e);
         } finally {
             setLoading(false);
         }
@@ -139,8 +139,8 @@ function AdEditCourse() {
                     label="Course Name"
                     fullWidth
                     variant="outlined"
-                    value={courseName}
-                    onChange={(e) => setCourseName(e.target.value)}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     sx={{ marginBottom: 2 }}
                 />
                 <TextField

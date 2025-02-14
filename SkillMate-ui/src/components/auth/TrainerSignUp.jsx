@@ -6,7 +6,7 @@ import { TextField, Button, Checkbox, FormControl, InputLabel, Select, MenuItem,
 import { Link } from 'react-router-dom';
 
 const TrainerSignUp = () => {
-    const [fullName, setFullName] = useState('');
+    const [name, setName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
@@ -74,7 +74,7 @@ const TrainerSignUp = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'fullName') setFullName(value);
+        if (name === 'name') setName(value);
         if (name === 'mobileNumber') setMobileNumber(value);
         if (name === 'email') setEmail(value);
         if (name === 'address') setAddress(value);
@@ -86,7 +86,7 @@ const TrainerSignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!fullName || !mobileNumber || !email || !address || !qualification || !experience || !profilePic || !workingStatus || technologies.length === 0 || !resume) {
+        if (!name || !mobileNumber || !email || !address || !qualification || !experience || !profilePic || !workingStatus || technologies.length === 0 || !resume) {
             setError('Please fill in all fields, upload a profile picture, and a resume.');
             showWarningToast('Please fill in all fields, upload a profile picture, and a resume.');
             return;
@@ -102,7 +102,7 @@ const TrainerSignUp = () => {
         setError(null);
 
         const trainerData = {
-            fullName,
+            name,
             mobileNumber,
             email,
             address,
@@ -110,7 +110,7 @@ const TrainerSignUp = () => {
             experience,
             workingStatus,
             technologies,
-            profilePic,
+            image: profilePic,
             resume,
         };
 
@@ -169,8 +169,8 @@ const TrainerSignUp = () => {
 
                     <TextField
                         label="Full Name"
-                        name="fullName"
-                        value={fullName}
+                        name="name"
+                        value={name}
                         onChange={handleInputChange}
                         required
                         fullWidth

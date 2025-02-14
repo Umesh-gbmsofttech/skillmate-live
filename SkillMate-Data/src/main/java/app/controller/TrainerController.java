@@ -60,14 +60,14 @@ public class TrainerController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	// @PutMapping("/update/{id}")
-	// public ResponseEntity<Trainer> updateTrainerProfile(@PathVariable Long id, @RequestBody Trainer trainer) {
-	// 	Trainer updatedTrainer = trainerService.updateTrainer(id, trainer);
-	// 	if (updatedTrainer == null) {
-	// 		return ResponseEntity.notFound().build();
-	// 	}
-	// 	return ResponseEntity.ok(updatedTrainer);
-	// }
+	 @PutMapping("/update/{id}")
+	 public ResponseEntity<Trainer> updateTrainerProfile(@PathVariable Long id, @RequestBody Trainer trainer) {
+	 	Trainer updatedTrainer = trainerService.updateTrainer(id, trainer);
+	 	if (updatedTrainer == null) {
+	 		return ResponseEntity.notFound().build();
+	 	}
+	 	return ResponseEntity.ok(updatedTrainer);
+	 }
 
 	// Delete a Trainer
 	@DeleteMapping("/delete/{id}")

@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 function TrainerProfileUpdate() {
     const token = useSelector((state) => state.auth.token);
     const [formData, setFormData] = useState({
-        fullName: '',
+        name: '',
         mobileNumber: '',
         email: '',
         address: '',
@@ -16,7 +16,7 @@ function TrainerProfileUpdate() {
         workingStatus: '',
         resume: '', // To store base64 PDF data or URL
         technologies: [],
-        profilePic: '', // To store base64 image data
+        image: '', // To store base64 image data
     });
     const [loading, setLoading] = useState(true);
     const { trainerId } = useParams();
@@ -31,7 +31,7 @@ function TrainerProfileUpdate() {
                 const response = await axios.get(`http://localhost:8080/trainers/fetch/${trainerId}`);
                 const trainer = response.data;
                 setFormData({
-                    fullName: trainer.fullName || '',
+                    name: trainer.name || '',
                     mobileNumber: trainer.mobileNumber || '',
                     email: trainer.email || '',
                     address: trainer.address || '',
@@ -39,12 +39,12 @@ function TrainerProfileUpdate() {
                     experience: trainer.experience || '',
                     workingStatus: trainer.workingStatus || '',
                     technologies: trainer.technologies || [],
-                    profilePic: trainer.profilePic || '',
+                    image: trainer.image || '',
                     resume: trainer.resume || '',
                 });
 
                 // Show profile picture preview (existing one)
-                setPreviewImage(trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : 'default-avatar.png');
+                setPreviewImage(trainer.image ? `data:image/png;base64,${trainer.image}` : 'default-avatar.png');
 
                 // If there is a resume, set it for display
                 if (trainer.resume) {
@@ -90,7 +90,7 @@ function TrainerProfileUpdate() {
                 const base64Data = base64Image.split(',')[1]; // Strip the prefix
                 setFormData((prevData) => ({
                     ...prevData,
-                    profilePic: base64Data // Update profilePic in formData
+                    image: base64Data // Update image in formData
                 }));
                 setPreviewImage(base64Image); // Update preview image immediately
             });
@@ -168,8 +168,8 @@ function TrainerProfileUpdate() {
                     {/* Form Fields */}
                     <TextField
                         label="Full Name"
-                        name="fullName"
-                        value={formData.fullName}
+                        name="name"
+                        value={formData.name}
                         onChange={handleChange}
                         fullWidth
                         variant="outlined"

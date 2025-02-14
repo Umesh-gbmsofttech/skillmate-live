@@ -52,7 +52,7 @@ function ReviewsSection({ course, user }) {
   }, [token, trainer, student, course, user]);
 
   return (
-    <Box sx={{ padding: '40px 20px', backgroundColor: '#1A2130' ,color:'white' }}>
+    <Box sx={{ padding: '40px 20px', backgroundColor: '#1A2130', color: 'white' }}>
       {/* Title Section */}
       <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '30px', fontWeight: 'bold', color: '#A6CDC6' }}>
         {!course ? 'Reviews' : ''}
@@ -113,7 +113,7 @@ function ReviewsSection({ course, user }) {
                 </CardMedia>
                 <CardContent sx={{ flexGrow: 1, padding: 0 }}>
                   <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-                    {review.ratingGiverTrainer?.fullName || review.ratingGiverStudent?.fullName || 'User'}
+                    {review.ratingGiverTrainer?.name || review.ratingGiverStudent?.name || 'User'}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     {review.reviewDate || 'No Date Provided'}

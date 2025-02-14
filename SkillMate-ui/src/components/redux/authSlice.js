@@ -21,7 +21,7 @@ const authSlice = createSlice({
 
       // Check if userData exists in payload, otherwise fallback for Admin
       if (action.payload.userData) {
-        state.username = action.payload.userData.fullName || state.username;
+        state.username = action.payload.userData.name || state.username;
         state.userData = action.payload.userData;
         localStorage.setItem('userData', JSON.stringify(action.payload.userData)); // Persist userData
       } else {

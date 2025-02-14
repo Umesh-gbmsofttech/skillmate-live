@@ -63,7 +63,7 @@ const LoginWithEmail = () => {
       if (response.ok) {
         const result = await response.json();
         showSuccessToast('OTP verified successfully!');
-        showSuccessToast(`Welcome ${result.userData.fullName}`);
+        showSuccessToast(`Welcome ${result.userData.name}`);
         dispatch(loginSuccess({
           token: result.token,
           userData: result.userData,

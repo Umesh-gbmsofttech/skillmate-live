@@ -112,9 +112,9 @@ function ManageCoursesList() {
         return <Loading />;
     }
 
-    if (error) {
-        return <Typography color="error">{error}</Typography>;
-    }
+    // if (error) {
+    //     return <Typography color="error">{error}</Typography>;
+    // }
 
     return (
         <Grid container spacing={3} sx={{ padding: 3 }}>
@@ -155,7 +155,7 @@ function ManageCoursesList() {
                                     <CardMedia
                                         component="img"
                                         height="200"
-                                        image={`data:image/jpeg;base64,${course.coverImage}` || '/path/to/placeholder-image.jpg'}
+                                        image={`data:image/jpeg;base64,${course.image}` || '/path/to/placeholder-image.jpg'}
                                         alt={`${course.courseName} cover`}
                                     />
                                     <CardContent sx={{ flexGrow: 1 }}>

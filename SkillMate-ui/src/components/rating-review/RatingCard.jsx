@@ -157,7 +157,7 @@ function RatingCard() {
                 <div className="rating___-container-card">
                     <img className="rating___-container-card-image" src={trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : altImage} />
                     <div className="rating___-container-card-data">
-                        <h1>{trainer?.fullName}</h1>
+                        <h1>{trainer?.name}</h1>
                         <p>{trainer?.experience}</p>
 
                         <div className="rating-stars">
@@ -191,7 +191,7 @@ function RatingCard() {
                 <div className="rating___-container-card">
                     <img className="rating___-container-card-image" src={student.profilePic ? `data:image/png;base64,${student.profilePic}` : altImage} />
                     <div className="rating___-container-card-data">
-                        <h1>{student?.fullName}</h1>
+                        <h1>{student?.name}</h1>
                         <p>{student?.experience}</p>
 
                         <div className="rating-stars">
@@ -369,7 +369,7 @@ export default RatingCard;
 //                 <div className="rating___-container-card">
 //                     <img className="rating___-container-card-image" src={trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : altImage} />
 //                     <div className="rating___-container-card-data">
-//                         <h1>{trainer?.fullName}</h1>
+//                         <h1>{trainer?.name}</h1>
 //                         <p>{trainer?.experience}</p>
 
 //                         <div className="rating-stars">
@@ -403,7 +403,7 @@ export default RatingCard;
 //                 <div className="rating___-container-card">
 //                     <img className="rating___-container-card-image" src={student.profilePic ? `data:image/png;base64,${student.profilePic}` : altImage} />
 //                     <div className="rating___-container-card-data">
-//                         <h1>{student?.fullName}</h1>
+//                         <h1>{student?.name}</h1>
 //                         <p>{student?.experience}</p>
 
 //                         <div className="rating-stars">

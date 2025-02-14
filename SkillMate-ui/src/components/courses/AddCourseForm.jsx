@@ -1,67 +1,100 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCourses } from '../redux/courseActions'; // Import the action
-import { Box, Typography, TextField, Button, CircularProgress, Input, Grid, Container, Paper, IconButton } from '@mui/material';
-import { showSuccessToast, showErrorToast } from '../utility/ToastService';
+import { Box, Typography, TextField, Button, CircularProgress, Grid, Container, Paper } from '@mui/material';
+import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
 
 function AddCourseForm() {
-  const [courseName, setCourseName] = useState('');
+  const [title, setTitle] = useState('');
   const [days, setDays] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
-  const [coverImage, setCoverImage] = useState(null);
+  const [image, setImage] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [previewImage, setPreviewImage] = useState(null);  // State for image preview
-  const dispatch = useDispatch();
+  const [previewImage, setPreviewImage] = useState(null);
   const navigate = useNavigate();
 
-  const token = useSelector((state) => state.auth.token);
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Prepare course data
-    const courseData = new FormData();
-    courseData.append('courseName', courseName);
-    courseData.append('days', days);
-    courseData.append('price', price);
-    courseData.append('description', description);
-    if (coverImage) {
-      courseData.append('coverImage', coverImage);
-    }
-
-    try {
-      const response = await axios.post('http://localhost:8080/courses/create', courseData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      dispatch(setCourses(response.data)); // Update Redux store
-      navigate('/admin-profile/manage-courses'); // Redirect to courses page
-      showSuccessToast('Course added successfully!');
-    } catch (error) {
-      showErrorToast('Error uploading the course!');
-      setError('Failed to add the course. Please try again.');
-    }
-  };
-
-  // Handle image preview on file selection
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setCoverImage(file);
+      if (!file.type.startsWith('image/')) {
+        setError('Please upload a valid image file.');
+        setImage(null);
+        setPreviewImage(null);
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        setError('File size must be less than 2MB.');
+        setImage(null);
+        setPreviewImage(null);
+        return;
+      }
+
+      setError('');
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result);
+        setPreviewImage(reader.result); // To show the preview of the image
       };
       reader.readAsDataURL(file);
+      setImage(file); // Store the file itself for the form submission
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // Check if all fields are filled
+    if (!title || !days || !price || !description || !image) {
+      setError('Please fill in all fields and upload an image.');
+      showWarningToast('Please fill in all fields and upload an image.');
+      setLoading(false);
+      return;
+    }
+
+    // Convert the image to Base64
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Image = reader.result.split(',')[1]; // Extract base64 string from the URL format
+
+      const courseData = {
+        title,
+        days,
+        price,
+        description,
+        image: base64Image, // Store base64 string of the image
+      };
+
+      try {
+        const response = await fetch('http://localhost:8080/courses/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(courseData), // Send JSON data including base64 image
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          showErrorToast(text || 'An error occurred on the server.');
+          throw new Error(text || 'An error occurred on the server.');
+        }
+
+        const data = await response.json();
+        if (data) {
+          showSuccessToast('Course data submitted successfully!');
+          navigate('/login/mobile'); // Corrected navigation path
+        }
+      } catch (error) {
+        setError(error.message || 'An error occurred while submitting the form.');
+        showErrorToast(`${error.message}` || 'An error occurred while submitting the form.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    reader.readAsDataURL(image); // Start reading the image as base64
   };
 
   return (
@@ -139,19 +172,13 @@ function AddCourseForm() {
                 label="Course Name"
                 variant="outlined"
                 fullWidth
-                value={courseName}
-                onChange={(e) => setCourseName(e.target.value)}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
                 sx={{
-                  '& .MuiInputLabel-root': {
-                    color: '#3f51b5',
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    borderColor: '#3f51b5',
-                  },
-                  '& .MuiOutlinedInput-root.Mui-focused': {
-                    borderColor: '#3f51b5',
-                  },
+                  '& .MuiInputLabel-root': { color: '#3f51b5' },
+                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
+                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
                 }}
               />
             </Grid>
@@ -167,15 +194,9 @@ function AddCourseForm() {
                 onChange={(e) => setDays(e.target.value)}
                 required
                 sx={{
-                  '& .MuiInputLabel-root': {
-                    color: '#3f51b5',
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    borderColor: '#3f51b5',
-                  },
-                  '& .MuiOutlinedInput-root.Mui-focused': {
-                    borderColor: '#3f51b5',
-                  },
+                  '& .MuiInputLabel-root': { color: '#3f51b5' },
+                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
+                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
                 }}
               />
             </Grid>
@@ -191,15 +212,9 @@ function AddCourseForm() {
                 onChange={(e) => setPrice(e.target.value)}
                 required
                 sx={{
-                  '& .MuiInputLabel-root': {
-                    color: '#3f51b5',
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    borderColor: '#3f51b5',
-                  },
-                  '& .MuiOutlinedInput-root.Mui-focused': {
-                    borderColor: '#3f51b5',
-                  },
+                  '& .MuiInputLabel-root': { color: '#3f51b5' },
+                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
+                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
                 }}
               />
             </Grid>
@@ -216,15 +231,9 @@ function AddCourseForm() {
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 sx={{
-                  '& .MuiInputLabel-root': {
-                    color: '#3f51b5',
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    borderColor: '#3f51b5',
-                  },
-                  '& .MuiOutlinedInput-root.Mui-focused': {
-                    borderColor: '#3f51b5',
-                  },
+                  '& .MuiInputLabel-root': { color: '#3f51b5' },
+                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
+                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
                 }}
               />
             </Grid>

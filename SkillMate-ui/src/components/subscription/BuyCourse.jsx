@@ -48,7 +48,7 @@ function BuyCourse({ course }) {
             await handlePaymentVerification(razorpay_payment_id);
           },
           prefill: {
-            name: userData.fullName,
+            name: userData.name,
             email: userData.email,
             contact: userData.mobileNumber,
           },

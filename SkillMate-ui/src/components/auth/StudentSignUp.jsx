@@ -6,7 +6,7 @@ import { setUserData } from '../redux/authSlice';
 import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 
 const StudentSignUp = () => {
-    const [fullName, setFullName] = useState('');
+    const [name, setName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
@@ -64,7 +64,7 @@ const StudentSignUp = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
-        if (!fullName || !mobileNumber || !email || !address || !qualification || !profilePic || !resume || !workingStatus) {
+        if (!name || !mobileNumber || !email || !address || !qualification || !profilePic || !resume || !workingStatus) {
             setError('Please fill in all fields and upload a profile picture and resume.');
             showWarningToast('Please fill in all fields and upload a profile picture and resume.');
             return;
@@ -77,7 +77,7 @@ const StudentSignUp = () => {
             return;
         }
 
-        const studentData = { fullName, mobileNumber, email, address, qualification, profilePic, resume, workingStatus };
+        const studentData = { name, mobileNumber, email, address, qualification, image: profilePic, resume, workingStatus };
 
         fetch('http://localhost:8080/students/create', {
             method: 'POST',
@@ -140,9 +140,9 @@ const StudentSignUp = () => {
 
                     <TextField
                         label="Full Name"
-                        name="fullName"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
+                        name="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         required
                         fullWidth
                         margin="normal"
@@ -188,16 +188,6 @@ const StudentSignUp = () => {
                         margin="normal"
                     />
 
-                    {/* <TextField
-                        label="Experience (years)"
-                        name="experience"
-                        value={experience}
-                        onChange={(e) => setExperience(e.target.value)}
-                        required
-                        fullWidth
-                        margin="normal"
-                    /> */}
-
                     <FormControl fullWidth margin="normal">
                         <InputLabel>Current Work Status</InputLabel>
                         <Select
@@ -212,22 +202,6 @@ const StudentSignUp = () => {
                             <MenuItem value="un-employed">Unemployed</MenuItem>
                         </Select>
                     </FormControl>
-
-                    {/* <Box mb={2}>
-                        <Typography variant="body1" gutterBottom>Technologies:</Typography>
-                        <Box display="flex" flexWrap="wrap">
-                            {['Java', 'Spring Boot', 'JavaScript', 'React', 'Angular', 'React Native'].map((tech) => (
-                                <Box key={tech} mr={2} mb={1}>
-                                    <Checkbox
-                                        value={tech}
-                                        checked={technologies.includes(tech)}
-                                        onChange={handleTechnologiesChange}
-                                    />
-                                    {tech}
-                                </Box>
-                            ))}
-                        </Box>
-                    </Box> */}
 
                     <Box mb={2}>
                         <input

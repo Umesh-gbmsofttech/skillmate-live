@@ -51,13 +51,13 @@ function LeaveRatingReview() {
                 <>
                     <Card sx={{ display: 'flex', flexDirection: 'column', width: 440, padding: 3, borderRadius: 2, backgroundColor: '#C7EFFF', boxShadow: 3, mb: 2 }}>
                         <Avatar
-                            sx={{ width: '100%', height: 180, borderRadius: 2, objectFit: 'contain', objectPosition:'top' }}
+                            sx={{ width: '100%', height: 180, borderRadius: 2, objectFit: 'contain', objectPosition: 'top' }}
                             src={trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : altImage}
                             alt="Trainer Image"
                         />
                         <CardContent>
                             <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
-                                {trainer?.fullName}
+                                {trainer?.name}
                             </Typography>
                             <Typography variant="body1" sx={{ mb: 1 }}>Experience: {trainer?.experience}</Typography>
                             <Typography variant="body1" sx={{ mb: 1 }}>Expertise: {trainer?.technologies}</Typography>
@@ -94,7 +94,7 @@ function LeaveRatingReview() {
                         />
                         <CardContent>
                             <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
-                                {student?.fullName}
+                                {student?.name}
                             </Typography>
                             <Typography variant="body1" sx={{ mb: 1 }}>Experience: {student?.experience}</Typography>
                             <Typography variant="body1" sx={{ mb: 1 }}>

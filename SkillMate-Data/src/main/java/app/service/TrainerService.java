@@ -40,6 +40,51 @@ public class TrainerService {
         return trainerRepository.findById(id);
     }
 
+    public Trainer updateTrainer(Long id, Trainer trainer) {
+        Trainer existingTrainer = trainerRepository.findById(id).orElse(null);
+
+        if (existingTrainer == null) {
+            return null;  
+        }
+
+        if (trainer.getName() != null) {
+            existingTrainer.setName(trainer.getName());
+        }
+        if (trainer.getMobileNumber() != null) {
+            existingTrainer.setMobileNumber(trainer.getMobileNumber());
+        }
+        if (trainer.getWorkingStatus() != null) {
+            existingTrainer.setWorkingStatus(trainer.getWorkingStatus());
+        }
+        if (trainer.getExperience() != null) {
+            existingTrainer.setExperience(trainer.getExperience());
+        }
+        if (trainer.getCompanyName() != null) {
+            existingTrainer.setCompanyName(trainer.getCompanyName());
+        }
+        if (trainer.getEmail() != null) {
+            existingTrainer.setEmail(trainer.getEmail());
+        }
+        if (trainer.getImage() != null) {
+            existingTrainer.setImage(trainer.getImage());
+        }
+        if (trainer.getResume() != null) {
+            existingTrainer.setResume(trainer.getResume());
+        }
+        if (trainer.getAddress() != null) {
+            existingTrainer.setAddress(trainer.getAddress());
+        }
+        if (trainer.getQualification() != null) {
+            existingTrainer.setQualification(trainer.getQualification());
+        }
+        if (trainer.getTechnologies() != null) {
+            existingTrainer.setTechnologies(trainer.getTechnologies());
+        }
+        if (trainer.getRoles() != null) {
+            existingTrainer.setRoles(trainer.getRoles());
+        }
+        return trainerRepository.save(existingTrainer);
+    }
     public void deleteTrainer(Long id) {
         trainerRepository.deleteById(id);
     }
