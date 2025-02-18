@@ -64,12 +64,12 @@ function MyCourses() {
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardMedia
                                 component="img"
-                                alt={course.courseName}
+                                alt={course.title}
                                 height="200"
-                                image={course.coverImage ? `data:image/png;base64,${course.coverImage}` : logo}
+                                image={course.image ? `data:image/png;base64,${course.image}` : logo}
                             />
                             <CardContent sx={{ flexGrow: 1 }}>
-                                <Typography variant="h6" gutterBottom>{course.courseName}</Typography>
+                                <Typography variant="h6" gutterBottom>{course.title}</Typography>
                                 <Typography variant="body2" color="textSecondary">Price: {course.price}</Typography>
                                 <Typography variant="body2" color="textSecondary">Description: {course.description}</Typography>
                                 <Typography variant="body2" color="textSecondary">Days: {course.days}</Typography>

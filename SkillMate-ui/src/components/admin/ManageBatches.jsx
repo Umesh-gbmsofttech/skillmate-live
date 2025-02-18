@@ -24,7 +24,6 @@ import ConfirmationDialog from '../utility/ConfirmationDialog';
 import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
 import baseUrl from '../urls/baseUrl'
 
-
 function ManageBatches() {
     const navigate = useNavigate();
     const [batches, setBatches] = useState([]);
@@ -36,16 +35,8 @@ function ManageBatches() {
     useEffect(() => {
         const fetchBatches = async () => {
             try {
-                const response = await axios.get(`${baseUrl}/batches/fetch`);
-                const fetchedBatches = response.data.map((batch) => ({
-                    id: batch.id,
-                    courseName: batch.course?.map(course => course.courseName).join(', ') || 'Not specified',
-                    trainerNames: batch.trainer?.map(trainer => trainer.fullName).join(', ') || 'Not specified',
-                    trainerProfilePic: batch.trainer?.map(trainer => trainer.profilePic).join(', ') || null,
-                    courseCoverImage: batch.course?.map(course => course.coverImage).join(', ') || null,
-                    studentsCount: batch.students?.length || 0,
-                }));
-                setBatches(fetchedBatches);
+                const response = await axios.get(`${baseUrl}batches`);
+                setBatches(response.data);
             } catch (error) {
                 showErrorToast('Error fetching batches');
             } finally {
@@ -56,9 +47,9 @@ function ManageBatches() {
         fetchBatches();
     }, []);
 
-    // Initialize Fuse.js
+    // Initialize Fuse.js for search
     const fuse = new Fuse(batches, {
-        keys: ['courseName', 'trainerNames', 'id'],
+        keys: ['trainer.course.title', 'trainer.trainer.name', 'id'],
         threshold: 0.3, // Adjust for better fuzzy searching
     });
 
@@ -75,7 +66,7 @@ function ManageBatches() {
     const handleConfirmDelete = async () => {
         if (batchToDelete) {
             try {
-                const response = await axios.delete(`${baseUrl}batches/delete/${batchToDelete}`);
+                const response = await axios.delete(`${baseUrl}/batches/${batchToDelete}`);
                 if (response.status === 200) {
                     showSuccessToast('Batch deleted successfully!');
                     setBatches((prevBatches) => prevBatches.filter((batch) => batch.id !== batchToDelete));
@@ -84,7 +75,7 @@ function ManageBatches() {
                     showInfoToast('Failed to delete the batch. Please try again.');
                 }
             } catch (error) {
-                showErrorToast('Unable To Delete something went wrong!');
+                showErrorToast('Unable To Delete, something went wrong!');
             }
         }
         setIsConfirmDialogOpen(false); // Close the confirmation dialog
@@ -109,7 +100,7 @@ function ManageBatches() {
                 <Loading />
             ) : (
                 <Box sx={{ padding: 2 }}>
-                    <Typography variant="h4" gutterBottom color='#3caacb' align="center">
+                    <Typography variant="h4" gutterBottom color="#3caacb" align="center">
                         Batches List
                     </Typography>
 
@@ -119,11 +110,7 @@ function ManageBatches() {
                     </Typography>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
-                        <Button
-                            onClick={handleBatchCreateClick}
-                            color="primary"
-                            variant="contained"
-                        >
+                        <Button onClick={handleBatchCreateClick} color="primary" variant="contained">
                             Create New Batch
                         </Button>
                     </Box>
@@ -141,14 +128,14 @@ function ManageBatches() {
                                                         onClick={() => handleBatchEditClick(batch.id)}
                                                         aria-label="edit"
                                                     >
-                                                        <EditIcon color='secondary' />
+                                                        <EditIcon color="secondary" />
                                                     </IconButton>
                                                     <IconButton
                                                         edge="end"
                                                         onClick={() => handleDeleteBatch(batch.id)}
                                                         aria-label="delete"
                                                     >
-                                                        <DeleteIcon color='warning' />
+                                                        <DeleteIcon color="warning" />
                                                     </IconButton>
                                                 </>
                                             }
@@ -156,11 +143,9 @@ function ManageBatches() {
                                             <ListItemAvatar>
                                                 <Avatar
                                                     src={
-                                                        batch?.trainerProfilePic
-                                                            ? `data:image/jpeg;base64,${batch.trainerProfilePic}`
-                                                            : batch?.courseCoverImage
-                                                                ? `data:image/jpeg;base64,${batch.courseCoverImage}`
-                                                                : profileImagePlaceholder
+                                                        batch.trainer?.trainer?.image
+                                                            ? `data:image/jpeg;base64,${batch.trainer.trainer.image}`
+                                                            : profileImagePlaceholder
                                                     }
                                                     alt="Batch Profile"
                                                 />
@@ -168,7 +153,7 @@ function ManageBatches() {
                                             <ListItemText
                                                 primary={
                                                     <Typography variant="h6" color="#3caacb" sx={{ fontWeight: 'bold' }}>
-                                                        Course: {batch.courseName}
+                                                        Course: {batch.trainer?.course?.title}
                                                     </Typography>
                                                 }
                                                 secondary={
@@ -177,15 +162,14 @@ function ManageBatches() {
                                                             Batch ID: {batch.id}
                                                         </Box>
                                                         <Box component="span" display="block" variant="body2" sx={{ color: '#F5EFFF' }}>
-                                                            Trainers: {batch.trainerNames}
+                                                            Trainer: {batch.trainer?.trainer?.name}
                                                         </Box>
                                                         <Box component="span" display="block" variant="body2" sx={{ color: '#F5EFFF' }}>
-                                                            Students Enrolled: {batch.studentsCount}
+                                                            Students Enrolled: {batch.students.length}
                                                         </Box>
                                                     </>
                                                 }
                                             />
-
                                         </ListItem>
                                         <Divider />
                                     </Box>

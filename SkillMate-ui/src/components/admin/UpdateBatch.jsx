@@ -4,8 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Grid, Card, CardContent, CardMedia, Button, Typography, Select, MenuItem, Checkbox, ListItemText, FormControl, InputLabel } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import defaultProfileImage from '../../assets/profilePic.jpg';
-import baseUrl from '../urls/baseUrl'
-
+import baseUrl from '../urls/baseUrl';
 
 function UpdateBatch() {
   const { batchId } = useParams(); // Get the batchId from the route params
@@ -48,12 +47,11 @@ function UpdateBatch() {
 
         // Setting the current selections in the newBatch state
         setNewBatch({
-          trainerIds: currentBatch.trainer.map((trainer) => trainer.id),  // Trainer IDs (from current batch)
-          courseIds: currentBatch.course.map((course) => course.id),  // Course IDs (from current batch)
-          studentIds: currentBatch.students.map((student) => student.id),  // Student IDs (from current batch)
+          trainerIds: currentBatch.trainer ? [currentBatch.trainer.id] : [],
+          courseIds: currentBatch.course ? [currentBatch.course.id] : [],
+          studentIds: currentBatch.students.map((student) => student.id),
         });
 
-        // console.log(newBatch)
         setLoading(false);
       } catch (error) {
         showErrorToast(`Failed to fetch data: ${error.message}`);
@@ -63,7 +61,6 @@ function UpdateBatch() {
 
     fetchData();
   }, [batchId]);
-
 
   const handleMultiSelectChange = (e) => {
     const { name, value } = e.target;
@@ -78,9 +75,9 @@ function UpdateBatch() {
 
     // Update batch data structure to match backend requirements
     const updatedBatchData = {
-      trainer: newBatch.trainerIds.map(id => ({ id })), // Sending an array of objects with id
-      students: newBatch.studentIds.map(id => ({ id })), // Same for students
-      course: newBatch.courseIds.map(id => ({ id })), // Same for course
+      trainer: newBatch.trainerIds.map(id => ({ id })),
+      students: newBatch.studentIds.map(id => ({ id })),
+      course: newBatch.courseIds.map(id => ({ id })),
     };
 
     try {
@@ -122,25 +119,24 @@ function UpdateBatch() {
                   alignItems="center"
                   justifyContent="center"
                   style={{ marginBottom: '20px' }}  // Space between card and form
-
                 >
                   <Card sx={{ bgcolor: '#f7f7f71b' }}>
                     <CardMedia
                       component="img"
                       alt="Course Image"
                       height="260"
-                      image={`data:image/jpeg;base64,${batch.course[0]?.coverImage}` || defaultProfileImage}
+                      image={`data:image/jpeg;base64,${batch.course?.image || ''}` || defaultProfileImage}
                     />
                     <CardContent>
                       <Typography variant="h6">Batch Id: {batch.id}</Typography>
                       <Typography variant="h5" color="textPrimary">
-                        Name of Course: {batch.course[0]?.courseName || ''}
+                        Name of Course: {batch.course?.title || ''}
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
-                        Trainer: {batch.trainer[0]?.fullName || 'N/A'}
+                        Trainer: {batch.trainer?.trainer?.name || 'N/A'}
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
-                        Number of Trainers: {batch.trainer?.length || '0'}
+                        Number of Trainers: {batch.trainer ? 1 : '0'}
                       </Typography>
                       <Typography variant="body1" color="textSecondary">
                         Number of Students: {batch.students?.length || '0'}
@@ -148,8 +144,8 @@ function UpdateBatch() {
                     </CardContent>
                   </Card>
                 </Grid>
-                {/* ..................................SELECT UPDATE.......................................... */}
-                {/* The Grid for the Update Form */}
+
+                {/* Select Update Form */}
                 <Grid
                   margin={2}
                   paddingBlock={15}
@@ -167,6 +163,24 @@ function UpdateBatch() {
                     Select Course, Trainer, and Students to update the batch
                   </Typography>
                   <form onSubmit={handleSubmit}>
+
+                    {/* Select Course */}
+                    <FormControl fullWidth margin="normal">
+                      <InputLabel>Select Course</InputLabel>
+                      <Select
+                        name="courseIds"
+                        value={newBatch.courseIds}
+                        onChange={handleMultiSelectChange}
+                        renderValue={(selected) => courses.find((course) => course.id === selected[0])?.title || 'Select Course'}
+                      >
+                        {courses?.map((course) => (
+                          <MenuItem key={course.id} value={course.id}>
+                            <ListItemText primary={course.title} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
                     {/* Select Trainer */}
                     <FormControl fullWidth margin="normal">
                       <InputLabel>Select Trainer</InputLabel>
@@ -182,29 +196,11 @@ function UpdateBatch() {
                       >
                         {trainers?.map((trainer) => (
                           <MenuItem key={trainer.id} value={trainer.id}>
-                            <ListItemText primary={trainer.fullName} />
+                            <ListItemText primary={trainer.name} />
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
-
-                    {/* Select Course */}
-                    <FormControl fullWidth margin="normal">
-                      <InputLabel>Select Course</InputLabel>
-                      <Select
-                        name="courseIds"
-                        value={newBatch.courseIds}
-                        onChange={handleMultiSelectChange}
-                        renderValue={(selected) => courses.find((course) => course.id === selected[0])?.courseName || 'Select Course'}
-                      >
-                        {courses?.map((course) => (
-                          <MenuItem key={course.id} value={course.id}>
-                            <ListItemText primary={course.courseName} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
 
                     {/* Select Students */}
                     <FormControl fullWidth margin="normal">
@@ -214,12 +210,12 @@ function UpdateBatch() {
                         name="studentIds"
                         value={newBatch.studentIds}
                         onChange={handleMultiSelectChange}
-                        renderValue={(selected) => selected.map((id) => students.find((student) => student.id === id)?.fullName).join(', ')}
+                        renderValue={(selected) => selected.map((id) => students.find((student) => student.id === id)?.name).join(', ')}
                       >
                         {students?.map((student) => (
                           <MenuItem key={student.id} value={student.id}>
                             <Checkbox checked={newBatch.studentIds.indexOf(student.id) > -1} />
-                            <ListItemText primary={student.fullName} />
+                            <ListItemText primary={student.name} />
                           </MenuItem>
                         ))}
                       </Select>
@@ -232,55 +228,51 @@ function UpdateBatch() {
                 </Grid>
               </Grid>
 
-              {/* ..............................CARDS.................................... */}
-
               {/* Display Trainer and Course Cards */}
-              <Grid item xs={12} margin={2} >
+              <Grid item xs={12} margin={2}>
                 <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
-                  <>
-                    {batch.trainer.map((trainer) => (
-                      <Grid item xs={12} sm={2} key={trainer.id}>
-                        <Typography variant="h6" gutterBottom>Trainer</Typography>
-                        <Card>
-                          <CardMedia
-                            component="img"
-                            alt="Trainer Image"
-                            height="140"
-                            image={`data:image/jpeg;base64,${trainer.profilePic}` || defaultProfileImage}
+                  {batch.trainer && (
+                    <Grid item xs={12} sm={2} key={batch.trainer.id}>
+                      <Typography variant="h6" gutterBottom>Trainer</Typography>
+                      <Card>
+                        <CardMedia
+                          component="img"
+                          alt="Trainer Image"
+                          height="140"
+                          image={`data:image/jpeg;base64,${batch.trainer.trainer?.image}` || defaultProfileImage}
+                        />
+                        <CardContent>
+                          <Typography variant="h5">{batch.trainer.trainer?.name}</Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            Experience: {batch.trainer.trainer?.experience || 'No experience'}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            Technologies: {batch.trainer.trainer?.technologies.join(', ') || 'No Technologies available'}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  )}
 
-                          />
-                          <CardContent>
-                            <Typography variant="h5">{trainer.fullName}</Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              Experience: {trainer.experience || 'No experience'}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              Technologies:{trainer.technologies.join(', ') || 'No Technologies available'}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    ))}
-                    {batch.course.map((course) => (
-                      <Grid item xs={12} sm={2} key={course.id}>
-                        <Typography variant="h6" gutterBottom>Course</Typography>
-                        <Card>
-                          <CardMedia
-                            component="img"
-                            alt="Course Image"
-                            height="140"
-                            // image={course.coverImage || defaultProfileImage}
-                            image={`data:image/jpeg;base64,${course.coverImage}` || defaultProfileImage}
-                          />
-                          <CardContent>
-                            <Typography variant="h5">{course.courseName}</Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {course.description || 'No description available'}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    ))}</>
+                  {batch.course && (
+                    <Grid item xs={12} sm={2} key={batch.course.id}>
+                      <Typography variant="h6" gutterBottom>Course</Typography>
+                      <Card>
+                        <CardMedia
+                          component="img"
+                          alt="Course Image"
+                          height="140"
+                          image={`data:image/jpeg;base64,${batch.course?.image}` || defaultProfileImage}
+                        />
+                        <CardContent>
+                          <Typography variant="h5">{batch.course.title}</Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            {batch.course.description || 'No description available'}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
 
@@ -295,10 +287,10 @@ function UpdateBatch() {
                           component="img"
                           alt="Student Image"
                           height="140"
-                          image={`data:image/jpeg;base64,${student.profilePic}` || defaultProfileImage}
+                          image={`data:image/jpeg;base64,${student.image}` || defaultProfileImage}
                         />
                         <CardContent>
-                          <Typography variant="h5">{student.fullName}</Typography>
+                          <Typography variant="h5">{student.name}</Typography>
                           <Typography variant="body2" color="textSecondary">
                             {student.email || 'No email available'}
                           </Typography>
@@ -308,14 +300,11 @@ function UpdateBatch() {
                   ))}
                 </Grid>
               </Grid>
-
-
             </Grid>
           )}
         </>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }
 

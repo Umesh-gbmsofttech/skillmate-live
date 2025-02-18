@@ -6,6 +6,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Getter
 @Setter
@@ -25,6 +27,7 @@ public class Attendance {
     @JoinColumn(name = "student_id")
     private Student student;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;

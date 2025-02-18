@@ -5,6 +5,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "meeting")
 @Getter
@@ -23,6 +25,8 @@ public class Meeting {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;// extra to store the id of course for each meeting
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;

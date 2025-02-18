@@ -3,6 +3,9 @@ package app.entity;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,9 +52,12 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "student")
+    // @JsonManagedReference
     private List<Enrollment> enrollments;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "student")
     private List<Attendance> attendances;
 

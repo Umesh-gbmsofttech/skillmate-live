@@ -38,6 +38,7 @@ function AdminProfile() {
                 <button className="admin-dashboard-button" onClick={handleManageTrainerClick}>Trainers</button>
                 <button className="admin-dashboard-button" onClick={handleManageStudentClick}>Students</button>
                 <button className="admin-dashboard-button" onClick={handleManageCoursesClick}>Courses</button>
+                <button className="admin-dashboard-button" onClick={handleManageCoursesClick}>Assign Course to Trainer</button>
                 <button className="admin-dashboard-button" onClick={handleManageBatchesClick}>Batches</button>
                 {/* <button className="admin-dashboard-button">Messages</button> */}
             </div>

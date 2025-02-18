@@ -3,6 +3,8 @@ package app.entity;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -54,9 +56,11 @@ public class Trainer {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "trainer")
     private List<TrainerCourse> trainerCourses;
 
+    // @JsonIgnore
     @OneToMany(mappedBy = "trainer")
     private List<Meeting> meetings;
 }

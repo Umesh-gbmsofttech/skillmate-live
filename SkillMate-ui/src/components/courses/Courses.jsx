@@ -47,7 +47,7 @@ function Courses() {
 
   // Fuse.js configuration for fuzzy search
   const fuse = new Fuse(courses, {
-    keys: ['courseName', 'description', 'price', 'days'], // Fields to search
+    keys: ['title', 'description', 'price', 'days'], // Fields to search
     includeScore: true, // Include match score
     threshold: 0.3, // Adjust for sensitivity (lower is stricter)
   });
@@ -98,11 +98,11 @@ function Courses() {
                 <CardMedia
                   component="img"
                   height="250"
-                  image={`data:image/jpeg;base64,${course?.coverImage}` || logo}
-                  alt={course.courseName || 'Course Image'}
+                  image={`data:image/jpeg;base64,${course?.image}` || logo}
+                  alt={course.title || 'Course Image'}
                 />
                 <CardContent sx={{ padding: '0 16px' }}>
-                  <Typography variant="h6">{course.courseName}</Typography>
+                  <Typography variant="h6">{course.title}</Typography>
                   <Typography variant="body2" color="text.secondary">
                     {course.days} Days of course
                   </Typography>

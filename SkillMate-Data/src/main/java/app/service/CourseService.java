@@ -52,9 +52,9 @@ public class CourseService {
                 existingCourse.setPrice(course.getPrice());
             }
 
-            if (course.getImage() != null && course.getImage().length > 0) {
-                existingCourse.setImage(course.getImage());
-            }
+            // if (course.getImage() != null && course.getImage().length > 0) {
+            // existingCourse.setImage(course.getImage());
+            // }
 
             return Optional.of(courseRepository.save(existingCourse));
         }

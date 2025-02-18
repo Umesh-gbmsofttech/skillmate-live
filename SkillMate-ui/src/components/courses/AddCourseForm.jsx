@@ -69,7 +69,7 @@ function AddCourseForm() {
       };
 
       try {
-        const response = await fetch(`${baseUrl}courses/create`, {
+        const response = await fetch(`${baseUrl}courses`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -32,7 +32,7 @@ public class Batch {
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")
-    private Trainer trainer;
+    private TrainerCourse trainer;
 
     @OneToMany
     @JoinTable(name = "batch_students", joinColumns = @JoinColumn(name = "batch_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))

@@ -3,6 +3,8 @@ package app.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,9 +40,11 @@ public class Course {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
-    private List<Enrollment> enrollments;
+    private List<Enrollment> enrollments;// this is causing problem when serialization and deserialization
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
     private List<TrainerCourse> trainerCourses;
 }

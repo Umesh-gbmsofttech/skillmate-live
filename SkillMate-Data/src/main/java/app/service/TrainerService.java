@@ -23,12 +23,12 @@ public class TrainerService {
     AuthService authService;
 
     public JwtResponse saveTrainer(Trainer trainer) {
-        if(trainer.getRoles()==null){
+        if (trainer.getRoles() == null) {
             trainer.setRoles(new HashSet<>());
         }
         trainer.getRoles().add(Role.TRAINER);
-        Trainer saved= trainerRepository.save(trainer);
-        String token=authService.generateToken(authService.getTrainerUserDetails(saved));
+        Trainer saved = trainerRepository.save(trainer);
+        String token = authService.generateToken(authService.getTrainerUserDetails(saved));
         return JwtResponse.builder().token(token).userData(saved).build();
     }
 
@@ -44,7 +44,7 @@ public class TrainerService {
         Trainer existingTrainer = trainerRepository.findById(id).orElse(null);
 
         if (existingTrainer == null) {
-            return null;  
+            return null;
         }
 
         if (trainer.getName() != null) {
@@ -65,12 +65,12 @@ public class TrainerService {
         if (trainer.getEmail() != null) {
             existingTrainer.setEmail(trainer.getEmail());
         }
-        if (trainer.getImage() != null) {
-            existingTrainer.setImage(trainer.getImage());
-        }
-        if (trainer.getResume() != null) {
-            existingTrainer.setResume(trainer.getResume());
-        }
+        // if (trainer.getImage() != null) {
+        // existingTrainer.setImage(trainer.getImage());
+        // }
+        // if (trainer.getResume() != null) {
+        // existingTrainer.setResume(trainer.getResume());
+        // }
         if (trainer.getAddress() != null) {
             existingTrainer.setAddress(trainer.getAddress());
         }
@@ -85,6 +85,7 @@ public class TrainerService {
         }
         return trainerRepository.save(existingTrainer);
     }
+
     public void deleteTrainer(Long id) {
         trainerRepository.deleteById(id);
     }
