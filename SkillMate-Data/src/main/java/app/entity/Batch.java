@@ -7,40 +7,34 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "course")
+@Table(name = "batch")
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
-
+public class Batch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    private byte[] image;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private Trainer trainer;
 
-    private String title;
-    private String description;
-    private int days;
-    private int price;
-
-    private LocalDate startDate;
-    private LocalDate endDate;
-
-    @OneToMany(mappedBy = "course")
-    private List<Enrollment> enrollments;
-
-    @OneToMany(mappedBy = "course")
-    private List<TrainerCourse> trainerCourses;
+    @OneToMany
+    @JoinTable(name = "batch_students", joinColumns = @JoinColumn(name = "batch_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+    private List<Student> students;
 }

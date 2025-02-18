@@ -3,6 +3,7 @@ package app.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "assignment")
@@ -11,18 +12,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Assignment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "trainer_id", nullable = false)
-    private Trainer trainer;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
+    @JoinColumn(name = "course_id")
     private Course course;
 
+    private String title;
+    private String description;
     private LocalDate dueDate;
+
+    @OneToMany(mappedBy = "assignment")
+    private List<AssignmentStatus> assignmentStatuses;
 }

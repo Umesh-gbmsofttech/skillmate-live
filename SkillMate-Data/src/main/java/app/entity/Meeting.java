@@ -3,8 +3,7 @@ package app.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "meeting")
@@ -13,22 +12,21 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Meeting {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
-
-    private LocalDateTime createdAt = LocalDateTime.now();;
-    private int duration;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String meetingLink;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private String message;
 
-    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Attendance> attendanceRecords;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;// extra to store the id of course for each meeting
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private Trainer trainer;
+
+    @OneToMany(mappedBy = "meeting")
+    private List<Attendance> attendances;
 }

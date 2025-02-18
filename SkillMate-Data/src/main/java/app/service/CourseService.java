@@ -56,22 +56,6 @@ public class CourseService {
                 existingCourse.setImage(course.getImage());
             }
 
-            // You can add additional logic to handle updates to the relationships if
-            // required
-            // For example, updating assignments, enrollments, or reviews only if they're
-            // not empty
-            if (course.getAssignments() != null && !course.getAssignments().isEmpty()) {
-                existingCourse.setAssignments(course.getAssignments());
-            }
-
-            if (course.getEnrollments() != null && !course.getEnrollments().isEmpty()) {
-                existingCourse.setEnrollments(course.getEnrollments());
-            }
-
-            if (course.getReviews() != null && !course.getReviews().isEmpty()) {
-                existingCourse.setReviews(course.getReviews());
-            }
-
             return Optional.of(courseRepository.save(existingCourse));
         }
 

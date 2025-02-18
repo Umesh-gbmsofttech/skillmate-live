@@ -1,9 +1,23 @@
 package app.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-
+import java.util.List;
 import java.util.Set;
+
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "trainer")
@@ -40,9 +54,9 @@ public class Trainer {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Assignment> assignments;
+    @OneToMany(mappedBy = "trainer")
+    private List<TrainerCourse> trainerCourses;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RatingReview> reviews;
+    @OneToMany(mappedBy = "trainer")
+    private List<Meeting> meetings;
 }
