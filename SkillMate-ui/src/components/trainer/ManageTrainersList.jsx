@@ -22,6 +22,7 @@ function ManageTrainersList() {
         const fetchTrainers = async () => {
             try {
                 const response = await axios.get(`${baseUrl}trainers`);
+                console.log('res', response.data);
                 const fetchedTrainers = response.data.map((trainer) => ({
                     id: trainer.id,
                     name: trainer.name,
@@ -30,7 +31,7 @@ function ManageTrainersList() {
                     stars: '⭐⭐⭐⭐⭐',
                     rateByUsers: '(10,321)',
                     technologies: trainer.technologies ? trainer.technologies.join(', ') : 'Not specified',
-                    profileImage: trainer.image
+                    image: trainer.image
                         ? `data:image/png;base64,${trainer.image}`
                         : profileImagePlaceholder,
                 }));
@@ -105,7 +106,10 @@ function ManageTrainersList() {
                         </Typography>
                     </Grid>
 
-                    <Grid item xs={12} textAlign="center">
+                    <Grid item xs={12} textAlign="center" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Button variant="contained" color="primary" onClick={() => navigate('/admin-profile/manage-trainers/assign-course-to/trainer')} size="small">
+                            New Registered Trainer
+                        </Button>
                         <Button variant="contained" color="primary" onClick={() => navigate('/trainer-signup')} size="small">
                             Add New Trainer
                         </Button>
@@ -120,7 +124,7 @@ function ManageTrainersList() {
                                             <CardMedia
                                                 component="img"
                                                 height="250"
-                                                image={trainer.profileImage}
+                                                image={trainer.image}
                                                 alt={`${trainer.name} profile`}
                                                 sx={{ objectFit: 'cover', objectPosition: 'top' }}
                                             />

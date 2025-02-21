@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.entity.Batch;
+import app.entity.Student;
 import app.service.BatchService;
 import jakarta.validation.Valid;
 
@@ -33,6 +34,28 @@ public class BatchController {
             return new ResponseEntity<>(batch, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Get batch by Trainer ID
+    @GetMapping("/trainer/{id}")
+    public ResponseEntity<List<Batch>> getBatchByTrainerId(@PathVariable Long id) {
+        try {
+            List<Batch> batches = batchService.getBatchTrainerById(id);
+            return new ResponseEntity<>(batches, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(List.of(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Get students by batch ID (here need to pass the trainer's batch id)
+    @GetMapping("/student/{id}")
+    public ResponseEntity<List<Student>> getStudentsByBatchId(@PathVariable Long batchId) {
+        try {
+            List<Student> students = batchService.getStudentsByBatchId(batchId);
+            return new ResponseEntity<>(students, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(List.of(), HttpStatus.NOT_FOUND);
         }
     }
 

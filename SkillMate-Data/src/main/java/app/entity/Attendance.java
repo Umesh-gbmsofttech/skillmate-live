@@ -6,7 +6,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Getter
@@ -20,17 +23,22 @@ public class Attendance {
     private Long id;
 
     private boolean attended;
-    private LocalTime inTime;
+
+    @JsonFormat(pattern = "HH:mm:ss") // Ensure time is in hh:mm:ss format
+    private LocalTime inTime = LocalTime.now();
+
+    @JsonFormat(pattern = "HH:mm:ss") // Ensure time is in hh:mm:ss format
     private LocalTime outTime;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "meeting_id")
+    private Meeting meeting;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "meeting_id")
-    private Meeting meeting;
-
+    @JsonFormat(pattern = "dd-MM-yyyy") // Ensure date is in dd-mm-yyyy format
     private LocalDateTime attendanceTimestamp = LocalDateTime.now();
 }

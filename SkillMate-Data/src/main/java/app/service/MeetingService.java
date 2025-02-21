@@ -27,6 +27,18 @@ public class MeetingService {
         return meetingRepository.findById(id);
     }
 
+    // find meeting for student course
+    public Optional<Meeting> getMeetingforStudent(Long batchId, Long courseId, Long trainerId) {
+        Optional<Meeting> meeting = meetingRepository.findNextMeeting(batchId, courseId, trainerId);
+        return meeting;
+    }
+
+    // find meetings for Trainer
+    public List<Meeting> getMeetingForTrainer(Long trainerId) {
+        List<Meeting> meeting = meetingRepository.findUpcomingMeetingsByTrainerId(trainerId);
+        return meeting;
+    }
+
     public void deleteMeeting(Long id) {
         meetingRepository.deleteById(id);
     }

@@ -58,6 +58,7 @@ import DesignSystems from './components/home/footer/explore/DesignSystems';
 import Prototyping_Wireframing from './components/home/footer/explore/Prototyping_Wireframing';
 import WebDevelopmentTools from './components/home/footer/explore/WebDevelopmentTools';
 import Chatbot from './components/home/chatbot/Chatbot';
+import AssignCourseToTrainer from './components/admin/AssignCourseToTrainer';
 
 
 function App() {
@@ -134,6 +135,7 @@ function App() {
         <Route path="/trainer-profile-update/:trainerId" element={<TrainerProfileUpdate username />} />
         <Route path="/admin-profile" element={<AdminProfile username />} />
         <Route path="/admin-profile/manage-trainers" element={<ManageTrainersList />} />
+        <Route path="/admin-profile/manage-trainers/assign-course-to/trainer" element={<AssignCourseToTrainer />} />
         <Route path="/admin-profile/manage-students" element={<ManageStudentsList />} />
         <Route path="/admin-profile/edit-courses" element={<AdEditCourse />} />
         <Route path="/admin-profile/manage-courses" element={<ManageCoursesList />} />

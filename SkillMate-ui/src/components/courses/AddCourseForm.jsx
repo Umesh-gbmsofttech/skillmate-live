@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Typography, TextField, Button, CircularProgress, Grid, Container, Paper } from '@mui/material';
 import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
-import baseUrl from '../urls/baseUrl'
-
+import baseUrl from '../urls/baseUrl';
 
 function AddCourseForm() {
   const [title, setTitle] = useState('');
@@ -12,6 +11,10 @@ function AddCourseForm() {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
@@ -48,7 +51,7 @@ function AddCourseForm() {
     setLoading(true);
 
     // Check if all fields are filled
-    if (!title || !days || !price || !description || !image) {
+    if (!title || !days || !price || !description || !image || !startDate || !endDate || !startTime || !endTime) {
       setError('Please fill in all fields and upload an image.');
       showWarningToast('Please fill in all fields and upload an image.');
       setLoading(false);
@@ -65,6 +68,10 @@ function AddCourseForm() {
         days,
         price,
         description,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
         image: base64Image, // Store base64 string of the image
       };
 
@@ -212,6 +219,78 @@ function AddCourseForm() {
                 fullWidth
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
+                required
+                sx={{
+                  '& .MuiInputLabel-root': { color: '#3f51b5' },
+                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
+                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
+                }}
+              />
+            </Grid>
+
+            {/* Start Date Input */}
+            <Grid item xs={12}>
+              <TextField
+                // label="Start Date"
+                type="date"
+                variant="outlined"
+                fullWidth
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+                sx={{
+                  '& .MuiInputLabel-root': { color: '#3f51b5' },
+                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
+                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
+                }}
+              />
+            </Grid>
+
+            {/* End Date Input */}
+            <Grid item xs={12}>
+              <TextField
+                // label="End Date"
+                type="date"
+                variant="outlined"
+                fullWidth
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required
+                sx={{
+                  '& .MuiInputLabel-root': { color: '#3f51b5' },
+                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
+                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
+                }}
+              />
+            </Grid>
+
+            {/* Start Time Input */}
+            <Grid item xs={12}>
+              <TextField
+                // label="Start Time"
+                type="time"
+                variant="outlined"
+                fullWidth
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                required
+                sx={{
+                  '& .MuiInputLabel-root': { color: '#3f51b5' },
+                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
+                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
+                }}
+              />
+            </Grid>
+
+            {/* End Time Input */}
+            <Grid item xs={12}>
+              <TextField
+                // label="End Time"
+                type="time"
+                variant="outlined"
+                fullWidth
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
                 required
                 sx={{
                   '& .MuiInputLabel-root': { color: '#3f51b5' },

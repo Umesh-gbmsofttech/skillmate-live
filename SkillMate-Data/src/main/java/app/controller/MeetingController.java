@@ -30,6 +30,20 @@ public class MeetingController {
         return meetingService.getMeetingById(id);
     }
 
+    // find meeting for student's course
+    @GetMapping("/student/{batchId}/{courseId}/{trainerId}")
+    public Optional<Meeting> getMeetingforStudent(@PathVariable Long batchId, @PathVariable Long courseId,
+            @PathVariable Long trainerId) {
+        return meetingService.getMeetingforStudent(batchId, courseId, trainerId);
+    }
+
+    // find meetings for trainer
+    @GetMapping("/trainer/{trainerId}")
+    public List<Meeting> getMeetingforStudent(
+            @PathVariable Long trainerId) {
+        return meetingService.getMeetingForTrainer(trainerId);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteMeeting(@PathVariable Long id) {
         meetingService.deleteMeeting(id);

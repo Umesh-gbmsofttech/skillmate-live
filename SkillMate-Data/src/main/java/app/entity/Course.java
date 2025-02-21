@@ -1,6 +1,7 @@
 package app.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,6 +40,8 @@ public class Course {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    // private LocalTime startTime;
+    // private LocalTime endTime;
 
     @JsonIgnore
     @OneToMany(mappedBy = "course")
@@ -47,4 +50,8 @@ public class Course {
     @JsonIgnore
     @OneToMany(mappedBy = "course")
     private List<TrainerCourse> trainerCourses;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "course")
+    private List<Batch> batchs;
 }

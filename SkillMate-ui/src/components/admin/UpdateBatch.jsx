@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Grid, Card, CardContent, CardMedia, Button, Typography, Select, MenuItem, Checkbox, ListItemText, FormControl, InputLabel } from '@mui/material';
+import { Grid, Card, CardContent, CardMedia, Button, Typography, Select, MenuItem, Checkbox, ListItemText, FormControl, InputLabel, TextField } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import defaultProfileImage from '../../assets/profilePic.jpg';
 import baseUrl from '../urls/baseUrl';
@@ -18,12 +18,14 @@ function UpdateBatch() {
     studentIds: [],
   });
   const [loading, setLoading] = useState(true);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const navigate = useNavigate();
 
   const fetchBatchUrl = `${baseUrl}batches/${batchId}`;
-  const getTrainersUrl = `${baseUrl}trainers`;
+  const getTrainersUrl = `${baseUrl}trainer-courses`;
   const getCoursesUrl = `${baseUrl}courses`;
-  const getStudentsUrl = `${baseUrl}students`;
+  const getStudentsUrl = `${baseUrl}enrollments`;
   const updateBatchUrl = `${baseUrl}batches/${batchId}`;
 
   useEffect(() => {
@@ -36,21 +38,22 @@ function UpdateBatch() {
           axios.get(getCoursesUrl),
         ]);
 
-        console.log(batchResponse.data);
         setBatch(batchResponse.data);
         setStudents(studentResponse.data);
         setTrainers(trainerResponse.data);
         setCourses(courseResponse.data);
 
-        // Set the current batch details into the form
         const currentBatch = batchResponse.data;
 
-        // Setting the current selections in the newBatch state
         setNewBatch({
           trainerIds: currentBatch.trainer ? [currentBatch.trainer.id] : [],
           courseIds: currentBatch.course ? [currentBatch.course.id] : [],
           studentIds: currentBatch.students.map((student) => student.id),
         });
+
+        // Set start and end time if available
+        setStartTime(currentBatch.startTime || '');
+        setEndTime(currentBatch.endTime || '');
 
         setLoading(false);
       } catch (error) {
@@ -62,27 +65,36 @@ function UpdateBatch() {
     fetchData();
   }, [batchId]);
 
+  // Filter trainers based on selected course
+  const filteredTrainers = useMemo(() => {
+    return trainers.filter(tc => newBatch.courseIds.includes(tc.course.id));
+  }, [newBatch.courseIds, trainers]);
+
+  // Filter students based on the selected course
+  const filteredStudents = useMemo(() => {
+    return students.filter(e => newBatch.courseIds.includes(e.course.id));
+  }, [newBatch.courseIds, students]);
+
   const handleMultiSelectChange = (e) => {
     const { name, value } = e.target;
     setNewBatch((prevData) => ({
       ...prevData,
-      [name]: Array.isArray(value) ? value : [value], // Ensure the value is an array
+      [name]: Array.isArray(value) ? value : [value],
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Update batch data structure to match backend requirements
     const updatedBatchData = {
-      trainer: newBatch.trainerIds.map(id => ({ id })),
+      course: { id: newBatch.courseIds[0] },
+      trainer: { id: newBatch.trainerIds[0] },
       students: newBatch.studentIds.map(id => ({ id })),
-      course: newBatch.courseIds.map(id => ({ id })),
+      startTime,
+      endTime,
     };
 
     try {
       const response = await axios.put(updateBatchUrl, updatedBatchData);
-      console.log('Batch updated successfully!', response);
       showSuccessToast('Batch updated successfully!');
       navigate('/admin-profile');
     } catch (error) {
@@ -107,7 +119,7 @@ function UpdateBatch() {
                 container
                 alignItems="center"
                 justifyContent="center"
-                style={{ minHeight: '100vh' }} // Ensures that the grid takes the full height of the viewport
+                style={{ minHeight: '100vh' }}
               >
                 {/* The Grid for the Card (Batch Info) */}
                 <Grid
@@ -118,14 +130,14 @@ function UpdateBatch() {
                   lg={5}   // 3/12 on large screens and up
                   alignItems="center"
                   justifyContent="center"
-                  style={{ marginBottom: '20px' }}  // Space between card and form
+                  style={{ marginBottom: '20px' }}
                 >
-                  <Card sx={{ bgcolor: '#f7f7f71b' }}>
+                  <Card>
                     <CardMedia
                       component="img"
                       alt="Course Image"
                       height="260"
-                      image={`data:image/jpeg;base64,${batch.course?.image || ''}` || defaultProfileImage}
+                      image={`data:image/jpeg;base64,${batch.course?.image || ''}`}
                     />
                     <CardContent>
                       <Typography variant="h6">Batch Id: {batch.id}</Typography>
@@ -157,7 +169,7 @@ function UpdateBatch() {
                   sm={7}   // 7/12 on small screens
                   md={8}   // 8/12 on medium screens and up
                   lg={6}
-                  bgcolor={'#f7f7f71b'}  // 9/12 on large screens and up
+                  bgcolor={'white'}  // 9/12 on large screens and up
                 >
                   <Typography variant="body1" color="textPrimary" align="center">
                     Select Course, Trainer, and Students to update the batch
@@ -189,18 +201,31 @@ function UpdateBatch() {
                         value={newBatch.trainerIds}
                         onChange={handleMultiSelectChange}
                         renderValue={(selected) => {
-                          return selected
-                            .map((id) => trainers.find((trainer) => trainer.id === id)?.fullName)
-                            .join(', ') || 'Select Trainer';
+                          if (!selected || selected.length === 0) {
+                            return 'No trainer selected';
+                          }
+                          const trainerNames = selected
+                            .map(id => {
+                              const trainer = filteredTrainers.find(trainer => trainer.id === id);
+                              return trainer ? trainer.trainer.name : '';
+                            })
+                            .filter(name => name);
+
+                          return trainerNames.join(', ') || '';
                         }}
                       >
-                        {trainers?.map((trainer) => (
-                          <MenuItem key={trainer.id} value={trainer.id}>
-                            <ListItemText primary={trainer.name} />
-                          </MenuItem>
-                        ))}
+                        {filteredTrainers.length > 0 ? (
+                          filteredTrainers.map(trainer => (
+                            <MenuItem key={trainer.id} value={trainer.id}>
+                              <ListItemText primary={trainer.trainer.name} />
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <MenuItem disabled>No trainer available for this course</MenuItem>
+                        )}
                       </Select>
                     </FormControl>
+
 
                     {/* Select Students */}
                     <FormControl fullWidth margin="normal">
@@ -210,16 +235,45 @@ function UpdateBatch() {
                         name="studentIds"
                         value={newBatch.studentIds}
                         onChange={handleMultiSelectChange}
-                        renderValue={(selected) => selected.map((id) => students.find((student) => student.id === id)?.name).join(', ')}
-                      >
-                        {students?.map((student) => (
-                          <MenuItem key={student.id} value={student.id}>
-                            <Checkbox checked={newBatch.studentIds.indexOf(student.id) > -1} />
-                            <ListItemText primary={student.name} />
-                          </MenuItem>
-                        ))}
+                        renderValue={(selected) => {
+                          return selected
+                            .map(id => {
+                              const enrollment = filteredStudents.find(enrollment => enrollment.student.id === id);
+                              return enrollment ? enrollment.student.name : '';
+                            })
+                            .join(', ');
+                        }}                      >
+                        {filteredStudents.length > 0 ? (
+                          filteredStudents?.map(enrollment => (
+                            <MenuItem key={enrollment.id} value={enrollment.student.id}>
+                              <Checkbox checked={newBatch.studentIds.indexOf(enrollment.student.id) > -1} />
+                              <ListItemText primary={enrollment.student.name} />
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <MenuItem disabled>No students avilable for this course</MenuItem>
+                        )}
                       </Select>
                     </FormControl>
+                    <TextField
+                      type="time"
+                      label="Start Time"
+                      fullWidth
+                      variant="outlined"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      sx={{ marginBottom: 2 }}
+                    />
+
+                    <TextField
+                      type="time"
+                      label="End Time"
+                      fullWidth
+                      variant="outlined"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                      sx={{ marginBottom: 2 }}
+                    />
 
                     <Button type="submit" variant="contained" color="primary" fullWidth>
                       Update Batch
@@ -239,7 +293,7 @@ function UpdateBatch() {
                           component="img"
                           alt="Trainer Image"
                           height="140"
-                          image={`data:image/jpeg;base64,${batch.trainer.trainer?.image}` || defaultProfileImage}
+                          image={`data:image/jpeg;base64,${batch.trainer.trainer?.image || defaultProfileImage}`}
                         />
                         <CardContent>
                           <Typography variant="h5">{batch.trainer.trainer?.name}</Typography>
@@ -262,7 +316,7 @@ function UpdateBatch() {
                           component="img"
                           alt="Course Image"
                           height="140"
-                          image={`data:image/jpeg;base64,${batch.course?.image}` || defaultProfileImage}
+                          image={`data:image/jpeg;base64,${batch.course?.image || defaultProfileImage}`}
                         />
                         <CardContent>
                           <Typography variant="h5">{batch.course.title}</Typography>
@@ -287,7 +341,7 @@ function UpdateBatch() {
                           component="img"
                           alt="Student Image"
                           height="140"
-                          image={`data:image/jpeg;base64,${student.image}` || defaultProfileImage}
+                          image={`data:image/jpeg;base64,${student.image || defaultProfileImage}`}
                         />
                         <CardContent>
                           <Typography variant="h5">{student.name}</Typography>

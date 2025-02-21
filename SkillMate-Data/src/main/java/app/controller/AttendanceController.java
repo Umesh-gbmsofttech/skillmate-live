@@ -2,6 +2,8 @@ package app.controller;
 
 import app.entity.Attendance;
 import app.service.AttendanceService;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +17,8 @@ public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
 
-    @PostMapping
-    public Attendance addAttendance(@RequestBody Attendance attendance) {
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public Attendance addAttendance(@Valid @RequestBody Attendance attendance) {
         return attendanceService.saveAttendance(attendance);
     }
 

@@ -3,6 +3,7 @@ package app.entity;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.ElementCollection;
@@ -60,7 +61,8 @@ public class Trainer {
     @OneToMany(mappedBy = "trainer")
     private List<TrainerCourse> trainerCourses;
 
-    // @JsonIgnore
-    @OneToMany(mappedBy = "trainer")
-    private List<Meeting> meetings;
+    // // @JsonIgnore
+    // @JsonBackReference
+    // @OneToMany(mappedBy = "trainer")
+    // private List<Meeting> meetings;
 }

@@ -8,8 +8,7 @@ import Loading from '../../Loading';
 import Meetings from '../trainer/Meetings';
 import Attendances from '../trainer/Attendances';
 import defaultProfilePic from '../../assets/skillmate.jpg';
-import baseUrl from '../urls/baseUrl'
-
+import baseUrl from '../urls/baseUrl';
 
 function TrainerProfile() {
     const [showProfile, setShowProfile] = useState(false);
@@ -17,22 +16,31 @@ function TrainerProfile() {
     const navigate = useNavigate();
     const [batch, setBatch] = useState('');
     const [batches, setBatches] = useState([]);
-    const token = useSelector((state) => state.auth.token);
-    const trainerId = userData?.id;
+    const [batchIds, setBatchIds] = useState([]);
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showPDF, setShowPDF] = useState(false);
-
-
+    const token = useSelector((state) => state.auth.token);
+    const trainerId = userData?.id;
 
     useEffect(() => {
         const fetchBatches = async () => {
             try {
-                const response = await axios.get(`${baseUrl}batches/by-trainer/${trainerId}`, {
+                const response = await axios.get(`${baseUrl}batches/trainer/${trainerId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
+                // console.log('trainer batches fetched', response.data);
                 setBatches(response.data);
                 setLoading(false);
+
+                const coursesArray = response.data.map(batch => batch.course);
+                const batchIdsArray = response.data.map(batch => batch.id);
+
+                setCourses(coursesArray);
+                setBatchIds(batchIdsArray);
+
+                // console.log('Courses:', coursesArray);
+                // console.log('Batch IDs:', batchIdsArray);
             } catch (error) {
                 console.error('Error fetching batches:', error);
             }
@@ -40,24 +48,6 @@ function TrainerProfile() {
 
         if (trainerId && token) {
             fetchBatches();
-        }
-    }, [trainerId, token]);
-
-    useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const response = await axios.get(`${baseUrl}courses/trainer/${trainerId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                setCourses(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching batches:', error);
-            }
-        };
-
-        if (trainerId && token) {
-            fetchCourses();
         }
     }, [trainerId, token]);
 
@@ -81,10 +71,9 @@ function TrainerProfile() {
                         {/* Profile Header */}
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Avatar
-                                src={userData?.profilePic ? `data:image/jpeg;base64,${userData.profilePic}` : defaultProfilePic}
+                                src={userData?.image ? `data:image/jpeg;base64,${userData.image}` : defaultProfilePic}
                                 alt="Profile"
                                 sx={{ width: 180, height: 220, objectFit: 'cover', objectPosition: 'top', borderRadius: '0', padding: '10px' }}
-
                             />
                             <Typography variant="h4" fontWeight="bold">
                                 Welcome, {userData?.name || 'Trainer'}
@@ -124,7 +113,6 @@ function TrainerProfile() {
                                         </Typography>
                                         <Typography variant="body1">{item.value}</Typography>
                                     </Box>
-
                                 ))}
                                 {userData.resume && (
                                     <Button
@@ -152,18 +140,16 @@ function TrainerProfile() {
                                 </Dialog>
                             </Box>
                         )}
-
                     </Box>
                 </>
             )}
             {/* Courses & Batches */}
-
             <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                 <Meetings userData={userData} courses={courses} trainerId={trainerId} />
             </div>
 
             {/* Batch Selection */}
-            <FormControl
+            {/* <FormControl
                 sx={{
                     maxWidth: 1000,
                     mx: 'auto',
@@ -179,13 +165,12 @@ function TrainerProfile() {
                     value={batch} onChange={(e) => setBatch(e.target.value)} label="Select Batch">
                     <MenuItem value="">-- Select Batch --</MenuItem>
                     {batches.map((batchItem) => (
-                        <MenuItem key={batchItem.id} value={batchItem.id}>
+                        <MenuItem key={batchItem.id} value={batchItem.id}></MenuItem>
                             Batch {batchItem.id}
                         </MenuItem>
                     ))}
                 </Select>
-            </FormControl>
-
+            </FormControl> */}
 
             <Attendances batch={batch} />
         </>

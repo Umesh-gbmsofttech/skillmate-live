@@ -66,7 +66,7 @@ function ManageBatches() {
     const handleConfirmDelete = async () => {
         if (batchToDelete) {
             try {
-                const response = await axios.delete(`${baseUrl}/batches/${batchToDelete}`);
+                const response = await axios.delete(`${baseUrl}batches/${batchToDelete}`);
                 if (response.status === 200) {
                     showSuccessToast('Batch deleted successfully!');
                     setBatches((prevBatches) => prevBatches.filter((batch) => batch.id !== batchToDelete));

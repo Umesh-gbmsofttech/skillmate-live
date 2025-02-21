@@ -19,10 +19,6 @@ function ManageStudentsList() {
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState(null);
 
-    const handleCourseAddClick = () => {
-        navigate('/student-signup');
-    };
-
     useEffect(() => {
         const fetchStudents = async () => {
             try {
@@ -67,10 +63,6 @@ function ManageStudentsList() {
         setStudentToDelete(null);
     };
 
-    const handleCourseEditClick = (studentId) => {
-        navigate(`/student-profile-update/${studentId}`);
-    };
-
     if (loading) {
         return <Loading />;
     }
@@ -100,8 +92,11 @@ function ManageStudentsList() {
                 </Typography>
             </Grid>
 
-            <Grid item xs={12} textAlign="center">
-                <Button variant="contained" color="primary" onClick={handleCourseAddClick}>
+            <Grid item xs={12} textAlign="center" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button variant="contained" color="primary" onClick={() => navigate('/')}>
+                    Assign Batch To New Students
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => navigate('/student-signup')}>
                     Add New Student
                 </Button>
             </Grid>
@@ -144,7 +139,7 @@ function ManageStudentsList() {
                                             <Button
                                                 variant="contained"
                                                 color="primary"
-                                                onClick={() => handleCourseEditClick(student.id)}
+                                                onClick={() => navigate(`/student-profile-update/${student.id}`)}
                                             >
                                                 Edit
                                             </Button>

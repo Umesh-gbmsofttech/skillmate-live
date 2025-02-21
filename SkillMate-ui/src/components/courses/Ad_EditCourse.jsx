@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Box, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
+import baseUrl from '../urls/baseUrl';
 
 function AdEditCourse() {
     const [title, setTitle] = useState('');
@@ -13,6 +14,10 @@ function AdEditCourse() {
     const [time, setTime] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
     const [courseCoverImage, setProfilePic] = useState(null);
     const [loading, setLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState(null);  // New state for image preview
@@ -28,6 +33,10 @@ function AdEditCourse() {
             setTime(courseData.time);
             setPrice(courseData.price);
             setDescription(courseData.description);
+            setStartDate(courseData.startDate);
+            setEndDate(courseData.endDate);
+            setStartTime(courseData.startTime);
+            setEndTime(courseData.endTime);
             setProfilePic(courseData.image || courseCoverImage);
             // Set preview image from existing course data
             setPreviewImage(courseData.image ? `data:image/jpeg;base64,${courseData.image}` : courseCoverImage);
@@ -61,13 +70,17 @@ function AdEditCourse() {
             time,
             price,
             description,
+            startDate,
+            endDate,
+            startTime,
+            endTime,
             image: coverImageBase64, // Send only the base64 string without prefix
         };
 
         setLoading(true);
         try {
             const response = await axios.put(
-                `${baseUrl}courses/update/${courseData.id}`,
+                `${baseUrl}courses/${courseData.id}`,
                 updatedCourse
             );
 
@@ -77,13 +90,11 @@ function AdEditCourse() {
                 navigate('/admin-profile/manage-courses');
             }
         } catch (e) {
-            // console.error('Error updating course:', error.message);
             showErrorToast('Error updating course!', e);
         } finally {
             setLoading(false);
         }
     };
-
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -96,9 +107,10 @@ function AdEditCourse() {
     }
 
     return (
-        <Box sx={{ padding: 4, backgroundColor: '#f9f9f9' }}>
+        <Box sx={{ padding: 4 }}>
             <Typography variant="h4" gutterBottom>Edit Course</Typography>
 
+            {/* Image Preview */}
             <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img
@@ -134,7 +146,14 @@ function AdEditCourse() {
                 </Box>
             </Box>
 
-            <Box sx={{ backgroundColor: '#fff', padding: 4, borderRadius: 2, boxShadow: 3 }}>
+            <Box sx={{
+                width: '100%',
+                maxWidth: 600,
+                bgcolor: '#f5f5f5',
+                boxShadow: 3,
+                borderRadius: 2,
+                p: 3,
+            }}>
                 <TextField
                     label="Course Name"
                     fullWidth
@@ -167,6 +186,50 @@ function AdEditCourse() {
                     variant="outlined"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                />
+
+                {/* Start Date */}
+                <TextField
+                    type="date"
+                    label="Start Date"
+                    fullWidth
+                    variant="outlined"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                />
+
+                {/* End Date */}
+                <TextField
+                    type="date"
+                    label="End Date"
+                    fullWidth
+                    variant="outlined"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                />
+
+                {/* Start Time */}
+                <TextField
+                    type="time"
+                    label="Start Time"
+                    fullWidth
+                    variant="outlined"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                />
+
+                {/* End Time */}
+                <TextField
+                    type="time"
+                    label="End Time"
+                    fullWidth
+                    variant="outlined"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
                     sx={{ marginBottom: 2 }}
                 />
             </Box>

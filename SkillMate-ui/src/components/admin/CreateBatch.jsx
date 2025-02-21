@@ -1,141 +1,244 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../Loading';
-import { Select, MenuItem, Checkbox, ListItemText, FormControl, InputLabel, Button } from '@mui/material';
+import { Select, MenuItem, Checkbox, ListItemText, FormControl, InputLabel, Button, Box, Typography, TextField } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import baseUrl from '../urls/baseUrl';
-import { useSelector } from 'react-redux'; // Added useSelector import for token
+import { useSelector } from 'react-redux';
 
 function CreateBatch() {
     const [enrollments, setEnrollments] = useState([]);
     const [trainerCourse, setTrainerCourse] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [selectedTrainer, setSelectedTrainer] = useState(null);
+    const [selectedCourse, setSelectedCourse] = useState(null);
     const [selectedStudents, setSelectedStudents] = useState([]);
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const token = useSelector((state) => state.auth.token); // Assuming the token is stored in redux
+    const token = useSelector((state) => state.auth.token);
 
     useEffect(() => {
-        // Fetch enrollments
         axios.get(`${baseUrl}enrollments`)
             .then(response => {
-                setEnrollments(response.data); // response contains an array of student objects
+                setEnrollments(response.data);
             })
-            .catch(error => {
+            .catch(() => {
                 showErrorToast('Error fetching enrollments for course');
                 setError('Error fetching enrollments');
             });
 
-        // Fetch trainerCourse
+        axios.get(`${baseUrl}courses`)
+            .then(response => {
+                setCourses(response.data);
+            })
+            .catch(() => {
+                showErrorToast('Error fetching courses');
+                setError('Error fetching courses');
+            });
+
         axios.get(`${baseUrl}trainer-courses`)
             .then(response => {
-                setTrainerCourse(response.data); // response contains an array of trainer objects
+                setTrainerCourse(response.data);
             })
-            .catch(error => {
+            .catch(() => {
                 showErrorToast('Error fetching trainerCourse');
                 setError('Error fetching trainerCourse');
             })
             .finally(() => {
-                setLoading(false); // stop loading state after both API calls
+                setLoading(false);
             });
     }, []);
+
+    console.log(trainerCourse);
+    const filteredTrainers = useMemo(() => {
+        return trainerCourse.filter(tc => tc.course.id === selectedCourse);
+    }, [selectedCourse, trainerCourse]);
+
+    const filteredStudents = useMemo(() => {
+        return enrollments.filter(e => e.course.id === selectedCourse);
+    }, [selectedCourse, enrollments]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        if (!selectedTrainer) {
+            showErrorToast('Trainer does not belong to the selected course.');
+            return;
+        }
+
+        // The correct trainer_id is from the TrainerCourse entity
         const batchData = {
-            trainer: { id: selectedTrainer }, // sending only trainer id
-            enrollments: selectedStudents.map(id => ({ id })) // sending selected student ids
+            course: { id: selectedCourse },
+            trainer_id: selectedTrainer,
+            students: selectedStudents.map(id => ({ id })),
+            startTime,
+            endTime
         };
 
-        // POST request to create the batch with authorization header
+        console.log(batchData);  // Log to verify that trainer_id is being sent
+
         axios.post(`${baseUrl}batches`, batchData, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`, // Adding Bearer token here
+                'Authorization': `Bearer ${token}`,
             }
         })
-            .then(response => {
+            .then(() => {
                 showSuccessToast('Batch created successfully');
-                // navigate('/batches'); // Redirect to batches page or wherever needed
+                navigate('/path-to-redirect');  // Redirect after successful creation
             })
-            .catch(error => {
+            .catch(() => {
                 showErrorToast('Error creating batch');
             });
     };
 
+
     const handleTrainerChange = (event) => {
-        setSelectedTrainer(event.target.value);
+        const trainerId = event.target.value;
+        setSelectedTrainer(trainerId);
+        console.log('trainer id of selected trainer, ', trainerId);
+    };
+
+    const handleCourseChange = (event) => {
+        setSelectedCourse(event.target.value);
     };
 
     const handleStudentsChange = (event) => {
         setSelectedStudents(event.target.value);
     };
 
-    console.log('trainerCourse: ', trainerCourse) // array of trainer objects
-    console.log('enrollments: ', enrollments) // array of student objects
-
     return (
         <>
             {loading ? (
                 <Loading />
             ) : error ? (
-                <p>{error}</p>
+                <Typography color="error">{error}</Typography>
             ) : (
-                <div className="admin__batch-management">
-                    <h2>Manage Batches</h2>
-                    <form onSubmit={handleSubmit}>
-                        {/* Select Single Trainer */}
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Select Trainer</InputLabel>
-                            <Select
-                                name="trainer"
-                                value={selectedTrainer}
-                                onChange={handleTrainerChange}
-                                renderValue={(selected) => {
-                                    const trainer = trainerCourse.find(trainer => trainer.id === selected);
-                                    return trainer ? trainer.trainer.name : 'Select Trainer';
-                                }}
-                            >
-                                {trainerCourse?.map(trainer => (
-                                    <MenuItem key={trainer.id} value={trainer.id}>
-                                        <ListItemText primary={trainer.trainer.name} />
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        minHeight: '100vh',
+                        padding: 3,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: '100%',
+                            maxWidth: 600,
+                            bgcolor: '#f5f5f5',
+                            boxShadow: 3,
+                            borderRadius: 2,
+                            p: 3,
+                        }}
+                    >
+                        <Typography variant="h4" component="h2" gutterBottom>
+                            Manage Batches
+                        </Typography>
+                        <form onSubmit={handleSubmit}>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Select Course</InputLabel>
+                                <Select
+                                    name="course"
+                                    value={selectedCourse}
+                                    onChange={handleCourseChange}
+                                    renderValue={(selected) => {
+                                        const course = courses.find(course => course.id === selected);
+                                        return course ? course.title : 'Select Course';
+                                    }}
+                                >
+                                    {courses?.map(course => (
+                                        <MenuItem key={course.id} value={course.id}>
+                                            <ListItemText primary={course.title} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
 
-                        {/* Select Multiple Students */}
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Assign Students</InputLabel>
-                            <Select
-                                multiple
-                                name="enrollments"
-                                value={selectedStudents}
-                                onChange={handleStudentsChange}
-                                renderValue={(selected) => {
-                                    return selected.map(id => {
-                                        const enrollment = enrollments.find(enrollment => enrollment.student.id === id);
-                                        return enrollment ? enrollment.student.name : '';
-                                    }).join(', ');
-                                }}
-                            >
-                                {enrollments?.map(enrollment => (
-                                    <MenuItem key={enrollment.id} value={enrollment.student.id}>
-                                        <Checkbox checked={selectedStudents.indexOf(enrollment.student.id) > -1} />
-                                        <ListItemText primary={enrollment.student.name} />
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Select Trainer</InputLabel>
+                                <Select
+                                    name="trainer"
+                                    value={selectedTrainer}
+                                    onChange={handleTrainerChange}
+                                    renderValue={(selected) => {
+                                        const trainer = filteredTrainers.find(trainer => trainer.trainer.id === selected);
+                                        return trainer ? trainer.trainer.name : 'No trainer for this course';
+                                    }}
+                                >
+                                    {filteredTrainers.length > 0 ? (
+                                        filteredTrainers?.map(trainer => (
+                                            <MenuItem key={trainer.trainer.id} value={trainer.trainer.id}>
+                                                <ListItemText primary={trainer.trainer.name} />
+                                            </MenuItem>
+                                        ))
+                                    ) : (
+                                        <MenuItem disabled>No trainer available for this course</MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
 
-                        <Button type="submit" variant="contained" color="primary" fullWidth>
-                            Create Batch
-                        </Button>
-                    </form>
-                </div>
+
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Assign Students</InputLabel>
+                                <Select
+                                    multiple
+                                    name="enrollments"
+                                    value={selectedStudents}
+                                    onChange={handleStudentsChange}
+                                    renderValue={(selected) => {
+                                        return selected
+                                            .map(id => {
+                                                const enrollment = filteredStudents.find(enrollment => enrollment.student.id === id);
+                                                return enrollment ? enrollment.student.name : 'No students available for this course';
+                                            })
+                                            .join(', ');
+                                    }}
+                                >
+                                    {filteredStudents.length > 0 ? (
+                                        filteredStudents?.map(enrollment => (
+                                            <MenuItem key={enrollment.id} value={enrollment.student.id}>
+                                                <Checkbox checked={selectedStudents.indexOf(enrollment.student.id) > -1} />
+                                                <ListItemText primary={enrollment.student.name} />
+                                            </MenuItem>
+                                        ))
+                                    ) : (
+                                        <MenuItem disabled>No students available for this course</MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
+
+                            <TextField
+                                type="time"
+                                label="Start Time"
+                                fullWidth
+                                variant="outlined"
+                                value={startTime}
+                                onChange={(e) => setStartTime(e.target.value)}
+                                sx={{ marginBottom: 2 }}
+                            />
+
+                            <TextField
+                                type="time"
+                                label="End Time"
+                                fullWidth
+                                variant="outlined"
+                                value={endTime}
+                                onChange={(e) => setEndTime(e.target.value)}
+                                sx={{ marginBottom: 2 }}
+                            />
+
+                            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                                Create Batch
+                            </Button>
+                        </form>
+                    </Box>
+                </Box>
             )}
         </>
     );

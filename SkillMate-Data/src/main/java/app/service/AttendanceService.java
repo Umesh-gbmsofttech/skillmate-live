@@ -5,6 +5,9 @@ import app.repository.AttendanceRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,17 @@ public class AttendanceService {
 
     public Attendance saveAttendance(Attendance attendance) {
         return attendanceRepository.save(attendance);
+    }
+
+    @GetMapping("/{studentId}")
+    public List<Attendance> getAllAttendanceRecords(@PathVariable Long studentId) {
+        return attendanceRepository.findByStudentId(studentId);
+    }
+
+    // for trainer to get the attendance of students by meeting id
+    @GetMapping("/{studentId}/{meetingId}")
+    public List<Attendance> getAllAttendanceRecords(@PathVariable Long studentId, @PathVariable Long meetingId) {
+        return attendanceRepository.findByStudentIdAndMeetingId(studentId, meetingId);
     }
 
     public List<Attendance> getAllAttendanceRecords() {
