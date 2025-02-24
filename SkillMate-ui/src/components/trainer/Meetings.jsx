@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchTrainerBatches } from '../redux/trainerBatchesSlice';
 import { TextField, Button, Grid, Typography, Paper, MenuItem, Select, InputLabel, FormControl, Checkbox, ListItemText, Avatar, Box } from '@mui/material';
-import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
+import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 import baseUrl from '../urls/baseUrl';
+import axios from 'axios';
 
 function Meetings({ userData, trainerId }) {
+    const dispatch = useDispatch();
+    const { batches, loading, error } = useSelector((state) => state.trainerBatches);
+    const token = useSelector((state) => state.auth.token);
+
     const [meetingDetails, setMeetingDetails] = useState({
         fromTime: "",
         toTime: "",
@@ -14,48 +19,14 @@ function Meetings({ userData, trainerId }) {
         selectedBatches: [],
         selectedCourse: ""
     });
-    const [batches, setBatches] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-    const [courses, setCourse] = useState([]);
+
     const [previousMeetings, setPreviousMeetings] = useState([]);
-    const token = useSelector((state) => state.auth.token);
-    const [trainerBatches, setTrainerBatches] = useState([]);
-    const [selectedStudents, setSelectedStudents] = useState([]);
 
     useEffect(() => {
-        const fetchBatches = async () => {
-            try {
-                const response = await axios.get(`${baseUrl}batches/trainer/${trainerId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                console.log('trainer batches fetched', response.data);
-                setBatches(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching batches:', error);
-            }
-        };
-
-        if (trainerId && token) {
-            fetchBatches();
+        if (trainerId && batches.length === 0) {
+            dispatch(fetchTrainerBatches(trainerId));
         }
-    }, [trainerId, token]);
-
-    useEffect(() => {
-        const fetchBatches = async () => {
-            try {
-                const response = await axios.get(`${baseUrl}batches/trainer/${trainerId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                setTrainerBatches(response.data);
-            } catch (error) {
-                showErrorToast(`Error fetching batches: ${error}`);
-            }
-        };
-
-        if (trainerId && token) fetchBatches();
-    }, [trainerId, token]);
+    }, [trainerId, batches.length, dispatch]);
 
     const handleMeetingInputChange = (e) => {
         const { name, value } = e.target;
@@ -70,7 +41,6 @@ function Meetings({ userData, trainerId }) {
         const selectedBatch = batches.find(batch => batch.id === selectedBatchId);
         const selectedCourse = selectedBatch ? selectedBatch.course : {};
 
-        // Set meeting details based on the selected batch
         setMeetingDetails((prevDetails) => ({
             ...prevDetails,
             selectedBatches: [selectedBatchId],
@@ -86,25 +56,19 @@ function Meetings({ userData, trainerId }) {
             return;
         }
 
-        const startTime = meetingDetails.fromTime;
-        const endTime = meetingDetails.toTime;
-
-        // Prepare the payload for the backend
         const payload = {
-            startTime: startTime,
-            endTime: endTime,
+            startTime: meetingDetails.fromTime,
+            endTime: meetingDetails.toTime,
             meetingLink: meetingDetails.meetingLink,
             course: { id: meetingDetails.selectedCourse },
             trainer: { id: trainerId },
-            batch: { id: meetingDetails.selectedBatches[0] },  // Only one batch can be selected
+            batch: { id: meetingDetails.selectedBatches[0] },
         };
 
         try {
-            // Send the data to the backend
             const response = await axios.post(`${baseUrl}meetings`, payload);
             showSuccessToast("Meeting created successfully");
 
-            // Reset meeting details after successful submission
             setMeetingDetails({
                 fromTime: "",
                 toTime: "",
@@ -114,13 +78,11 @@ function Meetings({ userData, trainerId }) {
                 selectedCourse: "",
             });
 
-            // Update the list of previous meetings
             setPreviousMeetings((prevMeetings) => [response.data, ...prevMeetings]);
         } catch (error) {
             showErrorToast(`Error saving meeting: ${error}`);
         }
     };
-
 
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto' }}>
@@ -136,11 +98,14 @@ function Meetings({ userData, trainerId }) {
                                 label="Choose Batch"
                                 value={meetingDetails.selectedBatches[0] || ''}
                                 onChange={handleBatchChange}
-                                renderValue={(selected) => batches.find(batch => batch.id === selected)?.course.title + batches.id || 'Select Batch'}
+                                renderValue={(selected) => {
+                                    const batch = batches.find(batch => batch.id === selected);
+                                    return batch ? batch.course.title : 'Select Batch';
+                                }}
                             >
-                                {trainerBatches.map((batch) => (
+                                {batches.map((batch) => (
                                     <MenuItem key={batch.id} value={batch.id}>
-                                        <Checkbox checked={meetingDetails.selectedBatches.indexOf(batch.id) > -1} />
+                                        <Checkbox checked={meetingDetails.selectedBatches.includes(batch.id)} />
                                         <ListItemText primary={`Batch Id: ${batch.id} - ${batch.course.title}`} />
                                     </MenuItem>
                                 ))}

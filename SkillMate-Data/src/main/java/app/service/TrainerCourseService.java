@@ -1,5 +1,6 @@
 package app.service;
 
+import app.entity.Course;
 import app.entity.TrainerCourse;
 import app.exception.EntityNotFoundException;
 import app.repository.TrainerCourseRepository;
@@ -37,6 +38,14 @@ public class TrainerCourseService {
         } else {
             throw new EntityNotFoundException("TrainerCourse not found with id " + id);
         }
+    }
+
+    public List<TrainerCourse> getCoursesByTrainerId(Long trainerId) {
+        List<TrainerCourse> trainerCourses = trainerCourseRepository.findByTrainerId(trainerId);
+        if (trainerCourses.isEmpty()) {
+            throw new EntityNotFoundException("No courses found for trainer ID " + trainerId);
+        }
+        return trainerCourses;
     }
 
     // Update TrainerCourse

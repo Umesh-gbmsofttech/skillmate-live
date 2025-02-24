@@ -1,40 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Box, Typography, Grid, Card, CardContent, CardMedia, CircularProgress } from '@mui/material';
-import logo from '../../assets/skillmate.jpg';
-import axios from 'axios';
-import LiveSessions from '../subscription/LiveSessions';
-import baseUrl from '../urls/baseUrl'
-
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Box, Typography, Grid, Card, CardContent, CardMedia, CircularProgress } from "@mui/material";
+import logo from "../../assets/skillmate.jpg";
+import { fetchCourses } from "../redux/myCoursesSlice";
+import LiveSessions from "../subscription/LiveSessions";
 
 function MyCourses() {
+    const dispatch = useDispatch();
     const token = useSelector((state) => state.auth.token);
     const userData = useSelector((state) => state.auth.userData);
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-    const [myCourses, setMyCourses] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    const fetchCourses = async () => {
-        try {
-            const response = await axios.get(`${baseUrl}enrollments/enrolled/${userData.id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            console.log(response.data)
-            setMyCourses(response.data);
-        } catch (error) {
-            setError('Error fetching courses.');
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { courses, loading, error } = useSelector((state) => state.myCourses);
 
     useEffect(() => {
-        if (isAuthenticated && userData?.id) {
-            fetchCourses();
+        if (isAuthenticated && userData?.id && courses.length === 0) {
+            dispatch(fetchCourses(userData.id));
         }
-    }, [isAuthenticated, userData?.id, token]);
+    }, [isAuthenticated, userData?.id, courses.length, dispatch]);
 
     if (loading) {
         return <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh"><CircularProgress /></Box>;
@@ -44,7 +26,7 @@ function MyCourses() {
         return <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh"><Typography variant="h6" color="error">{error}</Typography></Box>;
     }
 
-    if (myCourses.length === 0) {
+    if (courses.length === 0) {
         return <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh"><Typography variant="h6">No courses purchased yet.</Typography></Box>;
     }
 
@@ -55,13 +37,13 @@ function MyCourses() {
             </Typography>
 
             <Typography variant="body1" color="textSecondary" align="center" sx={{ marginBottom: 2 }}>
-                Number of Courses: {myCourses.length}
+                Number of Courses: {courses.length}
             </Typography>
 
             <Grid container spacing={3} justifyContent="center">
-                {myCourses.map((course) => (
+                {courses.map((course) => (
                     <Grid item xs={12} sm={6} md={4} key={course.id}>
-                        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
                             <CardMedia
                                 component="img"
                                 alt={course.title}
@@ -73,13 +55,16 @@ function MyCourses() {
                                 <Typography variant="body2" color="textSecondary">Price: {course.price}</Typography>
                                 <Typography variant="body2" color="textSecondary">Description: {course.description}</Typography>
                                 <Typography variant="body2" color="textSecondary">Days: {course.days}</Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Meetings: {course.meetings?.length || 0}
+                                </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
 
-            {/* <LiveSessions myCourses={myCourses} /> */}
+            <LiveSessions myCourses={courses} userData={userData} token={token} />
         </Box>
     );
 }

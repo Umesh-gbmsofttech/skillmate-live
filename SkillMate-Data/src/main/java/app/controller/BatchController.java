@@ -2,6 +2,7 @@ package app.controller;
 
 import app.entity.Batch;
 import app.entity.Student;
+import app.exception.EntityNotFoundException;
 import app.service.BatchService;
 import jakarta.validation.Valid;
 
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -39,23 +41,34 @@ public class BatchController {
 
     // Get batch by Trainer ID
     @GetMapping("/trainer/{id}")
-    public ResponseEntity<List<Batch>> getBatchByTrainerId(@PathVariable Long id) {
+    public ResponseEntity<List<Batch>> getBatchByTrainerId(@PathVariable(value = "id") Long id) {
         try {
             List<Batch> batches = batchService.getBatchTrainerById(id);
             return new ResponseEntity<>(batches, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(List.of(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NOT_FOUND);
         }
     }
 
     // Get students by batch ID (here need to pass the trainer's batch id)
-    @GetMapping("/student/{id}")
-    public ResponseEntity<List<Student>> getStudentsByBatchId(@PathVariable Long batchId) {
+    @GetMapping("/students/{batchId}")
+    public ResponseEntity<List<Student>> getStudentsByBatchId(@PathVariable("batchId") Long batchId) {
         try {
             List<Student> students = batchService.getStudentsByBatchId(batchId);
             return new ResponseEntity<>(students, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(List.of(), HttpStatus.NOT_FOUND);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Get the batches by student id
+    @GetMapping("/student/{id}")
+    public ResponseEntity<List<Batch>> getBatchesByStudentId(@PathVariable("id") Long studentId) {
+        try {
+            List<Batch> batches = batchService.getBatchesByStudentId(studentId);
+            return new ResponseEntity<>(batches, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NOT_FOUND);
         }
     }
 

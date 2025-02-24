@@ -41,13 +41,23 @@ public class BatchService {
         }
     }
 
-    // Get batch by Trainer ID
+    // Get students by Batch ID
     public List<Student> getStudentsByBatchId(Long batchId) {
-        List<Student> students = batchRepository.findBatchStudentsByBatchId(batchId);
+        List<Student> students = batchRepository.findStudentsByBatchId(batchId);
         if (!students.isEmpty()) {
             return students;
         } else {
-            throw new EntityNotFoundException("Students not found with Batch id: " + batchId);
+            throw new EntityNotFoundException("No students found for batch ID: " + batchId);
+        }
+    }
+
+    // Get batches by Student ID
+    public List<Batch> getBatchesByStudentId(Long studentId) {
+        List<Batch> batches = batchRepository.findBatchesByStudentId(studentId);
+        if (!batches.isEmpty()) {
+            return batches;
+        } else {
+            throw new EntityNotFoundException("No batches found for student ID: " + studentId);
         }
     }
 

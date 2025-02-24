@@ -9,88 +9,51 @@ import {
     TableHead,
     TableRow,
     Paper,
-    Button
+    Button,
+    Typography,
+    TextField
 } from "@mui/material";
 import Loading from "../../Loading";
-import { showSuccessToast, showErrorToast, showInfoToast, showWarningToast } from '../utility/ToastService';
+import { showSuccessToast, showErrorToast } from '../utility/ToastService';
+import baseUrl from "../urls/baseUrl";
 
 function Attendances({ batch }) {
-    const [students, setStudents] = useState([]);
-    const [attendances, setAttendances] = useState({});
+    const [attendances, setAttendances] = useState([]);
     const [editedAttendance, setEditedAttendance] = useState({});
     const [loading, setLoading] = useState(false);
     const token = useSelector((state) => state.auth.token);
 
     useEffect(() => {
-        const fetchStudents = async () => {
-            if (!batch) return;
-            setLoading(true);
-            try {
-                const response = await axios.get(
-                    `${baseUrl}students/batch/${batch}`,
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-                setStudents(response.data);
-            } catch (error) {
-                // console.error("Error fetching students:", error);
-                showErrorToast(`Error fetching students: ${error}`);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchStudents();
-    }, [batch, token]);
-
-    useEffect(() => {
         const fetchLatestAttendances = async () => {
-            if (!students.length) return;
-            const updatedAttendances = {};
             setLoading(true);
-            try {
-                for (const student of students) {
+            if (!batch) {
+                setLoading(false);
+                return;
+            } else {
+                try {
                     const response = await axios.get(
-                        `${baseUrl}attendances/student/${student.id}/latest`,
+                        `${baseUrl}attendances/batch/${batch}`,
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
-                    updatedAttendances[student.id] = [response.data]; // Store as an array
+                    setAttendances(response.data);
+                } catch (error) {
+                    showErrorToast(`Error fetching latest attendances: ${error}`);
+                } finally {
+                    setLoading(false);
                 }
-                setAttendances(updatedAttendances);
-            } catch (error) {
-                // console.error("Error fetching latest attendances:", error);
-                showErrorToast(`Error fetching latest attendances: ${error}`);
             }
             setLoading(false);
         };
-
         fetchLatestAttendances();
-    }, [students, token]);
+    }, [batch, token]);
 
-    const fetchAllAttendances = async (studentId) => {
-        setLoading(true);
-        try {
-            const response = await axios.get(
-                `${baseUrl}attendances/student/${studentId}`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            setAttendances((prev) => ({
-                ...prev,
-                [studentId]: response.data,
-            }));
-        } catch (error) {
-            // console.error("Error fetching all attendances:", error);
-            showErrorToast(`Error fetching all attendances: ${error}`);
-        }
-        setLoading(false);
-    };
-
-    const updateAttendance = async (studentId, recordId) => {
+    const updateAttendance = async (recordId) => {
         if (!editedAttendance[recordId]) return;
         setLoading(true);
         try {
             const updatedRecord = editedAttendance[recordId];
             await axios.put(
-                `${baseUrl}attendances/update/${recordId}`,
+                `${baseUrl}attendances/${recordId}`,
                 updatedRecord,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -102,17 +65,12 @@ function Attendances({ batch }) {
                 return updatedState;
             });
 
-            // Refresh attendance records
             const response = await axios.get(
-                `${baseUrl}attendances/student/${studentId}/latest`,
+                `${baseUrl}attendances/batch/${batch}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setAttendances((prev) => ({
-                ...prev,
-                [studentId]: [response.data],
-            }));
+            setAttendances(response.data);
         } catch (error) {
-            // console.error("Error updating attendance:", error);
             showErrorToast(`Error updating attendance: ${error}`);
         }
         setLoading(false);
@@ -125,116 +83,70 @@ function Attendances({ batch }) {
         }));
     };
 
+    const formatDateTime = (timestamp) => {
+        if (!timestamp) return "N/A";
+        const [date, time] = timestamp.split(" ");
+        return `${date} ${time}`;
+    };
+
     return (
-        <div style={{ padding: '0px 120px 10px 120px' }}>
+        <div style={{ padding: "10px", maxWidth: "100%" }}>
+            <Typography variant="h5" align="center" gutterBottom>
+                Attendance Records
+            </Typography>
             {loading ? (
                 <Loading />
             ) : (
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
+                <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+                    <Table sx={{ minWidth: 600 }}>
+                        <TableHead sx={{ bgcolor: "#f5f5f5" }}>
                             <TableRow>
-                                <TableCell>Sr. No.</TableCell>
-                                <TableCell>Student Name</TableCell>
-                                <TableCell>Course Name</TableCell>
-                                <TableCell>In Time</TableCell>
-                                <TableCell>Out Time</TableCell>
-                                <TableCell>Total Attendance</TableCell>
-                                <TableCell>Remark</TableCell>
-                                <TableCell>Actions</TableCell>
-                                <TableCell>View All</TableCell>
+                                <TableCell><b>Sr. No.</b></TableCell>
+                                <TableCell><b>Student Name</b></TableCell>
+                                {/* <TableCell><b>Course Name</b></TableCell> */}
+                                <TableCell><b>In Time</b></TableCell>
+                                <TableCell><b>Remark</b></TableCell>
+                                <TableCell><b>Actions</b></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {students.length > 0 ? (
-                                students.map((student, index) => {
-                                    const attendanceRecords = attendances[student.id] || [];
-
-                                    return (
-                                        <React.Fragment key={student.id}>
-                                            {attendanceRecords.length > 0 ? (
-                                                attendanceRecords.map((record) => (
-                                                    <TableRow key={`${student.id}-${record.id}`}>
-                                                        <TableCell>{index + 1}</TableCell>
-                                                        <TableCell>{student.name}</TableCell>
-                                                        <TableCell>
-                                                            {student.courses?.map((course) => course.courseName).join(", ") || "N/A"}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <input
-                                                                type="time"
-                                                                value={editedAttendance[record.id]?.inTime || record.inTime || ""}
-                                                                onChange={(e) =>
-                                                                    handleInputChange(record.id, "inTime", e.target.value)
-                                                                }
-                                                            />
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <input
-                                                                type="time"
-                                                                value={editedAttendance[record.id]?.outTime || record.outTime || ""}
-                                                                onChange={(e) =>
-                                                                    handleInputChange(record.id, "outTime", e.target.value)
-                                                                }
-                                                            />
-                                                        </TableCell>
-                                                        <TableCell>{record.totalAttendance || "N/A"}</TableCell>
-                                                        <TableCell>
-                                                            <input
-                                                                type="text"
-                                                                value={editedAttendance[record.id]?.remark || record.remark || ""}
-                                                                onChange={(e) =>
-                                                                    handleInputChange(record.id, "remark", e.target.value)
-                                                                }
-                                                            />
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <Button
-                                                                variant="contained"
-                                                                color="primary"
-                                                                onClick={() => updateAttendance(student.id, record.id)}
-                                                            >
-                                                                Update
-                                                            </Button>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {attendanceRecords.length === 1 && (
-                                                                <Button
-                                                                    variant="outlined"
-                                                                    color="secondary"
-                                                                    onClick={() => fetchAllAttendances(student.id)}
-                                                                >
-                                                                    View All
-                                                                </Button>
-                                                            )}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))
-                                            ) : (
-                                                <TableRow key={student.id}>
-                                                    <TableCell>{index + 1}</TableCell>
-                                                    <TableCell>{student.name}</TableCell>
-                                                    <TableCell>
-                                                        {student.courses?.map((course) => course.courseName).join(", ") || "N/A"}
-                                                    </TableCell>
-                                                    <TableCell colSpan={5}>No attendance records found</TableCell>
-                                                    <TableCell>
-                                                        <Button
-                                                            variant="outlined"
-                                                            color="secondary"
-                                                            onClick={() => fetchAllAttendances(student.id)}
-                                                        >
-                                                            View All
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            )}
-                                        </React.Fragment>
-                                    );
-                                })
+                            {attendances.length > 0 ? (
+                                attendances.map((record, index) => (
+                                    <TableRow key={record.id}>
+                                        <TableCell>{index + 1}</TableCell>
+                                        <TableCell>{record.student.name}</TableCell>
+                                        {/* <TableCell>
+                                            {record.student.qualification || "N/A"}
+                                        </TableCell> */}
+                                        <TableCell>{formatDateTime(record.attendanceTimestamp)}</TableCell>
+                                        <TableCell>
+                                            <TextField
+                                                variant="outlined"
+                                                size="small"
+                                                fullWidth
+                                                value={editedAttendance[record.id]?.remark || record.remark || ""}
+                                                onChange={(e) =>
+                                                    handleInputChange(record.id, "remark", e.target.value)
+                                                }
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                size="small"
+                                                onClick={() => updateAttendance(record.id)}
+                                            >
+                                                Update
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={9}>No students available for this batch</TableCell>
+                                    <TableCell colSpan={6} align="center">
+                                        No attendance records found
+                                    </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>

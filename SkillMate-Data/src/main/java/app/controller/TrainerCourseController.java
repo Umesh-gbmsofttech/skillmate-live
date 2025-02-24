@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.entity.Course;
 import app.entity.TrainerCourse;
 import app.exception.ResourceNotFoundException;
 import app.service.TrainerCourseService;
@@ -40,6 +41,13 @@ public class TrainerCourseController {
     public ResponseEntity<TrainerCourse> getTrainerCourseById(@PathVariable Long id) {
         TrainerCourse trainerCourse = trainerCourseService.getTrainerCourseById(id);
         return ResponseEntity.ok(trainerCourse);
+    }
+
+    // Get courses by trainer id
+    @GetMapping("/courses/{trainerId}")
+    public ResponseEntity<List<TrainerCourse>> getCoursesByTrainerId(@PathVariable Long trainerId) {
+        List<TrainerCourse> trainerCourses = trainerCourseService.getCoursesByTrainerId(trainerId);
+        return ResponseEntity.ok(trainerCourses);
     }
 
     // Update a TrainerCourse

@@ -1,10 +1,13 @@
 package app.service;
 
-import app.entity.RatingReview;
-import app.repository.RatingReviewsRepository;
+import app.entity.CourseRating;
+import app.entity.TrainerRating;
+import app.repository.CourseRatingRepository;
+import app.repository.TrainerRatingRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,21 +16,57 @@ import java.util.Optional;
 public class RatingReviewService {
 
     @Autowired
-    private RatingReviewsRepository ratingReviewRepository;
+    private CourseRatingRepository courseRatingRepository;
+    @Autowired
+    private TrainerRatingRepository trainerRatingRepository;
 
-    public RatingReview saveRatingReview(RatingReview ratingReview) {
-        return ratingReviewRepository.save(ratingReview);
+    public CourseRating saveRatingReviewOfCourse(CourseRating ratingReview) {
+        return courseRatingRepository.save(ratingReview);
     }
 
-    public List<RatingReview> getAllRatingReviews() {
-        return ratingReviewRepository.findAll();
+    public TrainerRating saveRatingReviewOfTrainer(TrainerRating ratingReview) {
+        return trainerRatingRepository.save(ratingReview);
     }
 
-    public Optional<RatingReview> getRatingReviewById(Long id) {
-        return ratingReviewRepository.findById(id);
+    public List<Object> getAllRatings() {
+        List<TrainerRating> tRating = trainerRatingRepository.findAll();
+        List<CourseRating> cRating = courseRatingRepository.findAll();
+        List<Object> ratings = List.of(tRating, cRating);
+        return ratings;
     }
 
-    public void deleteRatingReview(Long id) {
-        ratingReviewRepository.deleteById(id);
+    public List<CourseRating> getAllCourseRatings() {
+        return courseRatingRepository.findAll();
     }
+
+    public List<TrainerRating> getAllTrainerRatings() {
+        return trainerRatingRepository.findAll();
+    }
+
+    public CourseRating getCourseRatingById(Long id) {
+        Optional<CourseRating> rating = courseRatingRepository.findById(id);
+        return rating.orElse(null);
+    }
+
+    public List<CourseRating> getCourseRatingByCourseId(Long courseId) {
+        return courseRatingRepository.findByCourseId(courseId);
+    }
+
+    public TrainerRating getTrainerRatingById(Long id) {
+        Optional<TrainerRating> rating = trainerRatingRepository.findById(id);
+        return rating.orElse(null);
+    }
+
+    public List<TrainerRating> getTrainerRatingByTrainerId(Long trainerId) {
+        return trainerRatingRepository.findByTrainerId(trainerId);
+    }
+
+    public void deleteCourseRating(Long id) {
+        courseRatingRepository.deleteById(id);
+    }
+
+    public void deleteTrainerRating(Long id) {
+        trainerRatingRepository.deleteById(id);
+    }
+
 }

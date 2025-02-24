@@ -4,7 +4,8 @@ import './Carousel.css';
 import logo from '../../assets/skillmate.jpg';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import carouselImg1 from '../../assets/carausel.jpg';
+// import carouselImg1 from '../../assets/carausel.jpg';
+import carouselImg1 from '../../assets/background-laptop.avif';
 
 
 const Carousel = () => {

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { updateCourse } from '../redux/courseActions';
 import axios from 'axios';
 import { Box, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
 import baseUrl from '../urls/baseUrl';
+import { updateCourse } from '../redux/coursesSlice';
 
 function AdEditCourse() {
     const [title, setTitle] = useState('');
@@ -28,20 +28,20 @@ function AdEditCourse() {
 
     useEffect(() => {
         if (courseData) {
-            setTitle(courseData.title);
-            setDays(courseData.days);
-            setTime(courseData.time);
-            setPrice(courseData.price);
-            setDescription(courseData.description);
-            setStartDate(courseData.startDate);
-            setEndDate(courseData.endDate);
-            setStartTime(courseData.startTime);
-            setEndTime(courseData.endTime);
-            setProfilePic(courseData.image || courseCoverImage);
-            // Set preview image from existing course data
-            setPreviewImage(courseData.image ? `data:image/jpeg;base64,${courseData.image}` : courseCoverImage);
+            setTitle(courseData.title || '');
+            setDays(courseData.days || '');
+            setTime(courseData.time || '');
+            setPrice(courseData.price || '');
+            setDescription(courseData.description || '');
+            setStartDate(courseData.startDate || '');
+            setEndDate(courseData.endDate || '');
+            if (courseData.image) {
+                setProfilePic(courseData.image);
+                setPreviewImage(`data:image/jpeg;base64,${courseData.image}`);
+            }
         }
     }, [courseData]);
+
 
     const handleSubmitClick = async () => {
         const convertToBase64 = (file) => {
@@ -53,12 +53,11 @@ function AdEditCourse() {
             });
         };
 
-        let coverImageBase64 = previewImage; // Use the preview image (either existing or newly selected)
-        if (courseCoverImage && typeof courseCoverImage !== 'string') {
-            coverImageBase64 = await convertToBase64(courseCoverImage); // Convert to base64 if it's a new file
+        let coverImageBase64 = previewImage;
+        if (courseCoverImage && courseCoverImage instanceof File) {
+            coverImageBase64 = await convertToBase64(courseCoverImage);
         }
 
-        // Remove the prefix if it exists (e.g., "data:image/jpeg;base64,") when data is submitting
         if (coverImageBase64 && coverImageBase64.startsWith('data:image')) {
             coverImageBase64 = coverImageBase64.replace(/^data:image\/[a-z]+;base64,/, "");
         }
@@ -72,9 +71,7 @@ function AdEditCourse() {
             description,
             startDate,
             endDate,
-            startTime,
-            endTime,
-            image: coverImageBase64, // Send only the base64 string without prefix
+            image: coverImageBase64 || courseData.image,
         };
 
         setLoading(true);
@@ -85,22 +82,26 @@ function AdEditCourse() {
             );
 
             if (response.status === 200) {
-                showSuccessToast('Course updated successfully'); // Debugging log
+                showSuccessToast('Course updated successfully');
                 dispatch(updateCourse(updatedCourse));
                 navigate('/admin-profile/manage-courses');
             }
         } catch (e) {
-            showErrorToast('Error updating course!', e);
+            showErrorToast(`Error updating course! ${e.response?.data?.message || e.message}`);
         } finally {
             setLoading(false);
         }
     };
 
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setProfilePic(file);  // Store the selected file for conversion later
-        setPreviewImage(URL.createObjectURL(file));  // Set preview image directly from the file
+        if (file) {
+            setProfilePic(file);
+            setPreviewImage(URL.createObjectURL(file));
+        }
     };
+
 
     if (!courseData) {
         return <CircularProgress />;
@@ -208,28 +209,6 @@ function AdEditCourse() {
                     variant="outlined"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    sx={{ marginBottom: 2 }}
-                />
-
-                {/* Start Time */}
-                <TextField
-                    type="time"
-                    label="Start Time"
-                    fullWidth
-                    variant="outlined"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    sx={{ marginBottom: 2 }}
-                />
-
-                {/* End Time */}
-                <TextField
-                    type="time"
-                    label="End Time"
-                    fullWidth
-                    variant="outlined"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
                     sx={{ marginBottom: 2 }}
                 />
             </Box>

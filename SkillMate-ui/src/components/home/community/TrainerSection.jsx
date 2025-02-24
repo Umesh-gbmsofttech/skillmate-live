@@ -28,7 +28,7 @@ const TrainerSection = () => {
     useEffect(() => {
         const fetchTrainers = async () => {
             try {
-                const response = await fetch("http://localhost:8080/trainers/fetch", {
+                const response = await fetch("http://localhost:8080/trainers", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -59,7 +59,7 @@ const TrainerSection = () => {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 5, backgroundColor:'linearGradient((green),(red))' }}>
+        <Container maxWidth="lg" sx={{ mt: 5, backgroundColor: 'linearGradient((green),(red))' }}>
             {loading ? (
                 <Loading />
             ) : error ? (
@@ -68,7 +68,7 @@ const TrainerSection = () => {
                 </Typography>
             ) : (
                 <>
-                    <Typography variant="h4" align="center"   fontWeight="bold" gutterBottom color='#3caacb'>
+                    <Typography variant="h4" align="center" fontWeight="bold" gutterBottom color='#3caacb'>
                         Meet Our Expert Trainers
                     </Typography>
                     {/* Info Section */}
@@ -82,7 +82,7 @@ const TrainerSection = () => {
                             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
                         }}
                     >
-                        <Typography variant="h4" fontWeight="bold"  color="primary" gutterBottom>
+                        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
                             Our Trainers
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
@@ -111,7 +111,7 @@ const TrainerSection = () => {
                                 >
                                     {/* Circular Avatar */}
                                     <Avatar
-                                        src={trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : altImage}
+                                        src={trainer.image ? `data:image/png;base64,${trainer.image}` : altImage}
                                         alt={trainer.fullName || "Trainer"}
                                         sx={{
                                             width: 120,

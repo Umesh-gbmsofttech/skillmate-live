@@ -24,8 +24,8 @@ function StudentProfile() {
         qualification: userData?.qualification || 'Bachelor of Science, Computer Science',
         workStatus: userData?.workingStatus || 'Full-Time',
         technologies: userData?.technologies || ['JavaScript', 'React', 'Node.js'],
-        profilePic: userData?.profilePic
-            ? `data:image/jpeg;base64,${userData.profilePic}`
+        image: userData?.image
+            ? `data:image/jpeg;base64,${userData.image}`
             : defaultProfilePic,
         resume: userData?.resume,
     };
@@ -50,7 +50,7 @@ function StudentProfile() {
                 {/* Profile Header */}
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Avatar
-                        src={user.profilePic}
+                        src={user.image}
                         alt={user.name}
                         sx={{ width: 180, height: 220, objectFit: 'cover', objectPosition: 'top', borderRadius: '0', padding: '10px' }}
                     />

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToMyCourses } from '../redux/courseActions';
 import axios from 'axios';
 import ReviewsSection from '../rating-review/ReviewsSection';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
@@ -9,6 +8,7 @@ import { Box, Grid, Typography, Button, Card, CardMedia, CardContent, Collapse }
 import { ExpandMore } from '@mui/icons-material';
 import writeIcon from '../../assets/writeIcon.png';
 import baseUrl from '../urls/baseUrl'
+import { addToMyCourses } from '../redux/coursesSlice';
 
 
 function BuyCourse({ course }) {

@@ -3,52 +3,37 @@ import { Grid, Typography, Button, Card, CardContent, CardMedia, Dialog, DialogA
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCourses } from '../redux/courseActions';
 import Loading from '../../Loading';
 import Fuse from 'fuse.js';
 import { showSuccessToast, showErrorToast, showWarningToast, showInfoToast } from '../utility/ToastService';
 import Search from '../Search';
 import baseUrl from '../urls/baseUrl'
+import { fetchCourses, deleteCourse } from '../redux/coursesSlice';
 
 
 function ManageCoursesList() {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const token = useSelector((state) => state.auth.token);
-    const courses = useSelector((state) => state.courses.courses);
     const [searchQuery, setSearchQuery] = useState('');
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
     const [courseToDelete, setCourseToDelete] = useState(null);
     const [isFullDescriptionDialogOpen, setIsFullDescriptionDialogOpen] = useState(false);
     const [fullDescriptionContent, setFullDescriptionContent] = useState('');
+    const dispatch = useDispatch();
+    const { courses, status, error } = useSelector((state) => state.courses);
+    const token = useSelector((state) => state.auth.token);
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const response = await axios.get(`${baseUrl}courses`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                dispatch(setCourses(response.data));
-                setLoading(false);
-            } catch (error) {
-                setError('Failed to fetch courses.');
-                showErrorToast('Failed to fetch courses.');
-                setLoading(false);
-            }
-        };
-
         if (token) {
-            fetchCourses();
+            dispatch(fetchCourses());
         } else {
-            setError('Authorization token is missing or invalid.');
             showWarningToast('Authorization token is missing or invalid.');
-            setLoading(false);
         }
+        setLoading(false);
     }, [token, dispatch]);
+
+    if (status === 'loading') return <Loading />;
+    if (status === 'failed') return <Typography color="error">{error?.message || error}</Typography>;
 
     // Configure Fuse.js for fuzzy search
     const fuse = new Fuse(courses, {
@@ -73,28 +58,13 @@ function ManageCoursesList() {
         setIsConfirmDialogOpen(true); // Open the confirmation dialog
     };
 
-    const handleConfirmDelete = async () => {
+    const handleConfirmDelete = () => {
         if (courseToDelete) {
-            try {
-                const response = await axios.delete(`${baseUrl}courses/${courseToDelete}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                if (response.status === 200) {
-                    showSuccessToast('Course deleted successfully!');
-                    const updatedCourses = courses.filter((course) => course.id !== courseToDelete);
-                    dispatch(setCourses(updatedCourses)); // Update the course list in the Redux store
-                } else {
-                    showInfoToast('Failed to delete the course. Please try again.');
-                }
-            } catch (error) {
-                setError('Failed to delete the course. Please try again.');
-                showErrorToast('Failed to delete the course. Please try again.');
-            }
+            dispatch(deleteCourse(courseToDelete));
         }
-        setIsConfirmDialogOpen(false); // Close the dialog after confirming deletion
+        setIsConfirmDialogOpen(false);
     };
+
 
     const handleCancel = () => {
         setIsConfirmDialogOpen(false); // Close the dialog without deleting

@@ -29,7 +29,7 @@ function SoftwareEngineer() {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Adjust opacity (0.5 is the opacity value)
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',  // Adjust opacity (0.5 is the opacity value)
           zIndex: -1,  // Ensures overlay is behind the content
         }}
       />

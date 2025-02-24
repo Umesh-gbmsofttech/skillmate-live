@@ -23,12 +23,14 @@ public class Attendance {
     private Long id;
 
     private boolean attended;
+    private Long batch_id;
 
-    @JsonFormat(pattern = "HH:mm:ss") // Ensure time is in hh:mm:ss format
-    private LocalTime inTime = LocalTime.now();
+    // @JsonFormat(pattern = "HH:mm:ss") // Ensure time is in hh:mm:ss format
+    // private LocalTime inTime = LocalTime.now();
 
-    @JsonFormat(pattern = "HH:mm:ss") // Ensure time is in hh:mm:ss format
-    private LocalTime outTime;
+    // @JsonFormat(pattern = "HH:mm:ss") // Ensure time is in hh:mm:ss format
+    // private LocalTime outTime;
+    private String remark;
 
     @JsonBackReference
     @ManyToOne
@@ -39,6 +41,11 @@ public class Attendance {
     @JoinColumn(name = "student_id")
     private Student student;
 
-    @JsonFormat(pattern = "dd-MM-yyyy") // Ensure date is in dd-mm-yyyy format
-    private LocalDateTime attendanceTimestamp = LocalDateTime.now();
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss") // Ensure date-time format
+    private LocalDateTime attendanceTimestamp;
+
+    @PrePersist
+    protected void onCreate() {
+        this.attendanceTimestamp = LocalDateTime.now(); // Set timestamp before persisting
+    }
 }

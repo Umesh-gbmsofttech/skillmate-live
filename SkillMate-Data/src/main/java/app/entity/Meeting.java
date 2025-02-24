@@ -32,12 +32,16 @@ public class Meeting {
     @JoinColumn(name = "course_id")
     private Course course;// extra to store the id of course for each meeting
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss") // Ensure date-time format
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     // @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     // @JsonManagedReference
     private Trainer trainer;
 
+    @JsonIgnore // added becuse return attendace data aswell which not needed
     @JsonManagedReference
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
     private List<Attendance> attendances;

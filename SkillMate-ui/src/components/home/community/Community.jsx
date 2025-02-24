@@ -34,10 +34,8 @@ const Community = () => {
         </div>
       </section>
 
-      {/* Render both Trainer and Student Sections */}
-      <TrainerSection />  {/* Trainer section component */}
-      <StudentSection />  {/* Student section component */}
-      {/* <TestimonialsOfPlatformUsers heading={'What Our Community Says'} /> */}
+      <TrainerSection />
+      <StudentSection />
     </div>
   );
 };

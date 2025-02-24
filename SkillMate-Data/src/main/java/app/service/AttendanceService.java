@@ -2,12 +2,12 @@ package app.service;
 
 import app.entity.Attendance;
 import app.repository.AttendanceRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,29 +19,58 @@ public class AttendanceService {
     private AttendanceRepository attendanceRepository;
 
     public Attendance saveAttendance(Attendance attendance) {
+        attendance.setAttendanceTimestamp(LocalDateTime.now()); // Explicitly set timestamp
         return attendanceRepository.save(attendance);
-    }
-
-    @GetMapping("/{studentId}")
-    public List<Attendance> getAllAttendanceRecords(@PathVariable Long studentId) {
-        return attendanceRepository.findByStudentId(studentId);
-    }
-
-    // for trainer to get the attendance of students by meeting id
-    @GetMapping("/{studentId}/{meetingId}")
-    public List<Attendance> getAllAttendanceRecords(@PathVariable Long studentId, @PathVariable Long meetingId) {
-        return attendanceRepository.findByStudentIdAndMeetingId(studentId, meetingId);
     }
 
     public List<Attendance> getAllAttendanceRecords() {
         return attendanceRepository.findAll();
     }
 
-    public Optional<Attendance> getAttendanceById(Long id) {
-        return attendanceRepository.findById(id);
+    public Attendance getAttendanceById(Long id) {
+        return attendanceRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Attendance record not found with id: " + id));
+    }
+
+    public List<Attendance> getLatestAttendanceByBatchId(Long batchId) {
+        List<Attendance> attendanceList = attendanceRepository.findLatestAttendanceByBatchId(batchId);
+
+        if (attendanceList.isEmpty()) {
+            throw new EntityNotFoundException("No attendance records found for Batch Id: " + batchId);
+        }
+
+        return attendanceList;
+    }
+
+    public List<Attendance> getAttendanceByMeetingId(Long meetingId) {
+        List<Attendance> attendanceList = attendanceRepository.findByMeetingId(meetingId);
+        if (attendanceList.isEmpty()) {
+            throw new EntityNotFoundException("No attendance records found for meetingId: " + meetingId);
+        }
+        return attendanceList;
+    }
+
+    public List<Attendance> getAttendanceByStudentId(Long studentId) {
+        List<Attendance> attendanceList = attendanceRepository.findByStudentId(studentId);
+        if (attendanceList.isEmpty()) {
+            throw new EntityNotFoundException("No attendance records found for studentId: " + studentId);
+        }
+        return attendanceList;
+    }
+
+    public List<Attendance> getAttendanceByStudentIdAndMeetingId(Long studentId, Long meetingId) {
+        List<Attendance> attendanceList = attendanceRepository.findByStudentIdAndMeetingId(studentId, meetingId);
+        if (attendanceList.isEmpty()) {
+            throw new EntityNotFoundException("No attendance records found for studentId: " + studentId +
+                    " and meetingId: " + meetingId);
+        }
+        return attendanceList;
     }
 
     public void deleteAttendance(Long id) {
+        if (!attendanceRepository.existsById(id)) {
+            throw new EntityNotFoundException("Attendance record not found with id: " + id);
+        }
         attendanceRepository.deleteById(id);
     }
 }

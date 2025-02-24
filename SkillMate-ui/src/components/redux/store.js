@@ -1,18 +1,26 @@
 // store.js
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
-import courseReducer from './courseSlice';
-import communityDataReducer from './communityDataSlice'; // Import the new reducer
+import coursesReducer from './coursesSlice';
+import communityDataReducer from './communityDataSlice';
+import myCoursesReducer from './myCoursesSlice';
+import trainerCoursesReducer from './trainerCoursesSlice';
+import trainerBatchesReducer from './trainerBatchesSlice';
+import ratingReviewReducer from './ratingReviewSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    courses: courseReducer,
-    communityData: communityDataReducer, // Register the new reducer
+    courses: coursesReducer,
+    communityData: communityDataReducer,
+    myCourses: myCoursesReducer,
+    trainerCourses: trainerCoursesReducer,
+    trainerBatches: trainerBatchesReducer,
+    reviews: ratingReviewReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      thunk: true, // Ensure that thunk is enabled for async actions
+      thunk: true,
     }),
 });
 

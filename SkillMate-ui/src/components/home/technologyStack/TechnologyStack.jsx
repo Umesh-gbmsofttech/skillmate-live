@@ -51,7 +51,7 @@ const TechCard = styled(Card)(({ theme }) => ({
     position: 'relative',
     marginTop: '20px',
     color: '#16404D',
-    
+
     '&:hover': {
         boxShadow: '0 0 20px #676767',
     },
@@ -90,7 +90,7 @@ const TechDescription = styled(Box)(({ theme }) => ({
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
     opacity: 0,
     transition: 'opacity 0.3s ease-in-out',
-    
+
 }));
 
 
@@ -110,12 +110,20 @@ const TechnologyStack = () => {
                 variant="h3"
                 sx={{
                     textAlign: 'center',
-                    marginBottom: '20px',
+                    // marginBottom: '20px',
                     color: '#FDFFE2',
                     textShadow: '0 0 5px rgba(0, 0, 0, 0.2)',
                 }}
             >
                 Common Technology Stack Layers
+            </Typography>
+            <Typography
+                variant="h3"
+                sx={{
+                    textAlign: 'center'
+                }}
+            >
+                Describe about this
             </Typography>
 
             <Box
@@ -133,10 +141,10 @@ const TechnologyStack = () => {
                         <TechCard
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
-                            sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' ,justifyContent:'space-between' }}
+                            sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', justifyContent: 'space-between' }}
                         >
-                        
-                                <Typography
+
+                            {/* <Typography
                                     variant="h6"
                                     sx={{
                                         overflow: 'hidden',
@@ -148,13 +156,13 @@ const TechnologyStack = () => {
                                     }}
                                 >
                                     {technology.technologyName}
-                                </Typography>
-                                <TechImage
-                                    component="img"
-                                    src={technology.imageUrl}
-                                    alt={technology.technologyName}
-                                />
-                           
+                                </Typography> */}
+                            <TechImage
+                                component="img"
+                                src={technology.imageUrl}
+                                alt={technology.technologyName}
+                            />
+
                         </TechCard>
 
                         {/* Hoverable description that appears outside of the card */}

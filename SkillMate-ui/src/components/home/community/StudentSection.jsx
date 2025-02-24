@@ -18,7 +18,7 @@ const StudentSection = () => {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const response = await fetch('http://localhost:8080/students/fetch', {
+                const response = await fetch('http://localhost:8080/students', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ const StudentSection = () => {
                                 >
                                     {/* Circular Avatar */}
                                     <Avatar
-                                        src={student.profilePic ? `data:image/png;base64,${student.profilePic}` : altImage}
+                                        src={student.image ? `data:image/png;base64,${student.image}` : altImage}
                                         alt={student.fullName || 'Student'}
                                         sx={{
                                             width: 120,

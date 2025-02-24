@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Typography, TextField, Button, CircularProgress, Grid, Container, Paper } from '@mui/material';
 import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
-import baseUrl from '../urls/baseUrl';
+import { addCourse } from '../redux/coursesSlice'; // Import Redux action
 
 function AddCourseForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.courses); // Select Redux state
+
   const [title, setTitle] = useState('');
   const [days, setDays] = useState('');
   const [price, setPrice] = useState('');
@@ -13,97 +18,65 @@ function AddCourseForm() {
   const [image, setImage] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
-  const navigate = useNavigate();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       if (!file.type.startsWith('image/')) {
-        setError('Please upload a valid image file.');
+        showErrorToast('Please upload a valid image file.');
         setImage(null);
         setPreviewImage(null);
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        setError('File size must be less than 2MB.');
+        showErrorToast('File size must be less than 2MB.');
         setImage(null);
         setPreviewImage(null);
         return;
       }
 
-      setError('');
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result); // To show the preview of the image
-      };
+      reader.onloadend = () => setPreviewImage(reader.result);
       reader.readAsDataURL(file);
-      setImage(file); // Store the file itself for the form submission
+      setImage(file);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    // Check if all fields are filled
-    if (!title || !days || !price || !description || !image || !startDate || !endDate || !startTime || !endTime) {
-      setError('Please fill in all fields and upload an image.');
+    if (!title || !days || !price || !description || !image || !startDate || !endDate) {
       showWarningToast('Please fill in all fields and upload an image.');
-      setLoading(false);
       return;
     }
 
-    // Convert the image to Base64
     const reader = new FileReader();
     reader.onloadend = async () => {
-      const base64Image = reader.result.split(',')[1]; // Extract base64 string from the URL format
+      const base64Image = reader.result.split(',')[1];
 
-      const courseData = {
+      const newCourse = {
         title,
         days,
         price,
         description,
         startDate,
         endDate,
-        startTime,
-        endTime,
-        image: base64Image, // Store base64 string of the image
+        image: base64Image,
       };
 
-      try {
-        const response = await fetch(`${baseUrl}courses`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(courseData), // Send JSON data including base64 image
+      dispatch(addCourse(newCourse))
+        .unwrap()
+        .then(() => {
+          showSuccessToast('Course added successfully!');
+          navigate('/courses'); // Redirect after success
+        })
+        .catch((err) => {
+          showErrorToast(err || 'Failed to add course.');
         });
-
-        if (!response.ok) {
-          const text = await response.text();
-          showErrorToast(text || 'An error occurred on the server.');
-          throw new Error(text || 'An error occurred on the server.');
-        }
-
-        const data = await response.json();
-        if (data) {
-          showSuccessToast('Course data submitted successfully!');
-          navigate('/login/mobile'); // Corrected navigation path
-        }
-      } catch (error) {
-        setError(error.message || 'An error occurred while submitting the form.');
-        showErrorToast(`${error.message}` || 'An error occurred while submitting the form.');
-      } finally {
-        setLoading(false);
-      }
     };
 
-    reader.readAsDataURL(image); // Start reading the image as base64
+    reader.readAsDataURL(image);
   };
 
   return (
@@ -112,229 +85,32 @@ function AddCourseForm() {
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center', marginBottom: 3 }}>
           Add New Course
         </Typography>
-        {error && (
-          <Typography color="error" variant="body2" gutterBottom sx={{ textAlign: 'center', marginBottom: 2 }}>
-            {error}
-          </Typography>
-        )}
-
+        {error && <Typography color="error" sx={{ textAlign: 'center', marginBottom: 2 }}>{error}</Typography>}
         {loading && <CircularProgress sx={{ display: 'block', margin: '0 auto' }} />}
-
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            {/* Image Preview */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 3 }}>
-              {previewImage ? (
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <img
-                    src={previewImage}
-                    alt="Course Cover"
-                    style={{
-                      width: '100%',
-                      maxWidth: 350,
-                      height: 'auto',
-                      objectFit: 'cover',
-                      borderRadius: 10,
-                    }}
-                  />
-                </Box>
-              ) : (
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
-                    No image selected
-                  </Typography>
+            <Grid item xs={12}>
+              {previewImage && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 3 }}>
+                  <img src={previewImage} alt="Preview" style={{ width: 350, borderRadius: 10 }} />
                 </Box>
               )}
-            </Box>
-
-            {/* Cover Image Input */}
-            <Grid item xs={12}>
-              <Button
-                variant="outlined"
-                component="label"
-                fullWidth
-                sx={{
-                  borderColor: '#3f51b5',
-                  color: '#3f51b5',
-                  '&:hover': { borderColor: '#303f9f', color: '#303f9f' },
-                  padding: '10px',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
+              <Button variant="outlined" component="label" fullWidth>
                 <CloudUpload sx={{ marginRight: 1 }} />
                 Choose Cover Image
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
+                <input type="file" hidden accept="image/*" onChange={handleImageChange} />
               </Button>
             </Grid>
 
-            {/* Course Name Input */}
+            <Grid item xs={12}><TextField label="Course Name" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} required /></Grid>
+            <Grid item xs={12}><TextField label="Duration (in days)" type="number" fullWidth value={days} onChange={(e) => setDays(e.target.value)} required /></Grid>
+            <Grid item xs={12}><TextField label="Price" type="number" fullWidth value={price} onChange={(e) => setPrice(e.target.value)} required /></Grid>
+            <Grid item xs={12}><TextField type="date" fullWidth value={startDate} onChange={(e) => setStartDate(e.target.value)} required /></Grid>
+            <Grid item xs={12}><TextField type="date" fullWidth value={endDate} onChange={(e) => setEndDate(e.target.value)} required /></Grid>
+            <Grid item xs={12}><TextField label="Description" fullWidth multiline rows={4} value={description} onChange={(e) => setDescription(e.target.value)} required /></Grid>
             <Grid item xs={12}>
-              <TextField
-                label="Course Name"
-                variant="outlined"
-                fullWidth
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                sx={{
-                  '& .MuiInputLabel-root': { color: '#3f51b5' },
-                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
-                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
-                }}
-              />
-            </Grid>
-
-            {/* Duration Input */}
-            <Grid item xs={12}>
-              <TextField
-                label="Duration (in days)"
-                type="number"
-                variant="outlined"
-                fullWidth
-                value={days}
-                onChange={(e) => setDays(e.target.value)}
-                required
-                sx={{
-                  '& .MuiInputLabel-root': { color: '#3f51b5' },
-                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
-                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
-                }}
-              />
-            </Grid>
-
-            {/* Price Input */}
-            <Grid item xs={12}>
-              <TextField
-                label="Price"
-                type="number"
-                variant="outlined"
-                fullWidth
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-                sx={{
-                  '& .MuiInputLabel-root': { color: '#3f51b5' },
-                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
-                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
-                }}
-              />
-            </Grid>
-
-            {/* Start Date Input */}
-            <Grid item xs={12}>
-              <TextField
-                // label="Start Date"
-                type="date"
-                variant="outlined"
-                fullWidth
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-                sx={{
-                  '& .MuiInputLabel-root': { color: '#3f51b5' },
-                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
-                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
-                }}
-              />
-            </Grid>
-
-            {/* End Date Input */}
-            <Grid item xs={12}>
-              <TextField
-                // label="End Date"
-                type="date"
-                variant="outlined"
-                fullWidth
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                required
-                sx={{
-                  '& .MuiInputLabel-root': { color: '#3f51b5' },
-                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
-                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
-                }}
-              />
-            </Grid>
-
-            {/* Start Time Input */}
-            <Grid item xs={12}>
-              <TextField
-                // label="Start Time"
-                type="time"
-                variant="outlined"
-                fullWidth
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                required
-                sx={{
-                  '& .MuiInputLabel-root': { color: '#3f51b5' },
-                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
-                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
-                }}
-              />
-            </Grid>
-
-            {/* End Time Input */}
-            <Grid item xs={12}>
-              <TextField
-                // label="End Time"
-                type="time"
-                variant="outlined"
-                fullWidth
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                required
-                sx={{
-                  '& .MuiInputLabel-root': { color: '#3f51b5' },
-                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
-                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
-                }}
-              />
-            </Grid>
-
-            {/* Description Input */}
-            <Grid item xs={12}>
-              <TextField
-                label="Description"
-                variant="outlined"
-                fullWidth
-                multiline
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-                sx={{
-                  '& .MuiInputLabel-root': { color: '#3f51b5' },
-                  '& .MuiOutlinedInput-root': { borderColor: '#3f51b5' },
-                  '& .MuiOutlinedInput-root.Mui-focused': { borderColor: '#3f51b5' },
-                }}
-              />
-            </Grid>
-
-            {/* Submit Button */}
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                type="submit"
-                sx={{
-                  padding: '12px',
-                  fontWeight: 'bold',
-                  borderRadius: '8px',
-                  backgroundColor: '#3f51b5',
-                  '&:hover': { backgroundColor: '#303f9f' },
-                }}
-              >
-                Add Course
+              <Button variant="contained" color="primary" fullWidth type="submit" disabled={loading}>
+                {loading ? <CircularProgress size={24} /> : 'Add Course'}
               </Button>
             </Grid>
           </Grid>

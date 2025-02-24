@@ -31,17 +31,20 @@ public class MeetingController {
     }
 
     // find meeting for student's course
-    @GetMapping("/student/{batchId}/{courseId}/{trainerId}")
-    public Optional<Meeting> getMeetingforStudent(@PathVariable Long batchId, @PathVariable Long courseId,
-            @PathVariable Long trainerId) {
-        return meetingService.getMeetingforStudent(batchId, courseId, trainerId);
+    // @GetMapping("/student/{batchId}/{courseId}/{trainerId}")
+    @GetMapping("/student/{batchId}/{courseId}")
+    public Optional<Meeting> getMeetingforStudent(@PathVariable Long batchId, @PathVariable Long courseId) {
+        System.err.println("batchId: " + batchId + " courseId: " + courseId);
+        System.err.println(meetingService.getMeetingForStudent(batchId, courseId));
+        return meetingService.getMeetingForStudent(batchId, courseId);
     }
 
     // find meetings for trainer
-    @GetMapping("/trainer/{trainerId}")
-    public List<Meeting> getMeetingforStudent(
-            @PathVariable Long trainerId) {
-        return meetingService.getMeetingForTrainer(trainerId);
+    @GetMapping("/trainer/{trainerId}/{courseId}")
+    public List<Meeting> getMeetingsforTrainer(
+            @PathVariable Long trainerId, @PathVariable Long courseId) {
+        System.err.println("trainerId: " + trainerId + " courseId: " + courseId);
+        return meetingService.getMeetingsForTrainer(trainerId, courseId);
     }
 
     @DeleteMapping("/{id}")
