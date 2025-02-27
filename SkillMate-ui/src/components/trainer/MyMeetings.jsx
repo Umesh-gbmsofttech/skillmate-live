@@ -26,8 +26,8 @@ const MyMeetings = ({ trainerId, courses }) => {
     }));
 
     return (
-        <Box sx={{ padding: 3, minHeight: '100vh' }}>
-            <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
+        <Box sx={{ padding: 3, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
                 My Meetings
             </Typography>
             {loading ? (
@@ -35,11 +35,12 @@ const MyMeetings = ({ trainerId, courses }) => {
                     <CircularProgress size={60} thickness={5} />
                 </Box>
             ) : meetings.length > 0 ? (
-                <Grid container spacing={3}>
+                <Grid container spacing={3} sx={{ mt: 3 }}>
                     {meetings.map(meeting => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={meeting.id}>
                             <MeetingCard>
                                 <CardMedia
+                                    sx={{ objectPosition: "top", position: "relative", height: 200 }}
                                     component="img"
                                     image={`data:image/jpeg;base64,${meeting.course?.image || ''}`}
                                     alt={meeting.course?.title || 'Course'}

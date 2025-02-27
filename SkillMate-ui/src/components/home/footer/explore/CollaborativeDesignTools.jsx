@@ -1,9 +1,8 @@
 import React from 'react';
-import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
-import figmaImage from '../../../../assets/profilePic.jpg'; // Replace with an image related to collaborative design tools
-import adobeXdImage from '../../../../assets/profilePic.jpg'; // Replace with an image related to Adobe XD
-import invisionImage from '../../../../assets/profilePic.jpg'; // Replace with an image related to InVision
-import backGroundImage from '../../../../assets/Designer.jpeg'; // Background image
+import { Box, Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import CustomButton from '../../../utility/CustomButton';
+import designImage from '../../../../assets/footer/designImage.png';
+import invisionImage from '../../../../assets/footer/designImage.png';
 
 function CollaborativeDesignTools() {
     return (
@@ -11,7 +10,6 @@ function CollaborativeDesignTools() {
             sx={{
                 padding: 2,
                 color: 'white',
-                backgroundImage: `url(${backGroundImage})`, // Applying background image
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundAttachment: 'fixed',
@@ -27,41 +25,35 @@ function CollaborativeDesignTools() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Overlay with opacity
-                    zIndex: -1, // Ensures overlay is behind the content
+                    zIndex: -1,
                 }}
             />
 
             {/* Hero Section */}
-            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
-                <Typography variant="h3" fontWeight={'bold'} gutterBottom>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p1)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     Collaborative Design Tools
                 </Typography>
-                <Typography variant="h6" paragraph>
-                    Collaborative design tools allow teams to work together seamlessly, share ideas, and create designs that meet user needs. These tools enable real-time feedback, brainstorming, and co-design, making them essential for modern design workflows.
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                    Collaborative design tools allow teams to work together seamlessly, share ideas, and create user-focused designs. These tools enable real-time feedback, brainstorming, and co-design.
                 </Typography>
-                <Button variant="contained" color="primary" sx={{ marginTop: 2 }}>
-                    Explore Collaborative Tools
-                </Button>
+                <CustomButton text={'Explore Collaborative Tools'} marginTop={'1%'} />
             </Box>
 
-            {/* Collaborative Design Tools Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
+            {/* Top Collaborative Design Tools Section */}
+            <Box sx={{ marginBottom: 6, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     Top Collaborative Design Tools
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    Here are some popular collaborative design tools that make it easy for design teams to communicate, collaborate, and build interactive designs together:
                 </Typography>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                                     Figma
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    Figma is a cloud-based design tool that allows multiple designers to work on the same project in real-time. It is ideal for collaborative design, prototyping, and user interface design.
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    A cloud-based tool allowing multiple designers to collaborate in real-time. Great for prototyping and UI design.
                                     <br />
                                     <a href="https://www.figma.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Learn More</a>
                                 </Typography>
@@ -69,13 +61,13 @@ function CollaborativeDesignTools() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                                     Adobe XD
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    Adobe XD allows design teams to create wireframes, prototypes, and user interfaces while collaborating in real time. It also integrates with other Adobe tools, making it great for workflow consistency.
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    A powerful tool for wireframing, prototyping, and UI design with seamless Adobe ecosystem integration.
                                     <br />
                                     <a href="https://www.adobe.com/products/xd.html" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Learn More</a>
                                 </Typography>
@@ -83,13 +75,13 @@ function CollaborativeDesignTools() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                                     InVision
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    InVision is a digital product design platform that enables teams to collaborate on design projects, build interactive prototypes, and gather feedback all in one place.
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    A design collaboration platform for creating interactive prototypes and gathering feedback.
                                     <br />
                                     <a href="https://www.invisionapp.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Learn More</a>
                                 </Typography>
@@ -99,28 +91,49 @@ function CollaborativeDesignTools() {
                 </Grid>
             </Box>
 
-            {/* Best Practices for Collaborative Design */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
-                    Best Practices for Collaborative Design
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    Here are some best practices to follow when working in a collaborative design environment:
-                </Typography>
-                <ul>
-                    <li><Typography variant="body1">Use cloud-based tools: Cloud-based tools like Figma, Adobe XD, and InVision allow for real-time collaboration and version control.</Typography></li>
-                    <li><Typography variant="body1">Maintain clear communication: Regular meetings, design critiques, and feedback loops help ensure everyone is aligned with the vision.</Typography></li>
-                    <li><Typography variant="body1">Share assets and components: Create shared libraries or design systems to streamline the design process and maintain consistency.</Typography></li>
-                    <li><Typography variant="body1">Ensure feedback is actionable: When sharing designs, make sure feedback is clear, actionable, and focused on improvements.</Typography></li>
-                </ul>
-            </Box>
-
-            {/* Final Call to Action */}
-            <Box sx={{ textAlign: 'center', marginTop: 6 }}>
-                <Button variant="contained" color="primary" size="large">
-                    Start Collaborating on Designs Today
-                </Button>
-            </Box>
+            {/* Cloud & Deployment Section */}
+            <Grid container spacing={4} sx={{ marginBottom: 6, height: '100%', display: 'flex', alignItems: 'stretch' }}>
+                <Grid item xs={12} md={6}>
+                    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <CardMedia
+                            sx={{ objectFit: 'cover', objectPosition: 'top' }}
+                            component="img"
+                            height="350"
+                            image={designImage}
+                            alt="Collaborative Design"
+                        />
+                        <CardContent>
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                Collaborative Workflows
+                            </Typography>
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Enhance collaboration with cloud-based tools that enable real-time feedback, design versioning, and seamless teamwork.
+                            </Typography>
+                            <CustomButton text={'Learn More'} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <CardMedia
+                            sx={{ objectFit: 'cover', objectPosition: 'top' }}
+                            component="img"
+                            height="350"
+                            image={invisionImage}
+                            alt="Prototyping Tools"
+                        />
+                        <CardContent>
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                Prototyping & Testing
+                            </Typography>
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Streamline your design process with interactive prototyping tools that help you iterate quickly and test designs efficiently.
+                            </Typography>
+                            <CustomButton text={'Learn More'} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
         </Box>
     );
 }

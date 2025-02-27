@@ -18,6 +18,7 @@ const containerVariants = {
 };
 
 const TrainerProfile = () => {
+    const [tilt, setTilt] = useState({ x: 0, y: 0 });
     const [openDialog, setOpenDialog] = useState(null);
     const [resumeOpen, setResumeOpen] = useState(false);
     const dispatch = useDispatch();
@@ -52,39 +53,51 @@ const TrainerProfile = () => {
         setResumeOpen(true);
     };
 
+    const handleMouseMove = (e) => {
+        const { clientX, clientY } = e;
+        const { innerWidth, innerHeight } = window;
+        const x = (clientX / innerWidth - 0.5) * 20;
+        const y = (clientY / innerHeight - 0.5) * -20; // Invert Y-axis for natural movement
+        setTilt({ x, y });
+    };
+
     return (
         <>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", p: 2 }}>
-                <Card
-                    component={motion.div}
-                    initial="hidden"
-                    animate="visible"
-                    variants={containerVariants}
-                    sx={{ width: 400, textAlign: "center", p: 4, borderRadius: 4, boxShadow: 6 }}
-                >
-                    <Avatar
-                        src={userData?.image ? `data:image/jpeg;base64,${userData.image}` : defaultProfilePic}
-                        alt="Profile"
-                        sx={{ width: 100, height: 100, cursor: "pointer", boxShadow: 4, m: "0 auto", transition: "0.3s", "&:hover": { transform: "scale(1.1)" }, objectFit: "cover", objectPosition: "top" }}
-                        onClick={() => setOpenDialog("details")}
-                    />
-                    <Typography variant="h5" fontWeight="bold" mt={2}>
-                        {userData?.name || "Trainer"}
-                        <IconButton color="secondary" sx={{ '&:focus': { outline: 'none', border: 'none' } }}>
-                            <Edit />
-                        </IconButton>
-                    </Typography>
-                    <Typography variant="subtitle2">{userData?.email}</Typography>
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh", p: 2 }}>
+                <motion.div onMouseMove={handleMouseMove} style={{ perspective: "1000px" }}>
+                    <motion.div
+                        style={{ transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`, transition: "transform 0.1s ease-out" }}
+                    >
+                        <Card
+                            sx={{ width: 370, textAlign: "center", p: 4, borderRadius: 4, boxShadow: 6, }}
+                            sm={{ width: 470, textAlign: "center", p: 4, borderRadius: 4, boxShadow: 6, }}
 
-                    <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-                        {[{ label: "Courses", value: courses?.length || 0 }, { label: "Batches", value: batches?.length || 0 }, { label: "Meetings", value: meetings?.length || 0 }].map((item, index) => (
-                            <Box key={index} sx={{ textAlign: "center", mx: 1 }}>
-                                <Typography variant="h6">{item.value}</Typography>
-                                <CustomButton text={`${item.label}`} onClick={() => setOpenDialog(item.label.toLowerCase())} />
+                        >
+                            <Avatar
+                                src={userData?.image ? `data:image/jpeg;base64,${userData.image}` : defaultProfilePic}
+                                alt="Profile"
+                                sx={{ width: 100, height: 100, cursor: "pointer", boxShadow: 4, m: "0 auto", transition: "0.3s", "&:hover": { transform: "scale(1.1)" }, objectFit: "cover", objectPosition: "top" }}
+                                onClick={() => setOpenDialog("details")}
+                            />
+                            <Typography variant="h5" fontWeight="bold" mt={2}>
+                                {userData?.name || "Trainer"}
+                                <IconButton color="secondary" sx={{ '&:focus': { outline: 'none', border: 'none' } }}>
+                                    <Edit />
+                                </IconButton>
+                            </Typography>
+                            <Typography variant="subtitle2">{userData?.email}</Typography>
+
+                            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+                                {[{ label: "Courses", value: courses?.length || 0 }, { label: "Batches", value: batches?.length || 0 }, { label: "Meetings", value: meetings?.length || 0 }].map((item, index) => (
+                                    <Box key={index} sx={{ textAlign: "center", mx: 1 }}>
+                                        <Typography variant="h6">{item.value}</Typography>
+                                        <CustomButton text={`${item.label}`} onClick={() => setOpenDialog(item.label.toLowerCase())} />
+                                    </Box>
+                                ))}
                             </Box>
-                        ))}
-                    </Box>
-                </Card>
+                        </Card>
+                    </motion.div>
+                </motion.div>
             </Box>
 
             <Dialog open={openDialog === "details"} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
@@ -147,3 +160,4 @@ const TrainerProfile = () => {
 };
 
 export default TrainerProfile;
+

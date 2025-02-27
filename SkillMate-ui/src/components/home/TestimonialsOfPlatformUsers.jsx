@@ -3,18 +3,19 @@ import { Box, Typography } from '@mui/material';
 
 function TestimonialsOfPlatformUsers({ heading }) {
     const youtubeVideos = [
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
-        'https://youtu.be/eIrMbAQSU34?si=Y23ciag4B0yQ_73r',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+        'https://youtu.be/yRpLlJmRo2w?si=XqB45VagwGxuVXIJ',
+
     ];
 
-    const [visibleVideos, setVisibleVideos] = useState([]);
+    // Removed unused state
 
     // Ref to hold the video elements
     const videoRefs = useRef([]);
@@ -86,7 +87,6 @@ function TestimonialsOfPlatformUsers({ heading }) {
                             loading="lazy"
                             src={video}
                             title={`YouTube video testimonial ${index + 1}`}
-                            frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                             style={{ width: '100%', height: '100%', border: 'none', borderRadius: '10px' }}

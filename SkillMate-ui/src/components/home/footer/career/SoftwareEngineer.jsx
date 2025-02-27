@@ -2,10 +2,10 @@ import React from 'react';
 import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
 import BuildIcon from '@mui/icons-material/Build';
-import cloudImage from '../../../../assets/profilePic.jpg';
-import testingImage from '../../../../assets/profilePic.jpg';
+import cloudImage from '../../../../assets/footer/cloudImage.png';
+import testingImage from '../../../../assets/footer/testingImage.png';
 // import testingImage from '../../../../assets/testingImage.jpg';  // Replace with relevant image
-import backGroundImage from '../../../../assets/Designer.jpeg';
+import CustomButton from '../../../utility/CustomButton';
 
 function SoftwareEngineer() {
   return (
@@ -13,7 +13,6 @@ function SoftwareEngineer() {
       sx={{
         padding: 2,
         color: 'white',
-        backgroundImage: `url(${backGroundImage})`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundAttachment: 'fixed',
@@ -29,40 +28,37 @@ function SoftwareEngineer() {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',  // Adjust opacity (0.5 is the opacity value)
           zIndex: -1,  // Ensures overlay is behind the content
         }}
       />
 
       {/* Hero Section */}
-      <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
-        <Typography variant="h3" fontWeight={'bold'} gutterBottom>
+      <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+        <Typography color='var(--color-p2)' fontSize={'var(--font-size-p1)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
           Software Engineer
         </Typography>
-        <Typography variant="h6" paragraph>
+        <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
           As a Software Engineer, you will be responsible for designing, developing, and maintaining scalable and efficient software applications. You’ll collaborate with cross-functional teams to build systems that meet business needs and user requirements.
         </Typography>
-        <Button variant="contained" color="primary" sx={{ marginTop: 2 }}>
-          Apply Now
-        </Button>
+        <CustomButton text={'Apply Now'} marginTop={'1%'} />
       </Box>
 
       {/* Software Development Practices Section */}
-      <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-        <Typography variant="h5" gutterBottom>
+      <Box sx={{ marginBottom: 6, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+        <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
           Key Software Development Practices
         </Typography>
-        <Typography variant="body1" paragraph>
+        <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} paragraph>
           As a Software Engineer, you’ll be involved in the following essential development practices:
         </Typography>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={4}>
-            <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+            <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                   Software Development Methodologies
                 </Typography>
-                <Typography variant="body2" paragraph>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
                   - Agile (Scrum, Kanban) for iterative and incremental development.
                   <br />
                   - Continuous Integration and Continuous Deployment (CI/CD) for automated testing and deployment.
@@ -73,12 +69,12 @@ function SoftwareEngineer() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+            <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                   Version Control & Collaboration
                 </Typography>
-                <Typography variant="body2" paragraph>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
                   - <a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Git</a> for version control.
                   <br />
                   - GitHub, GitLab, or Bitbucket for collaboration and code review.
@@ -89,12 +85,12 @@ function SoftwareEngineer() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+            <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                   Development Tools & Environments
                 </Typography>
-                <Typography variant="body2" paragraph>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
                   - <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Docker</a> for containerization.
                   <br />
                   - <a href="https://kubernetes.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Kubernetes</a> for orchestration.
@@ -108,19 +104,19 @@ function SoftwareEngineer() {
       </Box>
 
       {/* Software Engineering Skills Section */}
-      <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-        <Typography variant="h5" gutterBottom>
+      <Box sx={{ marginBottom: 6, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+        <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
           Key Skills You’ll Apply
         </Typography>
-        <Typography variant="body1" paragraph>
+        <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} paragraph>
           As a Software Engineer, you will utilize a variety of programming languages, tools, and frameworks, including:
         </Typography>
         <ul>
-          <li><Typography variant="body1">Proficiency in programming languages such as Java, Python, C++, JavaScript, or Go.</Typography></li>
-          <li><Typography variant="body1">Experience working with web frameworks like <a href="https://expressjs.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Express.js</a> (Node.js), <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Spring Boot</a> (Java), or <a href="https://www.djangoproject.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Django</a> (Python).</Typography></li>
-          <li><Typography variant="body1">Experience in building scalable APIs, working with RESTful services, and microservices architectures.</Typography></li>
-          <li><Typography variant="body1">Knowledge of cloud platforms such as <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>AWS</a>, <a href="https://cloud.google.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Google Cloud</a>, or <a href="https://azure.microsoft.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Azure</a>.</Typography></li>
-          <li><Typography variant="body1">Understanding of databases like <a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MySQL</a>, <a href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>PostgreSQL</a>, or NoSQL databases like <a href="https://www.mongodb.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MongoDB</a>.</Typography></li>
+          <li><Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'}>Proficiency in programming languages such as Java, Python, C++, JavaScript, or Go.</Typography></li>
+          <li><Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'}>Experience working with web frameworks like <a href="https://expressjs.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Express.js</a> (Node.js), <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Spring Boot</a> (Java), or <a href="https://www.djangoproject.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Django</a> (Python).</Typography></li>
+          <li><Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'}>Experience in building scalable APIs, working with RESTful services, and microservices architectures.</Typography></li>
+          <li><Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'}>Knowledge of cloud platforms such as <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>AWS</a>, <a href="https://cloud.google.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Google Cloud</a>, or <a href="https://azure.microsoft.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Azure</a>.</Typography></li>
+          <li><Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'}>Understanding of databases like <a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MySQL</a>, <a href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>PostgreSQL</a>, or NoSQL databases like <a href="https://www.mongodb.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MongoDB</a>.</Typography></li>
         </ul>
       </Box>
 
@@ -136,15 +132,13 @@ function SoftwareEngineer() {
               alt="Cloud Infrastructure"
             />
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                 Cloud Infrastructure
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
                 Modern software engineering relies heavily on cloud infrastructure. As a Software Engineer, you will work with cloud services for deploying applications, handling scalability, and managing data storage.
               </Typography>
-              <Button variant="outlined" color="primary">
-                Learn More
-              </Button>
+              <CustomButton text={'Learn More'} />
             </CardContent>
           </Card>
         </Grid>
@@ -158,15 +152,13 @@ function SoftwareEngineer() {
               alt="Software Testing"
             />
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                 Software Testing & Quality
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
                 Ensuring the quality of the code is essential. As a Software Engineer, you’ll be using tools like <a href="https://jestjs.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Jest</a>, <a href="https://www.selenium.dev/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Selenium</a>, and <a href="https://www.junit.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>JUnit</a> for unit testing, integration testing, and continuous testing practices.
               </Typography>
-              <Button variant="outlined" color="primary">
-                Learn More
-              </Button>
+              <CustomButton text={'Learn More'} />
             </CardContent>
           </Card>
         </Grid>
@@ -174,9 +166,7 @@ function SoftwareEngineer() {
 
       {/* Final Call to Action */}
       <Box sx={{ textAlign: 'center', marginTop: 6 }}>
-        <Button variant="contained" color="primary" size="large">
-          Explore Software Engineer Opportunities
-        </Button>
+        <CustomButton text={'Explore Software Engineer Opportunities'} />
       </Box>
     </Box>
   );

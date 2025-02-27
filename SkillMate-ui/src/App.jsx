@@ -121,7 +121,7 @@ function App() {
             <Courses topCourses={true} />
             <TopTrainersAndStudents sectionHeading={'Our Top Trainers'} trainer={'trainer'} />
             <TopTrainersAndStudents sectionHeading={'Successfully	Placed	Students'} student={'student'} />
-            <TestimonialsOfPlatformUsers heading={'Testimonials of Platform Users'} />
+            {/* <TestimonialsOfPlatformUsers heading={'Testimonials of Platform Users'} /> */}
             <ReviewsSection />
             <TechnologyStack />
             <OurStudentsPlacedIn />

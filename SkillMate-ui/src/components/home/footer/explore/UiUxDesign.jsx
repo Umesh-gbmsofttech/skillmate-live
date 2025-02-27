@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
-import designImage from '../../../../assets/profilePic.jpg';  // Replace with a relevant image for UI/UX Design
-import prototypingImage from '../../../../assets/profilePic.jpg';  // Replace with an image related to prototyping or design tools
-import backGroundImage from '../../../../assets/Designer.jpeg'; // Background image
+import { Box, Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import designImage from '../../../../assets/footer/7.png';
+import teckImage from '../../../../assets/footer/techImage.png';
+import CustomButton from '../../../utility/CustomButton';
 
 function UiUxDesign() {
     return (
@@ -10,7 +10,6 @@ function UiUxDesign() {
             sx={{
                 padding: 2,
                 color: 'white',
-                backgroundImage: `url(${backGroundImage})`, // Applying background image
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundAttachment: 'fixed',
@@ -26,81 +25,51 @@ function UiUxDesign() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Overlay with opacity
-                    zIndex: -1, // Ensures overlay is behind the content
+                    zIndex: -1,
                 }}
             />
 
             {/* Hero Section */}
-            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
-                <Typography variant="h3" fontWeight={'bold'} gutterBottom>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p1)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     UI/UX Designer
                 </Typography>
-                <Typography variant="h6" paragraph>
-                    As a UI/UX Designer, you will be at the forefront of designing user-centered, visually stunning, and intuitive interfaces. Your role will be crucial in crafting seamless user experiences from wireframes to high-fidelity designs, ensuring that every product is both functional and aesthetically pleasing.
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                    As a UI/UX Designer, you will craft intuitive, visually appealing user interfaces that enhance user experience and engagement.
                 </Typography>
-                <Button variant="contained" color="primary" sx={{ marginTop: 2 }}>
-                    Apply Now
-                </Button>
+                <CustomButton text={'Apply Now'} marginTop={'1%'} />
             </Box>
 
-            {/* Design Tools and Skills Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
-                    Key Skills and Tools
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    As a UI/UX Designer, you’ll need proficiency in design tools and methodologies. Here are some of the core tools and skills:
+            {/* UI/UX Design Tools Section */}
+            <Box sx={{ marginBottom: 6, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
+                    Key Design Tools & Practices
                 </Typography>
                 <Grid container spacing={4}>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    UI/UX Design Tools
+                                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                    UI/UX Design Software
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://www.figma.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Figma</a>
+                                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - Figma, Sketch, Adobe XD for wireframing and prototyping.
                                     <br />
-                                    - <a href="https://www.sketch.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Sketch</a>
-                                    <br />
-                                    - <a href="https://www.adobe.com/products/xd.html" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Adobe XD</a>
-                                    <br />
-                                    - <a href="https://www.invisionapp.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>InVision</a>
+                                    - InVision and Axure for user testing and interaction design.
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Design Systems & Prototyping
+                                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                    Design Principles & Prototyping
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://material.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Material Design</a>
+                                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - Material Design, Apple HIG for consistent UI.
                                     <br />
-                                    - <a href="https://www.apple.com/design/human-interface-guidelines/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Apple Human Interface Guidelines</a>
-                                    <br />
-                                    - <a href="https://www.behance.net/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Prototyping with Behance</a>
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
-                            <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    User Research & Testing
-                                </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://www.userzoom.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>UserZoom</a>
-                                    <br />
-                                    - <a href="https://lookback.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Lookback.io</a>
-                                    <br />
-                                    - <a href="https://www.optimizely.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Optimizely</a>
-                                    <br />
-                                    - <a href="https://www.hotjar.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Hotjar</a>
+                                    - Usability Testing and A/B Testing for enhancing user experience.
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -108,64 +77,33 @@ function UiUxDesign() {
                 </Grid>
             </Box>
 
-            {/* Design Projects Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
-                    Projects You Will Work On
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    As a UI/UX Designer at our company, you'll have the opportunity to work on:
-                </Typography>
-                <ul>
-                    <li><Typography variant="body1">Designing user interfaces and experiences for web and mobile applications.</Typography></li>
-                    <li><Typography variant="body1">Creating wireframes, mockups, and prototypes for testing and user feedback.</Typography></li>
-                    <li><Typography variant="body1">Collaborating with product managers and developers to ensure seamless design implementation.</Typography></li>
-                    <li><Typography variant="body1">Conducting user research and usability testing to enhance user experience.</Typography></li>
-                    <li><Typography variant="body1">Building and maintaining design systems and style guides for consistent design patterns.</Typography></li>
-                </ul>
-            </Box>
-
-            {/* Work Environment Section */}
+            {/* Visual & Interactive Design */}
             <Grid container spacing={4} sx={{ marginBottom: 6, height: '100%', display: 'flex', alignItems: 'stretch' }}>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                        <CardMedia
-                            component="img"
-                            height="200"
-                            image={designImage}
-                            alt="Workspace Flexibility"
-                        />
+                        <CardMedia component="img" height="350" image={designImage} alt="Visual Design" />
                         <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                Flexible Workspace
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                Visual & Interactive Design
                             </Typography>
-                            <Typography variant="body2" paragraph>
-                                As a UI/UX designer, you’ll enjoy flexibility in your work environment, with the ability to work remotely, from co-working spaces, or our various office locations. Creativity thrives in the right environment, and we encourage flexibility.
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Creating pixel-perfect designs and animations for an engaging user experience.
                             </Typography>
-                            <Button variant="outlined" color="primary">
-                                Learn More
-                            </Button>
+                            <CustomButton text={'Learn More'} />
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                        <CardMedia
-                            component="img"
-                            height="200"
-                            image={prototypingImage}
-                            alt="Design Tools"
-                        />
+                        <CardMedia component="img" height="350" image={teckImage} alt="Prototyping" />
                         <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                Cutting-Edge Design Tools
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                Prototyping & User Testing
                             </Typography>
-                            <Typography variant="body2" paragraph>
-                                We provide our designers with the latest tools for UI/UX design and prototyping, including Figma, Sketch, Adobe XD, and InVision, ensuring that you have everything needed for efficient and collaborative design processes.
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Designing prototypes, conducting usability tests, and refining UI for the best user experience.
                             </Typography>
-                            <Button variant="outlined" color="primary">
-                                Learn More
-                            </Button>
+                            <CustomButton text={'Learn More'} />
                         </CardContent>
                     </Card>
                 </Grid>
@@ -173,9 +111,7 @@ function UiUxDesign() {
 
             {/* Final Call to Action */}
             <Box sx={{ textAlign: 'center', marginTop: 6 }}>
-                <Button variant="contained" color="primary" size="large">
-                    Explore UI/UX Design Opportunities
-                </Button>
+                <CustomButton text={'Explore UI/UX Design Opportunities'} />
             </Box>
         </Box>
     );

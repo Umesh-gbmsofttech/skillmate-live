@@ -1,11 +1,9 @@
 import React from 'react';
-import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import CustomButton from '../../../utility/CustomButton';
 import workspaceImage from '../../../../assets/profilePic.jpg';
-import techImage from '../../../../assets/profilePic.jpg';
-import developmentImage from '../../../../assets/profilePic.jpg';
-// import techImage from '../../../../assets/techImage.jpg';  // You can replace this with a relevant tech stack image
-// import developmentImage from '../../../../assets/profilePic.jpg';  // Replace with an image that relates to development work
-import backGroundImage from '../../../../assets/Designer.jpeg'; // Add the same background image
+import techImage from '../../../../assets/footer/techImage.png';
+import developmentImage from '../../../../assets/footer/developmentImage.png';
 
 function FullstackDeveloper() {
     return (
@@ -13,11 +11,10 @@ function FullstackDeveloper() {
             sx={{
                 padding: 2,
                 color: 'white',
-                backgroundImage: `url(${backGroundImage})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundAttachment: 'fixed',
-                position: 'relative', // To position the overlay
+                position: 'relative',
                 zIndex: 1,
             }}
         >
@@ -29,79 +26,71 @@ function FullstackDeveloper() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust opacity (0.5 is the opacity value)
-                    zIndex: -1, // Ensures overlay is behind the content
+                    zIndex: -1,
                 }}
             />
 
             {/* Hero Section */}
-            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
-                <Typography variant="h3" fontWeight={'bold'} gutterBottom>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p1)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     Full Stack Developer
                 </Typography>
-                <Typography variant="h6" paragraph>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
                     As a Full Stack Developer, you will work with both frontend and backend technologies, developing robust, scalable applications. You will play a key role in designing and deploying end-to-end solutions, ensuring the seamless integration of the front and back ends.
                 </Typography>
-                <Button variant="contained" color="primary" sx={{ marginTop: 2 }}>
-                    Apply Now
-                </Button>
+                <CustomButton text={'Apply Now'} marginTop={'1%'} />
             </Box>
 
             {/* Technical Skills Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
+            <Box sx={{ marginBottom: 6, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     Key Skills and Technologies
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    As a Full Stack Developer, you’ll be proficient in various technologies across the software stack. Here are some of the essential tools and frameworks:
                 </Typography>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                                     Front-End Technologies
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://reactjs.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>React.js</a>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - React.js, Angular, Vue.js
                                     <br />
-                                    - <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Angular</a>
+                                    - HTML5, CSS3, SASS
                                     <br />
-                                    - <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>HTML5</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>CSS3</a>, <a href="https://sass-lang.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>SASS</a>
+                                    - JavaScript, TypeScript
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                                     Back-End Technologies
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Node.js</a>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - Node.js, Express.js
                                     <br />
-                                    - <a href="https://expressjs.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Express.js</a>
+                                    - Python, Django, Flask
                                     <br />
-                                    - <a href="https://www.mongodb.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MongoDB</a>, <a href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>PostgreSQL</a>
+                                    - Java, Spring Boot
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Deployment and Tools
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                    Database & Cloud Technologies
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Docker</a>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - MySQL, PostgreSQL, MongoDB
                                     <br />
-                                    - <a href="https://www.heroku.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Heroku</a>
+                                    - AWS, Google Cloud, Azure
                                     <br />
-                                    - <a href="https://www.aws.amazon.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>AWS</a>
-                                    <br />
-                                    - <a href="https://www.cypress.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Cypress</a> for testing
+                                    - Docker, Kubernetes
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -109,64 +98,45 @@ function FullstackDeveloper() {
                 </Grid>
             </Box>
 
-            {/* Real Projects Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
-                    Real Projects You Will Work On
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    As a Full Stack Developer at our company, you’ll work on a variety of projects that include:
-                </Typography>
-                <ul>
-                    <li><Typography variant="body1">Building dynamic web applications with React/Angular and Node.js.</Typography></li>
-                    <li><Typography variant="body1">Integrating third-party APIs and services into our applications.</Typography></li>
-                    <li><Typography variant="body1">Building RESTful APIs and GraphQL endpoints.</Typography></li>
-                    <li><Typography variant="body1">Managing databases, including designing schemas and optimizing queries.</Typography></li>
-                    <li><Typography variant="body1">Deploying applications using Docker, AWS, or Heroku for scalability and performance.</Typography></li>
-                </ul>
-            </Box>
-
-            {/* Workspace Flexibility Section */}
+            {/* Development & Infrastructure Section */}
             <Grid container spacing={4} sx={{ marginBottom: 6, height: '100%', display: 'flex', alignItems: 'stretch' }}>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <CardMedia
+                            sx={{ objectFit: 'cover', objectPosition: 'top' }}
                             component="img"
-                            height="200"
-                            image={workspaceImage}
-                            alt="Workspace Flexibility"
+                            height="350"
+                            image={developmentImage}
+                            alt="Development Process"
                         />
                         <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                Flexible Workspace
+                            <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                Development Best Practices
                             </Typography>
-                            <Typography variant="body2" paragraph>
-                                Our developers enjoy the flexibility to work from home, co-working spaces, or our various office locations. We believe in work-life balance and providing the best environment to foster creativity and productivity.
+                            <Typography fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Learn industry best practices including agile methodologies, CI/CD pipelines, and automated testing for building scalable applications.
                             </Typography>
-                            <Button variant="outlined" color="primary">
-                                Learn More
-                            </Button>
+                            <CustomButton text={'Learn More'} />
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <CardMedia
+                            sx={{ objectFit: 'cover', objectPosition: 'top' }}
                             component="img"
-                            height="200"
-                            image={developmentImage}
-                            alt="Development Tools"
+                            height="350"
+                            image={techImage}
+                            alt="Technology Stack"
                         />
                         <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                Development Tools & Environment
+                            <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                Technology & Tools
                             </Typography>
-                            <Typography variant="body2" paragraph>
-                                We provide our developers with cutting-edge tools to ensure seamless development. From modern IDEs to version control with Git and GitHub, we ensure you have everything needed to code effectively.
+                            <Typography fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Work with modern technologies including Git, Docker, Kubernetes, cloud platforms, and more to enhance software development workflows.
                             </Typography>
-                            <Button variant="outlined" color="primary">
-                                Learn More
-                            </Button>
+                            <CustomButton text={'Learn More'} />
                         </CardContent>
                     </Card>
                 </Grid>
@@ -174,9 +144,7 @@ function FullstackDeveloper() {
 
             {/* Final Call to Action */}
             <Box sx={{ textAlign: 'center', marginTop: 6 }}>
-                <Button variant="contained" color="primary" size="large">
-                    Explore Full Stack Developer Opportunities
-                </Button>
+                <CustomButton text={'Explore Full Stack Developer Opportunities'} />
             </Box>
         </Box>
     );

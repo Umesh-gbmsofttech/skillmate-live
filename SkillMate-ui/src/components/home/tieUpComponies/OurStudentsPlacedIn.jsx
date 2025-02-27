@@ -80,7 +80,8 @@ const OurStudentsPlacedIn = () => {
         <Container>
             {/* <Heading>Our Students Placed In</Heading> */}
             <Box sx={{ padding: 2, textAlign: 'center' }}>
-                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>Our Students Placed In</Typography>
+                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+                    Our Students Placed In</Typography>
             </Box>
 
             {/* Carousel */}

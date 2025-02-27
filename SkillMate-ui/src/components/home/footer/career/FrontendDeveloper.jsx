@@ -1,10 +1,8 @@
 import React from 'react';
-import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
-import CodeIcon from '@mui/icons-material/Code';
-import ResponsiveIcon from '@mui/icons-material/Devices';
-import designImage from '../../../../assets/profilePic.jpg';
-import testingImage from '../../../../assets/profilePic.jpg';
-import backGroundImage from '../../../../assets/Designer.jpeg'; // Background image
+import { Box, Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import CustomButton from '../../../utility/CustomButton';
+import designImage from '../../../../assets/footer/designImage.png';
+import testingImage from '../../../../assets/footer/testingImage.png';
 
 function FrontendDeveloper() {
     return (
@@ -12,7 +10,6 @@ function FrontendDeveloper() {
             sx={{
                 padding: 2,
                 color: 'white',
-                backgroundImage: `url(${backGroundImage})`, // Applying background image
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundAttachment: 'fixed',
@@ -28,83 +25,58 @@ function FrontendDeveloper() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Overlay with opacity
-                    zIndex: -1, // Ensures overlay is behind the content
+                    zIndex: -1,
                 }}
             />
 
             {/* Hero Section */}
-            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
-                <Typography variant="h3" fontWeight={'bold'} gutterBottom>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p1)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     Frontend Developer
                 </Typography>
-                <Typography variant="h6" paragraph>
-                    As a Frontend Developer, you'll be responsible for building the user interface (UI) and user experience (UX) of web applications. Using modern web technologies and frameworks, you'll create visually appealing, responsive, and intuitive applications that engage users.
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                    As a Frontend Developer, you will be responsible for designing and implementing engaging user interfaces. You will work with modern frameworks to build responsive and accessible web applications.
                 </Typography>
-                <Button variant="contained" color="primary" sx={{ marginTop: 2 }}>
-                    Apply Now
-                </Button>
+                <CustomButton text={'Apply Now'} marginTop={'1%'} />
             </Box>
 
-            {/* Frontend Technologies Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
+            {/* Key Technologies Section */}
+            <Box sx={{ marginBottom: 6, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     Key Frontend Technologies
                 </Typography>
-                <Typography variant="body1" paragraph>
-                    As a Frontend Developer, you’ll work with a variety of tools and technologies to create high-quality user interfaces. Here are the main frameworks and libraries you'll use:
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} paragraph>
+                    As a Frontend Developer, you’ll utilize the following essential technologies:
                 </Typography>
                 <Grid container spacing={4}>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Frontend Frameworks & Libraries
+                                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                    UI Frameworks & Libraries
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://reactjs.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>React.js</a>
+                                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - React.js, Angular, Vue.js for frontend development.
                                     <br />
-                                    - <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Angular</a>
+                                    - Tailwind CSS, Bootstrap, and Material-UI for styling.
                                     <br />
-                                    - <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Vue.js</a>
-                                    <br />
-                                    - <a href="https://nextjs.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Next.js</a> (for server-side rendering with React)
+                                    - Next.js for server-side rendering and SEO optimization.
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Styling & Design
+                                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                    Development Tools
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://sass-lang.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>SASS</a> (CSS preprocessor)
+                                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - VS Code, WebStorm, and Chrome DevTools for development.
                                     <br />
-                                    - <a href="https://getbootstrap.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Bootstrap</a> (CSS framework)
+                                    - Git, GitHub, and Bitbucket for version control.
                                     <br />
-                                    - <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Tailwind CSS</a> (Utility-first CSS framework)
-                                    <br />
-                                    - <a href="https://material-ui.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Material-UI</a> (React component library)
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
-                            <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Build & Deployment Tools
-                                </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://webpack.js.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Webpack</a> (Module bundler)
-                                    <br />
-                                    - <a href="https://www.npmjs.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>npm</a> (Package manager)
-                                    <br />
-                                    - <a href="https://www.gatsbyjs.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Gatsby</a> (Static site generator)
-                                    <br />
-                                    - <a href="https://www.netlify.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Netlify</a> (Continuous deployment)
+                                    - Figma and Adobe XD for UI/UX design collaboration.
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -112,63 +84,45 @@ function FrontendDeveloper() {
                 </Grid>
             </Box>
 
-            {/* Real Projects Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
-                    Real Projects You Will Work On
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    As a Frontend Developer, you will be involved in a variety of projects, including:
-                </Typography>
-                <ul>
-                    <li><Typography variant="body1">Building modern, responsive web applications using React, Angular, or Vue.js.</Typography></li>
-                    <li><Typography variant="body1">Implementing UI/UX designs with frameworks like Material-UI, Tailwind CSS, or Bootstrap.</Typography></li>
-                    <li><Typography variant="body1">Optimizing the user experience through performance improvements, responsiveness, and accessibility.</Typography></li>
-                    <li><Typography variant="body1">Creating interactive UIs with state management tools such as Redux or Context API.</Typography></li>
-                    <li><Typography variant="body1">Ensuring cross-browser compatibility and debugging frontend issues.</Typography></li>
-                </ul>
-            </Box>
-
+            {/* UX & Testing Section */}
             <Grid container spacing={4} sx={{ marginBottom: 6, height: '100%', display: 'flex', alignItems: 'stretch' }}>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <CardMedia
-                            component="img"
-                            height="200"
+                            sx={{ objectFit: 'cover', objectPosition: 'top' }}
+                            component='img'
+                            height='350'
                             image={designImage}
-                            alt="Responsive Design"
+                            alt='UI/UX Design'
                         />
-                        <CardContent sx={{ flexGrow: 1 }}>
-                            <Typography variant="h6" gutterBottom>
-                                Responsive Web Design
+                        <CardContent>
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                UI/UX Design Principles
                             </Typography>
-                            <Typography variant="body2" paragraph>
-                                Frontend developers are responsible for building web pages that look great on any device, from desktops to smartphones. You’ll use tools like CSS Grid, Flexbox, and media queries to ensure that the layout adapts to all screen sizes.
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Understanding user needs and design principles is crucial for crafting engaging experiences. You will work closely with designers to bring creative visions to life.
                             </Typography>
-                            <Button variant="outlined" color="primary">
-                                Learn More
-                            </Button>
+                            <CustomButton text={'Learn More'} />
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <CardMedia
-                            component="img"
-                            height="200"
+                            sx={{ objectFit: 'cover', objectPosition: 'top' }}
+                            component='img'
+                            height='350'
                             image={testingImage}
-                            alt="Frontend Testing"
+                            alt='Frontend Testing'
                         />
-                        <CardContent sx={{ flexGrow: 1 }}>
-                            <Typography variant="h6" gutterBottom>
-                                Frontend Testing
+                        <CardContent>
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                Frontend Testing & Performance
                             </Typography>
-                            <Typography variant="body2" paragraph>
-                                As a Frontend Developer, testing is crucial. You’ll use tools like <a href="https://jestjs.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Jest</a>, <a href="https://www.cypress.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Cypress</a>, and <a href="https://react-testing-library.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>React Testing Library</a> to ensure your code is bug-free.
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Ensure code quality with Jest, Cypress, and Lighthouse audits to optimize performance, accessibility, and responsiveness.
                             </Typography>
-                            <Button variant="outlined" color="primary">
-                                Learn More
-                            </Button>
+                            <CustomButton text={'Learn More'} />
                         </CardContent>
                     </Card>
                 </Grid>
@@ -176,9 +130,7 @@ function FrontendDeveloper() {
 
             {/* Final Call to Action */}
             <Box sx={{ textAlign: 'center', marginTop: 6 }}>
-                <Button variant="contained" color="primary" size="large">
-                    Explore Frontend Developer Opportunities
-                </Button>
+                <CustomButton text={'Explore Frontend Developer Opportunities'} />
             </Box>
         </Box>
     );

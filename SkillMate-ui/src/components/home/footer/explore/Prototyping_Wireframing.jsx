@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
-import prototypingImage from '../../../../assets/profilePic.jpg'; // Replace with an image related to prototyping
-import wireframingImage from '../../../../assets/profilePic.jpg'; // Replace with an image related to wireframing
+import techImage from '../../../../assets/footer/techImage.png'; // Replace with an image related to prototyping
+import wireframingImage from '../../../../assets/footer/wireframingImage.png'; // Replace with an image related to wireframing
 import backGroundImage from '../../../../assets/Designer.jpeg'; // Background image
 
 function Prototyping_Wireframing() {

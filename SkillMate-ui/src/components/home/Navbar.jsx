@@ -173,11 +173,11 @@ function Navbar() {
               </Button>
             ) : (
               <IconButton onClick={handleProfileClick}>
-                <Avatar src={profilePicUrl} alt={userData ? userData.fullName : 'Profile'} sx={{ width: 35, height: 35 }} />
+                <Avatar src={profilePicUrl} alt={userData ? userData.fullName : 'Profile'} sx={{ width: 35, height: 35, '&:focus': { outline: 'none', border: 'none' } }} />
               </IconButton>
             )
           ) : (
-            <Button onClick={() => handleNavigation('/login/mobile')} variant="outlined" color="inherit">
+            <Button sx={{ '&:focus': { outline: 'none', border: 'none' } }} onClick={() => handleNavigation('/login/mobile')} variant="outlined" color="inherit">
               Sign In
             </Button>
           )}
@@ -191,16 +191,16 @@ function Navbar() {
                 {username}
               </Button>
             ) : (
-              <IconButton onClick={handleProfileClick}>
-                <Avatar src={profilePicUrl} alt={userData ? userData.fullName : 'Profile'} sx={{ width: 35, height: 35 }} />
+              <IconButton onClick={handleProfileClick} sx={{ '&:focus': { outline: 'none', border: 'none' } }}>
+                <Avatar src={profilePicUrl} alt={userData ? userData.fullName : 'Profile'} sx={{ width: 35, height: 35, '&:focus': { outline: 'none', border: 'none' } }} />
               </IconButton>
             )
           ) : (
-            <Button onClick={() => handleNavigation('/login/mobile')} variant="outlined" color="inherit">
+            <Button sx={{ '&:focus': { outline: 'none', border: 'none' } }} onClick={() => handleNavigation('/login/mobile')} variant="outlined" color="inherit">
               Sign In
             </Button>
           )}
-          <IconButton sx={{ color: '#fff' }} onClick={toggleMenu}>
+          <IconButton sx={{ color: '#fff', '&:focus': { outline: 'none', border: 'none' } }} onClick={toggleMenu}>
             ☰
           </IconButton>
         </Box>

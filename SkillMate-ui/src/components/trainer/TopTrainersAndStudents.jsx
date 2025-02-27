@@ -65,7 +65,7 @@ function TopTrainersAndStudents({ sectionHeading, student, trainer, community = 
                 <Box sx={{ padding: 1 }}>
                         {data.length > 0 && (
                                 <Box Box sx={{ padding: 2, textAlign: 'center' }}>
-                                        <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>
+                                        <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
                                                 {sectionHeading}
                                         </Typography>
                                         {trainer && !community && <Typography sx={{ textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>

@@ -63,12 +63,14 @@ function Courses({ topCourses = false }) {
     <div>
       {!topCourses ? (
         <Box sx={{ padding: 2, textAlign: 'center' }}>
-          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>Explore a wide range of courses designed to help you succeed in the tech industry</Typography>
+          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+            Explore a wide range of courses designed to help you succeed in the tech industry</Typography>
           <Search onSearch={setSearchQuery} />
         </Box>
       ) : (
         <Box sx={{ padding: 2, textAlign: 'center' }}>
-          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>Top Courses</Typography>
+          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+            Top Courses</Typography>
           <Typography sx={{ textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>Courses designed for aspiring developers, this courses equips you with the skills and hands-on experience needed to excel in software development.</Typography>
         </Box>
       )}
@@ -100,16 +102,16 @@ function Courses({ topCourses = false }) {
                 }}
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flexGrow: 1 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{course.title}</Typography>
-                  <Typography variant="body2" sx={{ overflow: 'hidden', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }}>{course.description}</Typography>
-                  <Typography variant="body2">Duration: {course.days} Days</Typography>
+                  <Typography sx={{ fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p2)' }}>{course.title}</Typography>
+                  <Typography sx={{ overflow: 'hidden', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p3)' }}>{course.description}</Typography>
+                  <Typography sx={{ fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p3)' }}>Duration: {course.days} Days</Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 1 }}>
                     {reviewsLoading ? (
                       <CircularProgress size={20} />
                     ) : (
                       <>
                         <Rating value={Number(avg)} readOnly precision={0.5} />
-                        <Typography variant="body2" sx={{ marginLeft: 1 }}>({count})</Typography>
+                        <Typography sx={{ fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p3)', marginLeft: 1 }}>({count})</Typography>
                       </>
                     )}
                   </Box>

@@ -1,10 +1,8 @@
 import React from 'react';
-import { Box, Typography, Button, Grid, Card, CardContent, CardMedia } from '@mui/material';
-import CloudIcon from '@mui/icons-material/Cloud';
-import ApiIcon from '@mui/icons-material/Api';
-import databaseImage from '../../../../assets/profilePic.jpg';
-import cloudImage from '../../../../assets/profilePic.jpg';
-import backGroundImage from '../../../../assets/Designer.jpeg'; // Background image
+import { Box, Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import CustomButton from '../../../utility/CustomButton';
+import databaseImage from '../../../../assets/footer/databaseImage.png';
+import cloudImage from '../../../../assets/footer/cloudImage.png';
 
 function BackendDeveloper() {
     return (
@@ -12,12 +10,12 @@ function BackendDeveloper() {
             sx={{
                 padding: 2,
                 color: 'white',
-                backgroundImage: `url(${backGroundImage})`, // Applying background image
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundAttachment: 'fixed',
                 position: 'relative',
                 zIndex: 1,
+                backgroundColor: 'var(--color-p4)', // Apply theme background
             }}
         >
             {/* Overlay */}
@@ -28,81 +26,50 @@ function BackendDeveloper() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Overlay with opacity
-                    zIndex: -1, // Ensures overlay is behind the content
+                    zIndex: -1, // Ensure it's behind content
                 }}
             />
 
             {/* Hero Section */}
-            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2, color: '#A6CDC6' }}>
-                <Typography variant="h3" fontWeight={'bold'} gutterBottom>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p1)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     Backend Developer
                 </Typography>
-                <Typography variant="h6" paragraph>
-                    As a Backend Developer, you’ll design and build scalable server-side applications, work with databases, and integrate cloud services. Your main responsibility will be to create powerful APIs and backend systems that power dynamic web applications.
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                    As a Backend Developer, you’ll design and build scalable server-side applications, work with databases, and integrate cloud services.
                 </Typography>
-                <Button variant="contained" color="primary" sx={{ marginTop: 2 }}>
-                    Apply Now
-                </Button>
+                <CustomButton text={'Apply Now'} marginTop={'1%'} />
             </Box>
 
             {/* Backend Technologies Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
+            <Box sx={{ marginBottom: 6, backgroundColor: 'var(--color-p4)', padding: 2 }}>
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} fontWeight={'bold'} gutterBottom>
                     Key Backend Technologies
                 </Typography>
-                <Typography variant="body1" paragraph>
-                    As a Backend Developer, you’ll work with various technologies to build robust and scalable backend services. Here are the main tools and frameworks you’ll be using:
+                <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                    Here are the main tools and frameworks used in backend development:
                 </Typography>
                 <Grid container spacing={4}>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Back-End Frameworks
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                    Backend Frameworks
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Node.js</a> with <a href="https://expressjs.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Express.js</a>
-                                    <br />
-                                    - <a href="https://www.djangoproject.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Django</a> (Python)
-                                    <br />
-                                    - <a href="https://flask.palletsprojects.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Flask</a> (Python)
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - Express.js (Node.js), Django (Python), Flask (Python), Spring Boot (Java)
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ backgroundColor: 'var(--color-p1)', color: 'var(--color-p2)' }}>
                             <CardContent>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                                     Databases
                                 </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://www.mongodb.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MongoDB</a> (NoSQL)
-                                    <br />
-                                    - <a href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>PostgreSQL</a> (SQL)
-                                    <br />
-                                    - <a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>MySQL</a> (SQL)
-                                    <br />
-                                    - <a href="https://redis.io/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Redis</a> (In-memory data store)
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Card sx={{ backgroundColor: '#2a2a2a', color: '#A6CDC6' }}>
-                            <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Cloud & Deployment
-                                </Typography>
-                                <Typography variant="body2" paragraph>
-                                    - <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>AWS</a> (Amazon Web Services)
-                                    <br />
-                                    - <a href="https://cloud.google.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Google Cloud</a>
-                                    <br />
-                                    - <a href="https://www.heroku.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Heroku</a>
-                                    <br />
-                                    - <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#f5a623' }}>Docker</a> for containerization
+                                <Typography fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} paragraph>
+                                    - MongoDB, PostgreSQL, MySQL, Redis
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -110,64 +77,45 @@ function BackendDeveloper() {
                 </Grid>
             </Box>
 
-            {/* Real Projects Section */}
-            <Box sx={{ marginBottom: 6, backgroundColor: 'rgba(76, 118, 255, 0.13)', padding: 2 }}>
-                <Typography variant="h5" gutterBottom>
-                    Real Projects You Will Work On
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    As a Backend Developer, you’ll have the opportunity to work on the following types of projects:
-                </Typography>
-                <ul>
-                    <li><Typography variant="body1">Designing and building RESTful APIs for web and mobile applications.</Typography></li>
-                    <li><Typography variant="body1">Integrating databases and ensuring efficient data retrieval and storage.</Typography></li>
-                    <li><Typography variant="body1">Creating microservices to break down large monolithic applications.</Typography></li>
-                    <li><Typography variant="body1">Ensuring security through authentication, authorization, and encryption.</Typography></li>
-                    <li><Typography variant="body1">Automating the deployment pipeline using CI/CD practices with Jenkins, GitLab, or similar tools.</Typography></li>
-                </ul>
-            </Box>
-
-            {/* Cloud Services & Deployment Section */}
-            <Grid container spacing={4} sx={{ marginBottom: 6, height: '100%', display: 'flex', alignItems: 'stretch' }}>
+            {/* Cloud & Deployment Section */}
+            <Grid container spacing={4} sx={{ marginBottom: 6 }}>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <CardMedia
+                            sx={{ objectFit: 'cover', objectPosition: 'top' }}
                             component="img"
-                            height="200"
+                            height="350"
                             image={cloudImage}
-                            alt="Cloud Deployment"
+                            alt="Cloud Infrastructure"
                         />
                         <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                Cloud Services & Deployment
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
+                                Cloud Infrastructure
                             </Typography>
-                            <Typography variant="body2" paragraph>
-                                Backend developers often work with cloud services for hosting, storage, and other backend operations. You will be responsible for deploying services and applications on platforms like AWS, Google Cloud, and Azure.
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Backend developers often work with cloud platforms like AWS, Google Cloud, and Azure.
                             </Typography>
-                            <Button variant="outlined" color="primary">
-                                Learn More
-                            </Button>
+                            <CustomButton text={'Learn More'} />
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <CardMedia
+                            sx={{ objectFit: 'cover', objectPosition: 'top' }}
                             component="img"
-                            height="200"
+                            height="350"
                             image={databaseImage}
                             alt="Database Management"
                         />
                         <CardContent>
-                            <Typography variant="h6" gutterBottom>
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p2)'} fontFamily={'var(--font-p1)'} gutterBottom>
                                 Database Management
                             </Typography>
-                            <Typography variant="body2" paragraph>
-                                You'll be responsible for designing and managing both SQL and NoSQL databases, optimizing queries, and ensuring the integrity and scalability of the data layer.
+                            <Typography color='var(--color-p2)' fontSize={'var(--font-size-p3)'} fontFamily={'var(--font-p1)'} paragraph>
+                                Backend developers handle structured (SQL) and unstructured (NoSQL) databases for scalable applications.
                             </Typography>
-                            <Button variant="outlined" color="primary">
-                                Learn More
-                            </Button>
+                            <CustomButton text={'Learn More'} />
                         </CardContent>
                     </Card>
                 </Grid>
@@ -175,9 +123,7 @@ function BackendDeveloper() {
 
             {/* Final Call to Action */}
             <Box sx={{ textAlign: 'center', marginTop: 6 }}>
-                <Button variant="contained" color="primary" size="large">
-                    Explore Backend Developer Opportunities
-                </Button>
+                <CustomButton text={'Explore Backend Developer Opportunities'} />
             </Box>
         </Box>
     );

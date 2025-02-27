@@ -93,7 +93,8 @@ const TechnologyStack = () => {
                 Common Technology Stack Layers used in Development
             </Typography> */}
             <Box sx={{ padding: 2, textAlign: 'center' }}>
-                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>Common	Technology	Stack	Layer</Typography>
+                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>
+                    Common Technology Stack	Layers Used In Develpment</Typography>
                 <Typography sx={{ marginBottom: 10, textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>
                     At Skillmate, our Java Full-Stack Development program is designed to equip you with a
                     comprehensive technology stack used by top IT companies. By mastering these
