@@ -63,7 +63,7 @@ function EnquiryForm({ closeForm, contact }) {
       {/* Image Section */}
       <Box
         flex={1}
-        display={{ xs: 'block', md: 'block' }}
+        display={{ xs: 'none', md: 'block' }}
         sx={{
           width: { xs: '100%', md: '50%' },
           height: { xs: 'auto', md: '100%' }, // Full height on large screens

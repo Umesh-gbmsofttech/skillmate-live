@@ -4,8 +4,8 @@ import './Carousel.css';
 import logo from '../../assets/skillmate.jpg';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-// import carouselImg1 from '../../assets/carausel.jpg';
-import carouselImg1 from '../../assets/background-laptop.avif';
+// import carouselImg1 from '../../assets/carousel.jpg';
+import carouselImg1 from '../../assets/carousel1.jpg';
 
 
 const Carousel = () => {
@@ -65,7 +65,7 @@ const Carousel = () => {
           <div className="carousel-slide" key={index}>
             <div className="carousel-image-container">
               <img className="carousel-image" src={img.image} alt={`Slide ${index + 1}`} />
-              <h3 className="carousel-caption">{img.caption}</h3>
+              {/* <h3 className="carousel-caption">{img.caption}</h3> */}
             </div>
           </div>
         ))}

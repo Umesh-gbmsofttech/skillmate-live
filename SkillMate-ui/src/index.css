@@ -1,11 +1,38 @@
-body {
-  margin: 0;
-  background-color: #1A2130;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-p1: #f7f7f7;
+  --color-p2: #1A2130;
+  --color-p3: #008080;
+  --color-p4: #cfcfcf;
+
+
+  --font-p1: Cambria;
+  --font-p2: Cochin;
+
+  --font-size-p1: 1.6rem;
+  --font-size-p2: 1.3rem;
+  --font-size-p3: 0.9rem;
 }
 
-/* 
-#008080
-#E0E0E0 
-font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-*/
+body {
+  margin: 0;
+  color: var(--color-p2);
+  background-color: var(--color-p1);
+  font-family: var(--font-p1);
+}
+
+
+.cursor-tracker {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgba(116, 223, 223, 0.6);
+  pointer-events: none;
+  transition: transform 0.1s ease;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  filter: blur(50px);
+  box-shadow: 0 0 12px rgba(116, 255, 255, 0.4);
+}

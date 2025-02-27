@@ -11,9 +11,7 @@ import TrainerSignUp from './components/auth/TrainerSignUp';
 import Community from './components/home/community/Community';
 import Subscription from './components/subscription/Subscription';
 import DeleteProfile from './components/profile/DeleteProfile';
-import OurTopCourses from './components/courses/OurTopCourses';
-import ExploreAllCourses from './components/courses/ExploreAllCourses';
-import TopTrainers from './components/trainer/TopTrainers';
+import TopTrainersAndStudents from './components/trainer/TopTrainersAndStudents';
 import TestimonialsOfPlatformUsers from './components/home/TestimonialsOfPlatformUsers';
 import TechnologyStack from './components/home/technologyStack/TechnologyStack';
 import OurStudentsPlacedIn from './components/home/tieUpComponies/OurStudentsPlacedIn';
@@ -38,7 +36,6 @@ import BuyCourse from './components/subscription/BuyCourse';
 import MyCourses from './components/courses/MyCourses';
 import { CourseProvider } from './components/context/CourseContext';
 import Carousel from './components/home/Carousel';
-// import LoginProfile from './components/auth/Profile';
 import { Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ManageBatches from './components/admin/ManageBatches';
@@ -88,6 +85,22 @@ function App() {
   }, [showForm]);
 
 
+  // Mouse move event listener for cursor tracker
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      const cursor = document.querySelector('.cursor-tracker');
+      cursor.style.left = `${event.pageX}px`;
+      cursor.style.top = `${event.pageY}px`;
+    };
+
+    // Adding the event listener when component mounts
+    document.addEventListener("mousemove", handleMouseMove);
+
+    // Cleanup the event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
   return (
     // debouncing throatling
     //rahulrathod2002
@@ -95,7 +108,7 @@ function App() {
 
 
     <Router>
-      {/* <Profile /> */}
+      <div className="cursor-tracker"></div>
       <Navbar />
       <Routes>
         <Route path="*" element={<h1 className='page-not-found-error-msg'>404 - Page Not Found</h1>} />
@@ -105,11 +118,10 @@ function App() {
             <Carousel />
             <ConfirmationDialog />
             {/* <CardSection /> */}
-            <OurTopCourses />
-            <ExploreAllCourses />
-            <TopTrainers sectionHeading={'TOP TRAINERS'} trainer={'trainer'} />
-            <TopTrainers sectionHeading={'Successfully placed students'} student={'student'} />
-            {/* <TestimonialsOfPlatformUsers heading={'Testimonials of Platform Users'} /> */}
+            <Courses topCourses={true} />
+            <TopTrainersAndStudents sectionHeading={'Our Top Trainers'} trainer={'trainer'} />
+            <TopTrainersAndStudents sectionHeading={'Successfully	Placed	Students'} student={'student'} />
+            <TestimonialsOfPlatformUsers heading={'Testimonials of Platform Users'} />
             <ReviewsSection />
             <TechnologyStack />
             <OurStudentsPlacedIn />

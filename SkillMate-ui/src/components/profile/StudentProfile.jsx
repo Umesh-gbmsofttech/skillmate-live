@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Typography, IconButton, Avatar, Dialog, Button, Divider } from '@mui/material';
-import { Visibility, VisibilityOff, Edit } from '@mui/icons-material';
+import { Box, Typography, IconButton, Avatar, Dialog, Button, Divider, Card, DialogTitle } from '@mui/material';
+import { Visibility, VisibilityOff, Edit, Close } from '@mui/icons-material';
+import { motion } from 'framer-motion';
 import MyCourses from '../courses/MyCourses';
 import defaultProfilePic from '../../assets/skillmate.jpg';
+import CustomButton from '../utility/CustomButton';
+
+const containerVariants = {
+    hidden: { opacity: 0, y: -30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
 
 function StudentProfile() {
     const [showProfile, setShowProfile] = useState(false);
     const [showPDF, setShowPDF] = useState(false);
-
     const userData = useSelector((state) => state.auth.userData);
     const location = useLocation();
     const navigate = useNavigate();
-
     const { username } = location.state || { username: 'Admin' };
 
     const user = {
@@ -24,9 +29,7 @@ function StudentProfile() {
         qualification: userData?.qualification || 'Bachelor of Science, Computer Science',
         workStatus: userData?.workingStatus || 'Full-Time',
         technologies: userData?.technologies || ['JavaScript', 'React', 'Node.js'],
-        image: userData?.image
-            ? `data:image/jpeg;base64,${userData.image}`
-            : defaultProfilePic,
+        image: userData?.image ? `data:image/jpeg;base64,${userData.image}` : defaultProfilePic,
         resume: userData?.resume,
     };
 
@@ -36,94 +39,99 @@ function StudentProfile() {
 
     return (
         <>
-            <Box
-                sx={{
-                    maxWidth: 1000,
-                    mx: 'auto',
-                    p: 2,
-                    bgcolor: 'background.paper',
-                    borderRadius: 3,
-                    boxShadow: 4,
-                    mt: 5,
-                }}
-            >
-                {/* Profile Header */}
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', p: 2 }}>
+                <Card
+                    component={motion.div}
+                    initial="hidden"
+                    animate="visible"
+                    variants={containerVariants}
+                    sx={{ width: 400, textAlign: 'center', p: 4, borderRadius: 4, boxShadow: 6 }}
+                >
                     <Avatar
                         src={user.image}
                         alt={user.name}
-                        sx={{ width: 180, height: 220, objectFit: 'cover', objectPosition: 'top', borderRadius: '0', padding: '10px' }}
+                        sx={{
+                            width: 100,
+                            height: 100,
+                            cursor: 'pointer',
+                            boxShadow: 4,
+                            m: '0 auto',
+                            transition: '0.3s',
+                            '&:hover': { transform: 'scale(1.1)' },
+                        }}
+                        onClick={() => setShowProfile(!showProfile)}
                     />
-                    <Typography variant="h4" fontWeight="bold">
-                        Welcome, {userData?.roles[0] !== 'STUDENT' ? username : user.name}
-                    </Typography>
-                    <Box>
-                        <IconButton onClick={() => setShowProfile(!showProfile)} color="primary">
-                            {showProfile ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                        <IconButton onClick={handleUpdateAccountClick} color="secondary">
+                    <Typography variant="h5" fontWeight="bold" mt={2}>
+                        {userData?.roles[0] !== 'STUDENT' ? username : user.name}
+                        <IconButton onClick={handleUpdateAccountClick} color="secondary" sx={{
+                            '&:focus': {
+                                outline: 'none',
+                                border: 'none',
+                            },
+                        }}>
                             <Edit />
                         </IconButton>
-                    </Box>
-                </Box>
+                    </Typography>
+                    <Typography variant="subtitle2">{user.email}</Typography>
 
-                {/* Profile Details */}
-                {showProfile && (
-                    <Box
-                        sx={{
-                            p: 3,
-                            borderRadius: 3,
-                            bgcolor: 'grey.50',
-                            boxShadow: 2,
-                            border: '1px solid #e0e0e0',
-                        }}
-                    >
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                        {[{ label: "Courses", value: 0 }, { label: "Batches", value: 0 }, { label: "Meetings", value: 0 }].map((item, index) => (
+                            <Box key={index} sx={{ textAlign: "center", mx: 1 }}>
+                                <Typography variant="h6">{item.value}</Typography>
+                                <CustomButton text={`${item.label}`} onClick={() => setOpenDialog(item.label.toLowerCase())} />
+                            </Box>
+                        ))}
+                    </Box>
+                </Card>
+            </Box>
+
+            {showProfile && (
+                <Dialog open={showProfile} onClose={() => setShowProfile(false)} maxWidth="sm" fullWidth>
+                    <Box sx={{ p: 3 }}>
+                        <Typography variant="h6" textAlign="center">My Details</Typography>
+                        <IconButton onClick={() => setShowProfile(false)} sx={{ position: 'absolute', right: 8, top: 8 }}>
+                            <Close />
+                        </IconButton>
                         {[
-                            { label: 'Name', value: user.name },
                             { label: 'Phone', value: user.mobile },
-                            { label: 'Email', value: user.email },
                             { label: 'Address', value: user.address },
                             { label: 'Education', value: user.qualification },
                             { label: 'Work Status', value: user.workStatus },
-                        ].map((item, index) => (
-                            <Box key={index} sx={{ mb: 2 }}>
-                                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                                    {item.label}:
-                                </Typography>
-                                <Typography variant="body1">{item.value}</Typography>
-                                {index < 5 && <Divider sx={{ mt: 1, mb: 1 }} />}
+                        ].map(({ label, value }, index) => (
+                            <Box key={index} sx={{ boxShadow: 2, borderRadius: 1, p: 1, mb: 1, ":hover": { boxShadow: 5 }, fontFamily: "var(--font-p1)", }}>
+                                <Typography variant="body1" fontWeight="bold">{label}:</Typography>
+                                <Typography variant="body2">{value}</Typography>
                             </Box>
                         ))}
-
-                        {/* View Resume Button */}
                         {user.resume && (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{ mt: 3 }}
-                                onClick={() => setShowPDF(true)}
-                            >
+                            <Button variant="outlined" sx={{ mt: 3 }} onClick={() => setShowPDF(true)}>
                                 View Resume
                             </Button>
                         )}
                     </Box>
-                )}
-
-                {/* PDF Dialog */}
-                <Dialog open={showPDF} onClose={() => setShowPDF(false)} maxWidth="md" fullWidth>
-                    {user.resume ? (
-                        <Box sx={{ height: '600px' }}>
-                            <iframe
-                                src={`data:application/pdf;base64,${user.resume}`}
-                                title="Resume PDF"
-                                style={{ width: '100%', height: '100%', border: 'none' }}
-                            />
-                        </Box>
-                    ) : (
-                        <Typography>No resume available.</Typography>
-                    )}
                 </Dialog>
-            </Box>
+            )}
+
+            <Dialog open={showPDF} onClose={() => setShowPDF(false)} maxWidth="md" fullWidth>
+                <DialogTitle>
+                    <Typography variant="h6" textAlign="center">My Resume</Typography>
+                    <IconButton onClick={() => setShowPDF(false)} sx={{ position: 'absolute', right: 8, top: 8 }}>
+                        <Close />
+                    </IconButton>
+                </DialogTitle>
+                <Box sx={{ p: 2 }}>
+                    {user.resume ? (
+                        <iframe
+                            src={`data:application/pdf;base64,${user.resume}`}
+                            width="100%"
+                            height="600px"
+                            title="Resume"
+                        />
+                    ) : (
+                        <Typography>No resume uploaded.</Typography>
+                    )}
+                </Box>
+            </Dialog>
 
             <MyCourses />
         </>

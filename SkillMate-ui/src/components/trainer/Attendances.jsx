@@ -1,3 +1,4 @@
+// Attendances.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -9,152 +10,162 @@ import {
     TableHead,
     TableRow,
     Paper,
-    Button,
     Typography,
-    TextField
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    CircularProgress,
+    Box,
+    Grid,
 } from "@mui/material";
-import Loading from "../../Loading";
-import { showSuccessToast, showErrorToast } from '../utility/ToastService';
+import { styled } from '@mui/material/styles';
 import baseUrl from "../urls/baseUrl";
 
-function Attendances({ batch }) {
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    width: '100%',
+    maxWidth: 600,
+    mx: "auto",
+    boxShadow: theme.shadows[2],
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+        minWidth: 600,
+    },
+}));
+
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+    overflowX: 'auto',
+    boxShadow: theme.shadows[2],
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+        overflowX: 'initial',
+    },
+}));
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    fontFamily: "var(--font-p2)",
+    [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(1),
+        fontSize: '0.8rem',
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    [theme.breakpoints.down('sm')]: {
+        '& > *': {
+            padding: theme.spacing(0.5),
+        }
+    },
+}));
+
+
+const Attendances = ({ batches }) => {
+    const [selectedBatch, setSelectedBatch] = useState("");
     const [attendances, setAttendances] = useState([]);
-    const [editedAttendance, setEditedAttendance] = useState({});
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const token = useSelector((state) => state.auth.token);
 
     useEffect(() => {
-        const fetchLatestAttendances = async () => {
+        const fetchAttendances = async () => {
             setLoading(true);
-            if (!batch) {
+            setError(null);
+            if (!selectedBatch) {
+                setAttendances([]);
                 setLoading(false);
                 return;
-            } else {
-                try {
-                    const response = await axios.get(
-                        `${baseUrl}attendances/batch/${batch}`,
-                        { headers: { Authorization: `Bearer ${token}` } }
-                    );
-                    setAttendances(response.data);
-                } catch (error) {
-                    showErrorToast(`Error fetching latest attendances: ${error}`);
-                } finally {
-                    setLoading(false);
-                }
             }
-            setLoading(false);
+            try {
+                const response = await axios.get(
+                    `${baseUrl}attendances/batch/${selectedBatch}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setAttendances(response.data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
         };
-        fetchLatestAttendances();
-    }, [batch, token]);
+        fetchAttendances();
+    }, [selectedBatch, token]);
 
-    const updateAttendance = async (recordId) => {
-        if (!editedAttendance[recordId]) return;
-        setLoading(true);
-        try {
-            const updatedRecord = editedAttendance[recordId];
-            await axios.put(
-                `${baseUrl}attendances/${recordId}`,
-                updatedRecord,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+    const handleBatchChange = (event) => {
+        setSelectedBatch(event.target.value);
+    };
 
-            showSuccessToast("Attendance updated successfully");
-            setEditedAttendance((prev) => {
-                const updatedState = { ...prev };
-                delete updatedState[recordId];
-                return updatedState;
-            });
-
-            const response = await axios.get(
-                `${baseUrl}attendances/batch/${batch}`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            setAttendances(response.data);
-        } catch (error) {
-            showErrorToast(`Error updating attendance: ${error}`);
+    const renderAttendanceTable = () => {
+        if (loading) {
+            return <Box display="flex" justifyContent="center" mt={2}><CircularProgress /></Box>;
         }
-        setLoading(false);
-    };
+        if (error) {
+            return <Typography color="error" align="center" sx={{ fontFamily: "var(--font-p1)", color: "var(--color-p2)" }}>Error: {error}</Typography>;
+        }
+        if (attendances.length === 0) {
+            return <Typography align="center" sx={{ fontFamily: "var(--font-p1)", color: "var(--color-p2)" }}>No attendance records found for this batch.</Typography>;
+        }
 
-    const handleInputChange = (recordId, field, value) => {
-        setEditedAttendance((prev) => ({
-            ...prev,
-            [recordId]: { ...prev[recordId], [field]: value },
-        }));
-    };
-
-    const formatDateTime = (timestamp) => {
-        if (!timestamp) return "N/A";
-        const [date, time] = timestamp.split(" ");
-        return `${date} ${time}`;
+        return (
+            <StyledTableContainer component={Paper}>
+                <Table sx={{ minWidth: 300 }}>
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>Sr. No.</StyledTableCell>
+                            <StyledTableCell>Student Name</StyledTableCell>
+                            <StyledTableCell>In Time</StyledTableCell>
+                            <StyledTableCell>Remark</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {attendances.map((record, index) => (
+                            <StyledTableRow key={record.id}>
+                                <StyledTableCell>{index + 1}</StyledTableCell>
+                                <StyledTableCell>{record.student.name}</StyledTableCell>
+                                <StyledTableCell>{record.attendanceTimestamp}</StyledTableCell>
+                                <StyledTableCell>{record.remark}</StyledTableCell>
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </StyledTableContainer>
+        );
     };
 
     return (
-        <div style={{ padding: "10px", maxWidth: "100%" }}>
-            <Typography variant="h5" align="center" gutterBottom>
-                Attendance Records
-            </Typography>
-            {loading ? (
-                <Loading />
-            ) : (
-                <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
-                    <Table sx={{ minWidth: 600 }}>
-                        <TableHead sx={{ bgcolor: "#f5f5f5" }}>
-                            <TableRow>
-                                <TableCell><b>Sr. No.</b></TableCell>
-                                <TableCell><b>Student Name</b></TableCell>
-                                {/* <TableCell><b>Course Name</b></TableCell> */}
-                                <TableCell><b>In Time</b></TableCell>
-                                <TableCell><b>Remark</b></TableCell>
-                                <TableCell><b>Actions</b></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {attendances.length > 0 ? (
-                                attendances.map((record, index) => (
-                                    <TableRow key={record.id}>
-                                        <TableCell>{index + 1}</TableCell>
-                                        <TableCell>{record.student.name}</TableCell>
-                                        {/* <TableCell>
-                                            {record.student.qualification || "N/A"}
-                                        </TableCell> */}
-                                        <TableCell>{formatDateTime(record.attendanceTimestamp)}</TableCell>
-                                        <TableCell>
-                                            <TextField
-                                                variant="outlined"
-                                                size="small"
-                                                fullWidth
-                                                value={editedAttendance[record.id]?.remark || record.remark || ""}
-                                                onChange={(e) =>
-                                                    handleInputChange(record.id, "remark", e.target.value)
-                                                }
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                size="small"
-                                                onClick={() => updateAttendance(record.id)}
-                                            >
-                                                Update
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={6} align="center">
-                                        No attendance records found
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            )}
-        </div>
+        <Box p={2}>
+            <Grid container spacing={2} direction="column" alignItems="center">
+                <Grid item xs={12}>
+                    <Typography variant="h5" align="center" gutterBottom sx={{ fontFamily: "var(--font-p1)", color: "var(--color-p2)" }}>
+                        Attendance Records
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sm={8} md={6}>
+                    <StyledFormControl>
+                        <InputLabel id="batch-select-label" sx={{ fontFamily: "var(--font-p1)", color: "var(--color-p2)" }}>Select Batch</InputLabel>
+                        <Select
+                            labelId="batch-select-label"
+                            id="batch-select"
+                            value={selectedBatch}
+                            onChange={handleBatchChange}
+                            fullWidth
+                        >
+                            <MenuItem value="">
+                                <em>-- Select Batch --</em>
+                            </MenuItem>
+                            {batches.map((batchItem) => (
+                                <MenuItem key={batchItem.id} value={batchItem.id} sx={{ fontFamily: "var(--font-p1)", color: "var(--color-p2)" }}>
+                                    Batch {batchItem.id}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </StyledFormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    {renderAttendanceTable()}
+                </Grid>
+            </Grid>
+        </Box>
     );
-}
+};
 
 export default Attendances;

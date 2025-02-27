@@ -1,6 +1,7 @@
 import React from 'react';
 import companyLogo from '../../../assets/google.png'; // Sample logo, replace with actual logo paths.
 import styled, { keyframes } from 'styled-components';
+import { Box, Typography } from '@mui/material';
 
 // Define the scroll animation
 const scrollAnimation = keyframes`
@@ -18,10 +19,10 @@ const Container = styled.div`
 `;
 
 const Heading = styled.h1`
+    font-family: 'var(--font-p2)';
     margin-bottom: 30px;
     font-size: 2rem;
     font-weight: bold;
-    color: #ffffff;
 `;
 
 const Carousel = styled.div`
@@ -77,7 +78,10 @@ const OurStudentsPlacedIn = () => {
 
     return (
         <Container>
-            <Heading>Our Students Placed In</Heading>
+            {/* <Heading>Our Students Placed In</Heading> */}
+            <Box sx={{ padding: 2, textAlign: 'center' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>Our Students Placed In</Typography>
+            </Box>
 
             {/* Carousel */}
             <Carousel>

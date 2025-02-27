@@ -4,179 +4,123 @@ import { styled } from '@mui/system';
 import backendImg from '../../../assets/technology_stack/backend.png';
 import databaseImg from '../../../assets/technology_stack/database.png';
 import frontendImg from '../../../assets/technology_stack/frontend.png';
-import osImg from '../../../assets/technology_stack/os.jpeg';
-import serverImg from '../../../assets/technology_stack/server.jpg';
+import osImg from '../../../assets/technology_stack/os.png';
+import serverImg from '../../../assets/technology_stack/server.png';
+import { showSuccessToast } from '../../utility/ToastService';
+import { Margin } from '@mui/icons-material';
 
 const technologies = [
-    {
-        number: 1,
-        technologyName: "OS",
-        imageUrl: osImg,
-        description: "Operating system used for server deployment.",
-    },
-    {
-        number: 2,
-        technologyName: "SERVER",
-        imageUrl: serverImg,
-        description: "Manages client requests and backend logic.",
-    },
-    {
-        number: 3,
-        technologyName: "DATABASE",
-        imageUrl: databaseImg,
-        description: "Stores and retrieves application data efficiently.",
-    },
-    {
-        number: 4,
-        technologyName: "BACKEND PROGRAMMING/ LANGUAGE",
-        imageUrl: frontendImg,
-        description: "Languages used to build business logic and APIs.",
-    },
-    {
-        number: 5,
-        technologyName: "FRONTEND FRAMEWORK/ LIBRARY",
-        imageUrl: backendImg,
-        description: "Tools for creating interactive user interfaces.",
-    },
+    { technologyName: "OS", imageUrl: osImg, description: "Operating system used for server deployment." },
+    { technologyName: "SERVER", imageUrl: serverImg, description: "Manages client requests and backend logic." },
+    { technologyName: "DATABASE", imageUrl: databaseImg, description: "Stores and retrieves application data efficiently." },
+    { technologyName: "BACKEND", imageUrl: backendImg, description: "Languages used to build business logic and APIs." },
+    { technologyName: "FRONTEND", imageUrl: frontendImg, description: "Tools for creating interactive user interfaces." },
 ];
 
-const TechCard = styled(Card)(({ theme }) => ({
-    backgroundColor: '#fbf5dd95',
-    borderRadius: '10px',
-    width: '180px',
+const TechContainer = styled(Box)({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '10px',
+    overflow: 'hidden',
+    width: '100%',
+});
+
+const TechCard = styled(Card)(({ isHovered }) => ({
+    borderRadius: '4px',
     height: '250px',
-    textAlign: 'center',
-    padding: '10px',
-    transition: 'box-shadow 0.3s ease',
+    flex: isHovered ? '3' : '1',
+    transition: 'flex 0.5s ease',
     position: 'relative',
-    marginTop: '20px',
-    color: '#16404D',
-
-    '&:hover': {
-        boxShadow: '0 0 20px #676767',
-    },
-    [theme.breakpoints.down('sm')]: {
-        width: '160px', // Adjust card width on small screens
-    },
-    [theme.breakpoints.down('xs')]: {
-        width: '140px', // Further reduce card width on extra-small screens
-    },
+    cursor: 'pointer',
+    overflow: 'hidden',
 }));
 
-const TechImage = styled(CardMedia)(({ theme }) => ({
+const TechImage = styled(CardMedia)({
     width: '100%',
-    height: '120px',
+    height: '100%',
     objectFit: 'cover',
-    borderRadius: '8px',
-    marginTop: '30px',
-    alignSelf: 'end',
-    justifySelf: 'end',
-}));
-
-const TechDescription = styled(Box)(({ theme }) => ({
-    display: 'none',
-    backgroundColor: 'rgba(229, 229, 229, 0.8)',
-    color: '#000',
     position: 'absolute',
-    bottom: '100%',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    padding: '10px',
-    borderRadius: '10px',
-    zIndex: 1000,
-    fontSize: '1em',
+    top: 0,
+    left: 0,
+});
+
+const Overlay = styled(Box)({
+    position: 'absolute',
+    top: 0,
+    left: 0,
     width: '100%',
-    textAlign: 'center',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: 'rgba(0, 0, 0, 0.6)',
+    color: '#fff',
     opacity: 0,
-    transition: 'opacity 0.3s ease-in-out',
+    transition: 'opacity 0.5s ease',
+});
 
-}));
+const TechText = styled(Typography)({
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    marginBottom: '8px',
+});
 
+const TechDescription = styled(Typography)({
+    fontSize: '0.9em',
+    textAlign: 'center',
+    marginBottom: '8px',
+    fontFamily: 'var(--font-p2)',
+});
 
+const LearnMore = styled(Typography)({
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    fontWeight: 'bold',
+});
 
 const TechnologyStack = () => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
     return (
-        <Box
-            sx={{
-                padding: '50px 20px',
-                background: 'linear-gradient(125deg, #16404D, #1A2130, #fbf5dd67, #1A2130)',
-                minHeight: '100vh',
-            }}
-        >
-            <Typography
-                variant="h3"
-                sx={{
-                    textAlign: 'center',
-                    // marginBottom: '20px',
-                    color: '#FDFFE2',
-                    textShadow: '0 0 5px rgba(0, 0, 0, 0.2)',
-                }}
-            >
-                Common Technology Stack Layers
-            </Typography>
-            <Typography
-                variant="h3"
-                sx={{
-                    textAlign: 'center'
-                }}
-            >
-                Describe about this
-            </Typography>
-
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    gap: '20px',
-                    marginTop: '20vh',
-                    position: 'relative',
-                }}
-            >
-                {technologies.map((technology, index) => (
-                    <Box key={technology.number} sx={{ position: 'relative' }}>
-                        <TechCard
-                            onMouseEnter={() => setHoveredIndex(index)}
-                            onMouseLeave={() => setHoveredIndex(null)}
-                            sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', justifyContent: 'space-between' }}
-                        >
-
-                            {/* <Typography
-                                    variant="h6"
-                                    sx={{
-                                        overflow: 'hidden',
-                                        fontSize: '1em',
-                                        fontWeight: 'bold',
-                                        padding: 0,
-                                        margin: '0',
-                                        color: '#16404D',
-                                    }}
-                                >
-                                    {technology.technologyName}
-                                </Typography> */}
-                            <TechImage
-                                component="img"
-                                src={technology.imageUrl}
-                                alt={technology.technologyName}
-                            />
-
-                        </TechCard>
-
-                        {/* Hoverable description that appears outside of the card */}
-                        <TechDescription
-                            sx={{
-                                opacity: hoveredIndex === index ? 1 : 0,
-                                display: hoveredIndex === index ? 'block' : 'none',
-                            }}
-                        >
-                            <p>{technology.description}</p>
-                        </TechDescription>
-                    </Box>
-                ))}
+        <Box sx={{
+            padding: '50px 20px',
+            background: 'linear-gradient(140deg,var(--color-p1), var(--color-p3), var(--color-p4))',
+            // minHeight: '100vh',
+        }}>
+            {/* <Typography variant="h3" sx={{ textAlign: 'center', color: '#FDFFE2', textShadow: '0 0 5px rgba(0, 0, 0, 0.2)', marginBottom: 10, fontFamily: 'var(--font-p2)' }}>
+                Common Technology Stack Layers used in Development
+            </Typography> */}
+            <Box sx={{ padding: 2, textAlign: 'center' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>Common	Technology	Stack	Layer</Typography>
+                <Typography sx={{ marginBottom: 10, textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>
+                    At Skillmate, our Java Full-Stack Development program is designed to equip you with a
+                    comprehensive technology stack used by top IT companies. By mastering these
+                    technologies, you’ll be prepared to build scalable, high-performance web applications
+                    and advance your career as a full-stack developer.
+                </Typography>
             </Box>
+
+            <TechContainer>
+                {technologies.map((technology, index) => (
+                    <TechCard
+                        key={index}
+                        isHovered={hoveredIndex === index}
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(null)}
+                    >
+                        <TechImage component="img" src={technology.imageUrl} alt={technology.technologyName} />
+                        <Overlay style={{ opacity: hoveredIndex === index ? 1 : 0 }}>
+                            <TechText>{technology.technologyName}</TechText>
+                            <TechDescription>{technology.description}</TechDescription>
+                            <LearnMore onClick={() => showSuccessToast(`Read more about ${technology.technologyName}`)}>
+                                Learn More
+                            </LearnMore>
+                        </Overlay>
+                    </TechCard>
+                ))}
+            </TechContainer>
         </Box>
     );
 };

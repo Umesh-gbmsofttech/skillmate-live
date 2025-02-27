@@ -48,7 +48,7 @@ function Contact() {
                         <CardMedia
                             component="img"
                             sx={{ width: { xs: '100%', md: '50%' }, borderRadius: 2 }}
-                            image={course?.coverImage ? `data:image/jpeg;base64,${course.coverImage}` : logo}
+                            image={course?.image ? `data:image/jpeg;base64,${course.image}` : logo}
                             alt="Course Image"
                         />
                         <CardContent sx={{ width: { xs: '100%', md: '50%' } }}>
@@ -92,15 +92,14 @@ function Contact() {
                     >
                         Leave a Rating and Review <img src={writeIcon} alt="Rate Us" style={{ marginLeft: 8, width: 24 }} />
                     </Button>
-                    <Typography variant="h4" align="center" fontWeight="bold" mt={4} color='#3caacb'>Latest Reviews</Typography>
                     <ReviewsSection course={course} />
                 </>
             )}
 
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', p: 2, bgcolor: '#f9f9f9', mt: 4, borderRadius: 2, backgroundColor: '#1A2130' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', p: 2, mt: 4, borderRadius: 2, fontFamily: 'var(--font-p2)' }}>
                 <Button onClick={handleWhatsAppClick} startIcon={<img src={whatsapp} alt="WhatsApp" style={{ width: 40, height: 40 }} />}>
-                    <Typography variant="h6">09226224019</Typography>
+                    <Typography variant="h5">09226224019</Typography>
                 </Button>
             </Box>
 

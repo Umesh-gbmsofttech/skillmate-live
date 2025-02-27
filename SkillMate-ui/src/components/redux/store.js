@@ -7,6 +7,7 @@ import myCoursesReducer from './myCoursesSlice';
 import trainerCoursesReducer from './trainerCoursesSlice';
 import trainerBatchesReducer from './trainerBatchesSlice';
 import ratingReviewReducer from './ratingReviewSlice';
+import meetingsReducer from './meetingsSlice';
 
 const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ const store = configureStore({
     trainerCourses: trainerCoursesReducer,
     trainerBatches: trainerBatchesReducer,
     reviews: ratingReviewReducer,
+    meetings: meetingsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

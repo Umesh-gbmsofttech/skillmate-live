@@ -2,24 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCourses } from '../redux/coursesSlice';
+import { fetchReviews } from '../redux/ratingReviewSlice';
 import Fuse from 'fuse.js';
-import { Card, CardContent, CardMedia, Button, Typography, Box } from '@mui/material';
+import { Card, Typography, Box, Rating, CircularProgress } from '@mui/material';
 import logo from '../../assets/skillmate.jpg';
-import referAndEarn from '../../assets/refer-earn.png';
-import editIcon from '../../assets/editIcon.png';
 import Search from '../Search';
 import Loading from '../../Loading';
-import ConfirmationDialog from '../utility/ConfirmationDialog';
 import { showWarningToast } from '../utility/ToastService';
+import editIcon from '../../assets/editIcon.png';
+import referAndEarn from '../../assets/refer-earn.png';
+import CustomButton from '../utility/CustomButton';
 
-function Courses() {
+function Courses({ topCourses = false }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
-  const username = useSelector((state) => state.auth.username);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { courses, status, error } = useSelector((state) => state.courses);
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const { reviews, loading: reviewsLoading } = useSelector((state) => state.reviews);
+  const username = useSelector((state) => state.auth.username);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -27,7 +28,12 @@ function Courses() {
     }
   }, [status, dispatch]);
 
-  // Fuse.js configuration for fuzzy search
+  useEffect(() => {
+    courses.forEach((course) => {
+      dispatch(fetchReviews({ courseId: course.id, token: localStorage.getItem('token') }));
+    });
+  }, [dispatch, courses]);
+
   const fuse = new Fuse(courses, {
     keys: ['title', 'description', 'price', 'days'],
     includeScore: true,
@@ -36,86 +42,104 @@ function Courses() {
 
   const filteredCourses = searchQuery ? fuse.search(searchQuery).map((result) => result.item) : courses;
 
+  const handleReferNowClick = () => showWarningToast('This feature is not available right now.');
   const handleCourseEditClick = (course) => navigate('/admin-profile/edit-courses', { state: { course } });
-  const handleContactUsClick = (course) => navigate('/contact', { state: { course } });
   const handleBuyNowClick = (course) => {
     if (!isAuthenticated) {
       showWarningToast('Please login to continue.');
-      setIsConfirmDialogOpen(true);
       return;
     }
     navigate('/subscriptions', { state: { course } });
   };
-  const handleOk = () => navigate('/login/mobile');
-  const handleCancel = () => setIsConfirmDialogOpen(false);
-  const handleReferNowClick = () => showWarningToast('This feature is not available right now.');
+  const handleContactUsClick = (course) => navigate('/contact', { state: { course } });
+  const getCourseRating = (courseId) => {
+    const courseReviews = reviews.filter((review) => review.course?.id === courseId);
+    const totalReviews = courseReviews.length;
+    const averageRating = totalReviews > 0 ? courseReviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews : 0;
+    return { avg: averageRating.toFixed(1), count: totalReviews };
+  };
 
   return (
     <div>
-      <Box sx={{ padding: 2, backgroundColor: '#1A2130' }}>
-        <Typography variant="h4" gutterBottom sx={{ color: '#3B6790', textAlign: 'center' }}>
-          Explore a wide range of courses designed to help you succeed in the tech industry
-        </Typography>
-
-        <Search onSearch={setSearchQuery} />
-
-        {status === 'loading' ? (
-          <Loading />
-        ) : error ? (
-          <Typography color="error">{error}</Typography>
-        ) : filteredCourses.length > 0 ? (
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 3 }}>
-            {filteredCourses.map((course) => (
-              <Card key={course.id} sx={{ width: 300, boxShadow: 3, backgroundColor: '#71BBB2', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 2 }}>
-                <CardMedia
-                  component="img"
-                  height="250"
-                  image={`data:image/jpeg;base64,${course?.image}` || logo}
-                  alt={course.title || 'Course Image'}
-                />
-                <CardContent sx={{ padding: '0 16px' }}>
-                  <Typography variant="h6">{course.title}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {course.days} Days of course
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Rating: {course.rating}
-                  </Typography>
-                </CardContent>
-                {username === 'ADMIN' && (
-                  <img
-                    onClick={() => handleCourseEditClick(course)}
-                    src={editIcon}
-                    alt="edit"
-                    style={{ width: 20, height: 20, cursor: 'pointer', position: 'relative', top: '0%', right: '-88%' }}
-                  />
-                )}
-                <Box sx={{ display: 'flex', flexDirection: 'column', padding: 2 }}>
-                  <Button variant="contained" color="primary" onClick={() => handleContactUsClick(course)} sx={{ mb: 1 }}>
-                    Contact Us
-                  </Button>
-                  <Button variant="contained" color="secondary" onClick={() => handleBuyNowClick(course)}>
-                    BUY NOW
-                  </Button>
+      {!topCourses ? (
+        <Box sx={{ padding: 2, textAlign: 'center' }}>
+          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>Explore a wide range of courses designed to help you succeed in the tech industry</Typography>
+          <Search onSearch={setSearchQuery} />
+        </Box>
+      ) : (
+        <Box sx={{ padding: 2, textAlign: 'center' }}>
+          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>Top Courses</Typography>
+          <Typography sx={{ textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>Courses designed for aspiring developers, this courses equips you with the skills and hands-on experience needed to excel in software development.</Typography>
+        </Box>
+      )}
+      {status === 'loading' ? (
+        <Loading />
+      ) : error ? (
+        <Typography color="error"></Typography>
+      ) : filteredCourses.length > 0 ? (
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: 2,
+          padding: 2,
+          width: '100%',
+        }}>
+          {filteredCourses.map((course) => {
+            const { avg, count } = getCourseRating(course.id);
+            return (
+              <Card
+                key={course.id}
+                sx={{
+                  boxShadow: 3,
+                  borderRadius: 3,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  padding: 2,
+                  height: '100%',
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flexGrow: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{course.title}</Typography>
+                  <Typography variant="body2" sx={{ overflow: 'hidden', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }}>{course.description}</Typography>
+                  <Typography variant="body2">Duration: {course.days} Days</Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 1 }}>
+                    {reviewsLoading ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      <>
+                        <Rating value={Number(avg)} readOnly precision={0.5} />
+                        <Typography variant="body2" sx={{ marginLeft: 1 }}>({count})</Typography>
+                      </>
+                    )}
+                  </Box>
+                  {username === 'ADMIN' && (
+                    <img onClick={() => handleCourseEditClick(course)} src={editIcon} alt="edit" style={{ width: 20, height: 20, cursor: 'pointer', position: 'absolute', top: 10, right: 10 }} />
+                  )}
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', paddingTop: 1 }}>
+                  <CustomButton onClick={() => handleContactUsClick(course)} text="Contact Us" marginBottom={'4px'} width={'100%'} />
+                  <CustomButton onClick={() => handleBuyNowClick(course)} text="BUY NOW" width={'100%'} />
                 </Box>
               </Card>
-            ))}
+            );
+          })}
+        </Box>
+      ) : (
+        <Typography>No courses available.</Typography>
+      )}
+      {!topCourses && (
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: 4, boxShadow: 3, borderRadius: 1, backgroundColor: 'var(--color-p4)', margin: '1% 1% 0', transition: "box-shadow 0.3s ease", ":hover": { boxShadow: 5 } }}>
+          <Box>
+            <Typography variant="h5" gutterBottom fontWeight={'bold'} color='var(--color-p2)'>Refer and Earn</Typography>
+            <Typography variant="body1" gutterBottom color='var(--color-p2)'>Earn extra money by referring your friends and family to SkillMate.</Typography>
+            <CustomButton onClick={handleReferNowClick} text="Refer Now" />
           </Box>
-        ) : (
-          <Typography>No courses available.</Typography>
-        )}
-      </Box>
-
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: 4, border: 1, borderRadius: 1, backgroundColor: '#FBF5DD' }}>
-        <Box>
-          <Typography variant="h5" gutterBottom>Refer and Earn</Typography>
-          <Typography variant="body1" gutterBottom>Earn extra money by referring your friends and family to SkillMate.</Typography>
-          <Button variant="contained" color="primary" onClick={handleReferNowClick} sx={{ mt: 2 }}>Refer Now</Button>
+          <Box>
+            <img src={referAndEarn} alt="Refer and Earn" style={{ width: '20vh', height: '20vh' }} />
+          </Box>
         </Box>
-        <Box>
-          <img src={referAndEarn} alt="Refer and Earn" style={{ width: '20vh', height: '20vh' }} />
-        </Box>
-      </Box>
+      )}
     </div>
   );
 }

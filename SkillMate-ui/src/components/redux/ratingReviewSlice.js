@@ -51,9 +51,17 @@ const ratingReviewSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
+            // .addCase(fetchReviews.fulfilled, (state, action) => {
+            //     state.loading = false;
+            //     state.reviews = action.payload;
+            // })
             .addCase(fetchReviews.fulfilled, (state, action) => {
                 state.loading = false;
-                state.reviews = action.payload;
+                // Merge new reviews while preventing duplicates
+                const newReviews = action.payload.filter(
+                    (newReview) => !state.reviews.some((existing) => existing.id === newReview.id)
+                );
+                state.reviews = [...state.reviews, ...newReviews];
             })
             .addCase(fetchReviews.rejected, (state, action) => {
                 state.loading = false;

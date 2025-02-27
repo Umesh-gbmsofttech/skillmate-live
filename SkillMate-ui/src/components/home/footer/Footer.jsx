@@ -1,20 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Typography, List, ListItem, ListItemIcon } from '@mui/material';
-import { styled } from '@mui/system';
+import { borderRadius, styled } from '@mui/system';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import CompanySignature from '../CompanySignature';
 
 const FooterContainer = styled(Box)({
-    backgroundColor: '#16404D',
-    color: '#FDFFE2',
+    backgroundColor: 'var(--color-p3)',
+    color: 'var(--color-p1)',
     padding: '0 40px',
     display: 'flex',
     justifyContent: 'space-around',
     flexWrap: 'wrap',
     borderTop: '1px solid rgb(78, 78, 78)',
+    marginTop: '20px',
 });
 
 const FooterSection = styled(Box)({
@@ -24,9 +25,11 @@ const FooterSection = styled(Box)({
 });
 
 const FooterHeading = styled(Typography)({
+    fontFamily: 'var(--font-p1)',
+    fontWeight: 'bold',
     fontSize: '20px',
     marginBottom: '15px',
-    borderBottom: '1px solid #000000',
+    borderBottom: 'var(--color-p1) 1px solid',
     paddingBottom: '5px',
 });
 
@@ -35,24 +38,36 @@ const FooterList = styled(List)({
 });
 
 const FooterItem = styled(ListItem)({
+    fontFamily: 'var(--font-p1)',
     display: 'flex',
     alignItems: 'center',
     margin: '8px 0',
     cursor: 'pointer',
-    paddingLeft: '10px',
+    padding: '5px 10px',
     transition: 'background-color 0.2s, color 0.3s',
+    color: 'var(--color-p1)',
+    width: 'fit-content',
+    borderRadius: '25px',
     '&:hover': {
-        color: '#006381',
+        color: 'var(--color-p4)',
         backgroundColor: 'hsla(0, 0%, 11%, 0.426)',
         textDecoration: 'none',
     },
 });
 
+const AddressItem = ({ address }) => {
+    return (
+        <ListItem sx={{ fontFamily: 'var(--font-p1)', display: 'flex', alignItems: 'center', margin: '8px 0', padding: '5px 10px', cursor: 'pointer', width: 'fit-content', borderRadius: '25px', }}>
+            <Typography variant="body2" fontFamily={'var(--font-p1)'}>{address}</Typography>
+        </ListItem>
+    );
+};
+
 const FooterItemLink = styled(Link)({
     textDecoration: 'none',
-    color: '#FDFFE2',
+    color: 'var(--color-p1)',
     '&:hover': {
-        color: '#006381',
+        color: 'var(--color-p4)',
         textDecoration: 'none',
     },
 });
@@ -130,6 +145,9 @@ function Footer() {
                         <FooterItem>
                             <FooterItemLink to="/why-skillmate">Why SkillMate?</FooterItemLink>
                         </FooterItem>
+                    </FooterList>
+                    <FooterList>
+                        <AddressItem address="JQ4F+GM3, Pawar Nagar-3, Opposite of Sonai Mangal Karyalay, Thergaon, Wakad, Pimpri-Chinchwad, Maharashtra 411033" />
                     </FooterList>
                 </FooterSection>
             </FooterContainer>

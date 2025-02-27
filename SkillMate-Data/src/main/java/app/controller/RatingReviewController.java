@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -83,7 +84,7 @@ public class RatingReviewController {
             if (rating != null) {
                 return new ResponseEntity<>(rating, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -97,7 +98,8 @@ public class RatingReviewController {
             if (rating != null && !rating.isEmpty()) {
                 return new ResponseEntity<>(rating, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                // return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(rating, HttpStatus.OK);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -105,7 +107,7 @@ public class RatingReviewController {
     }
 
     @GetMapping("/trainers/{id}")
-    public ResponseEntity<TrainerRating> getTrainerRatingById(@PathVariable("id") Long id) {
+    public ResponseEntity<TrainerRating> getTrainerRatingById(@PathVariable Long id) {
         try {
             TrainerRating rating = ratingReviewService.getTrainerRatingById(id);
             if (rating != null) {
@@ -125,7 +127,8 @@ public class RatingReviewController {
             if (rating != null && !rating.isEmpty()) {
                 return new ResponseEntity<>(rating, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                // return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(rating, HttpStatus.OK);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

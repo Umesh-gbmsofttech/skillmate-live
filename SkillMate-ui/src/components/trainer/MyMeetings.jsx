@@ -1,68 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { showErrorToast } from '../utility/ToastService';
-import baseUrl from '../urls/baseUrl';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchTrainerMeetings } from '../redux/meetingsSlice';
+import { Box, Typography, CircularProgress, Grid, Card, CardMedia, CardContent } from '@mui/material';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import GroupsIcon from '@mui/icons-material/Groups';
+import CustomButton from '../utility/CustomButton';
+import { styled } from '@mui/material/styles';
 
 const MyMeetings = ({ trainerId, courses }) => {
-    const token = useSelector((state) => state.auth.token);
-    const [meetings, setMeetings] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const { meetings, loading } = useSelector((state) => state.meetings);
 
     useEffect(() => {
-        const fetchMeetings = async () => {
-            setLoading(true);
-            try {
-                let allMeetings = [];
-                for (const course of courses || []) { // Ensure courses is iterable
-                    if (!course?.id) {
-                        console.error("Skipping invalid course:", course);
-                        continue;
-                    }
-                    const response = await axios.get(
-                        `${baseUrl}meetings/trainer/${trainerId}/${course.id}`,
-                        { headers: { Authorization: `Bearer ${token}` } }
-                    );
-                    allMeetings = [...allMeetings, ...response.data];
-                }
-                setMeetings(allMeetings);
-            } catch (error) {
-                showErrorToast(`Error fetching meetings: ${error.message}`);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (Array.isArray(courses) && courses.length > 0 && trainerId) {
-            fetchMeetings();
+        if (trainerId && Array.isArray(courses) && courses.length > 0) {
+            const courseIds = courses.map(courseObj => courseObj.course?.id).filter(id => id);
+            dispatch(fetchTrainerMeetings({ trainerId, courses: courseIds }));
         }
-    }, [trainerId, courses, token]);
+    }, [trainerId, courses, dispatch]);
 
+    const MeetingCard = styled(Card)(({ theme }) => ({
+        borderRadius: theme.spacing(2),
+        boxShadow: theme.shadows[5],
+        transition: 'transform 0.3s ease',
+        '&:hover': { transform: 'scale(1.03)', boxShadow: theme.shadows[10] },
+    }));
 
     return (
-        <div>
-            <h2>My Meetings</h2>
+        <Box sx={{ padding: 3, minHeight: '100vh' }}>
+            <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
+                My Meetings
+            </Typography>
             {loading ? (
-                <p>Loading meetings...</p>
-            ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                    {meetings.map((meeting) => (
-                        <div key={meeting.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
-                            <img src={`data:image/jpeg;base64,${meeting.course.image}`} alt={meeting.course.title} style={{ width: '100%', borderRadius: '5px' }} />
-                            <h3>{meeting.course.title}</h3>
-                            <p>Batch ID: {meeting.batch.id}</p>
-                            <p>Start Time: {meeting.startTime}</p>
-                            <p>End Time: {meeting.endTime}</p>
-                            <a href={meeting.meetingLink} target="_blank" rel="noopener noreferrer">
-                                <button style={{ background: 'blue', color: 'white', padding: '10px', borderRadius: '5px' }}>
-                                    Join Now
-                                </button>
-                            </a>
-                        </div>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                    <CircularProgress size={60} thickness={5} />
+                </Box>
+            ) : meetings.length > 0 ? (
+                <Grid container spacing={3}>
+                    {meetings.map(meeting => (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={meeting.id}>
+                            <MeetingCard>
+                                <CardMedia
+                                    component="img"
+                                    image={`data:image/jpeg;base64,${meeting.course?.image || ''}`}
+                                    alt={meeting.course?.title || 'Course'}
+                                />
+                                <CardContent>
+                                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                        {meeting.course?.title || 'Unknown Course'}
+                                    </Typography>
+                                    <Typography><GroupsIcon /> Batch ID: {meeting.batch?.id || 'N/A'}</Typography>
+                                    <Typography><AccessTimeIcon /> Start Time: {meeting.startTime || 'N/A'}</Typography>
+                                    <Typography><AccessTimeIcon /> End Time: {meeting.endTime || 'N/A'}</Typography>
+                                    {meeting.meetingLink && (
+                                        <CustomButton text={'Go Live'} onClick={() => window.open(meeting.meetingLink, '_blank')} width={'100%'} />
+                                    )}
+                                </CardContent>
+                            </MeetingCard>
+                        </Grid>
                     ))}
-                </div>
+                </Grid>
+            ) : (
+                <Typography sx={{ textAlign: 'center', mt: 4, fontSize: '1.2rem' }}>
+                    No meetings scheduled.
+                </Typography>
             )}
-        </div>
+        </Box>
     );
 };
 

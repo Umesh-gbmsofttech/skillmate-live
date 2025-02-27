@@ -108,7 +108,6 @@ function LiveSessions({ myCourses, userData, token }) {
                 ) : (
                     <Typography variant="h6" color="textSecondary" align="center">
                         No live sessions available.
-                        such a thing really means that you can have sessions available for offline
                     </Typography>
                 )}
             </Grid>

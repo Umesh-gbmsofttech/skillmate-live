@@ -113,12 +113,6 @@ function BuyCourse({ course }) {
     }
   };
 
-
-
-  const handleRateUsClick = () => {
-    navigate('/rating-reviews/page/card', { state: { course } });
-  };
-
   return (
     <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 4 }}>
       {course && (
@@ -141,15 +135,6 @@ function BuyCourse({ course }) {
             </Typography>
             <Button variant="contained" color="primary" fullWidth sx={{ mb: 2 }} onClick={handleBuyCourse}>
               Buy Now
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              fullWidth
-              startIcon={<img src={writeIcon} alt="Rate Us" style={{ width: 20 }} />}
-              onClick={handleRateUsClick}
-            >
-              Leave a Rating and Review
             </Button>
             <Button
               onClick={handleExpandClick}
