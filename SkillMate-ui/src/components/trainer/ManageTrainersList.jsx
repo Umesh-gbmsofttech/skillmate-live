@@ -9,6 +9,7 @@ import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import Search from '../Search';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
 import baseUrl from '../urls/baseUrl';
+import CustomButton from '../utility/CustomButton';
 
 function ManageTrainersList() {
     const navigate = useNavigate();
@@ -89,10 +90,10 @@ function ManageTrainersList() {
             {loading ? (
                 <Loading />
             ) : (
-                <Grid container spacing={3} sx={{ padding: 3 }}>
+                <Grid container spacing={3} sx={{ padding: 3, textAlign: 'center' }}>
                     <Grid item xs={12}>
-                        <Typography variant="h4" align="center" color='#3caacb'>
-                            Trainer's List
+                        <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+                            Trainer&apos;s List
                         </Typography>
                     </Grid>
 
@@ -101,18 +102,14 @@ function ManageTrainersList() {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Typography variant="body1" align="center" color='#3caacb'>
+                        <Typography sx={{ marginBottom: 2, fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }}>
                             Number of Results: {filteredTrainers.length}
                         </Typography>
                     </Grid>
 
                     <Grid item xs={12} textAlign="center" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Button variant="contained" color="primary" onClick={() => navigate('/admin-profile/manage-trainers/assign-course-to/trainer')} size="small">
-                            New Registered Trainer
-                        </Button>
-                        <Button variant="contained" color="primary" onClick={() => navigate('/trainer-signup')} size="small">
-                            Add New Trainer
-                        </Button>
+                        <CustomButton text={'New Registered Trainer'} onClick={() => navigate('/admin-profile/manage-trainers/assign-course-to/trainer')} />
+                        <CustomButton text={'Add New Trainer'} onClick={() => navigate('/trainer-signup')} />
                     </Grid>
 
                     <Grid item xs={12}>
@@ -123,48 +120,34 @@ function ManageTrainersList() {
                                         <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                                             <CardMedia
                                                 component="img"
-                                                height="250"
+                                                height="210"
                                                 image={trainer.image}
                                                 alt={`${trainer.name} profile`}
                                                 sx={{ objectFit: 'cover', objectPosition: 'top' }}
                                             />
                                             <CardContent sx={{ flexGrow: 1 }} style={{ padding: "8px" }} >
-                                                <Typography variant="h6" gutterBottom>
+                                                <Typography sx={{ fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)', fontWeight: 'bold' }} gutterBottom>
                                                     {trainer.name}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
+                                                <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                                     Experience: {trainer.experience}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
+                                                <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                                     Ratings: {trainer.ratingsAverage} {trainer.stars} {trainer.rateByUsers}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
+                                                <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                                     Technologies: {trainer.technologies}
                                                 </Typography>
-                                                <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
+                                                <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                                     Trainer ID: {trainer.id}
                                                 </Typography>
                                             </CardContent>
                                             <Grid container justifyContent="space-around" sx={{ marginBottom: '8px' }} spacing={1}>
                                                 <Grid item>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        size='small'
-                                                        onClick={() => navigate(`/trainer-profile-update/${trainer.id}`)}
-                                                    >
-                                                        Edit
-                                                    </Button>
+                                                    <CustomButton text={'Edit'} padding={'5px 5px'} onClick={() => navigate(`/trainer-profile-update/${trainer.id}`)} />
                                                 </Grid>
                                                 <Grid item>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="secondary"
-                                                        size='small'
-                                                        onClick={() => handleDeleteTrainer(trainer.id)}
-                                                    >
-                                                        Delete
-                                                    </Button>
+                                                    <CustomButton text={'Delete'} padding={'5px 5px'} color={'var(--color-p2)'} backgroundColor={'var(--color-p4)'} onClick={() => handleDeleteTrainer(trainer.id)} />
                                                 </Grid>
                                             </Grid>
                                         </Card>

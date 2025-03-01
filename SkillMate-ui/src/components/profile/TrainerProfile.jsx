@@ -62,7 +62,7 @@ const TrainerProfile = () => {
     };
 
     return (
-        <>
+        <Box sx={{ marginBottom: { sx: 10, md: 30 }, marginTop: { sx: 5, md: 10 } }}>
             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh", p: 2 }}>
                 <motion.div onMouseMove={handleMouseMove} style={{ perspective: "1000px" }}>
                     <motion.div
@@ -155,7 +155,8 @@ const TrainerProfile = () => {
 
             {openDialog === "batches" && <Attendances batches={batches} />}
             {!openDialog && <MyMeetings trainerId={userData?.id} courses={courses} />}
-        </>
+            {/* <MyMeetings courses={courses} trainerId={userData.id} /> */}
+        </Box>
     );
 };
 

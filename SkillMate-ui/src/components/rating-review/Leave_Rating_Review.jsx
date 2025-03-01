@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTrainer, setStudent, clearCommunityData } from '../redux/communityDataSlice';
-import { fetchCourses } from '../redux/myCoursesSlice';
+import { fetchCoursesAndBatches } from '../redux/myCoursesSlice';
 import { fetchTrainerCourses } from '../redux/trainerCoursesSlice';
 import { Box, Card, CardContent, Avatar, Typography, Button } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -16,7 +16,8 @@ function LeaveRatingReview() {
     const userData = useSelector((state) => state.auth.userData);
 
     // Get trainer and student from Redux
-    const trainer = useSelector((state) => state.communityData.trainer);
+    // const trainer = useSelector((state) => state.communityData.trainer);
+    const trainer = location.state?.trainer;
     const student = useSelector((state) => state.communityData.student);
 
     // Get courses from Redux
@@ -29,7 +30,7 @@ function LeaveRatingReview() {
     // Fetch enrolled courses when the component mounts
     useEffect(() => {
         if (userData?.id) {
-            dispatch(fetchCourses(userData.id)); // Fetch student's enrolled courses
+            dispatch(fetchCoursesAndBatches(userData.id));  // Fetch student's enrolled courses
         }
     }, [dispatch, userData]);
 
@@ -58,7 +59,7 @@ function LeaveRatingReview() {
                     <Card sx={{ display: 'flex', flexDirection: 'column', width: 440, padding: 3, borderRadius: 2, backgroundColor: '#C7EFFF', boxShadow: 3, mb: 2 }}>
                         <Avatar
                             sx={{ width: '100%', height: 180, borderRadius: 2, objectFit: 'contain', objectPosition: 'top' }}
-                            src={trainer.profilePic ? `data:image/png;base64,${trainer.profilePic}` : altImage}
+                            src={trainer.image ? `data:image/png;base64,${trainer.image}` : altImage}
                             alt="Trainer Image"
                         />
                         <CardContent>

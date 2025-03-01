@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Box, Card, CardContent, Avatar, Typography, CircularProgress, useMediaQuery, Rating } from '@mui/material';
 import { fetchReviews } from '../redux/ratingReviewSlice';
 import baseUrl from '../urls/baseUrl';
+import { useNavigate } from 'react-router-dom';
 
 function TopTrainersAndStudents({ sectionHeading, student, trainer, community = false }) {
         const dispatch = useDispatch();
@@ -10,6 +11,7 @@ function TopTrainersAndStudents({ sectionHeading, student, trainer, community = 
         const { reviews, loading } = useSelector((state) => state.reviews);
         const [data, setData] = useState([]);
         const isMobileOrTablet = useMediaQuery('(max-width: 900px)');
+        const navigate = useNavigate();
 
         useEffect(() => {
                 const fetchData = async () => {
@@ -114,10 +116,15 @@ function TopTrainersAndStudents({ sectionHeading, student, trainer, community = 
                                                                         display: 'flex',
                                                                         alignItems: 'center',
                                                                         padding: 2,
-                                                                        boxShadow: 2,
+                                                                        // boxShadow: 2,
                                                                         transition: 'box-shadow 0.3s ease',
                                                                         borderRadius: 3,
                                                                         ":hover": { boxShadow: 5 },
+                                                                }}
+                                                                onClick={() => {
+                                                                        if (trainer) { // Only navigate if it's a trainer card
+                                                                                navigate('/rating-reviews/page', { state: { trainer: person } });
+                                                                        }
                                                                 }}
                                                         >
                                                                 <Avatar

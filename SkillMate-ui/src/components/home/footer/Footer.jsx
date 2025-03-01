@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Typography, List, ListItem, ListItemIcon } from '@mui/material';
-import { borderRadius, styled } from '@mui/system';
+import { styled } from '@mui/system';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -15,7 +15,7 @@ const FooterContainer = styled(Box)({
     justifyContent: 'space-around',
     flexWrap: 'wrap',
     borderTop: '1px solid rgb(78, 78, 78)',
-    marginTop: '20px',
+    // marginTop: '20px',
 });
 
 const FooterSection = styled(Box)({
@@ -55,9 +55,31 @@ const FooterItem = styled(ListItem)({
     },
 });
 
-const AddressItem = ({ address }) => {
+const AddressItem = ({ address, href }) => {
     return (
-        <ListItem sx={{ fontFamily: 'var(--font-p1)', display: 'flex', alignItems: 'center', margin: '8px 0', padding: '5px 10px', cursor: 'pointer', width: 'fit-content', borderRadius: '25px', }}>
+        <ListItem
+            component="a"
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+                fontFamily: 'var(--font-p1)',
+                display: 'flex',
+                alignItems: 'center',
+                margin: '8px 0',
+                padding: '5px 10px',
+                cursor: 'pointer',
+                width: 'fit-content',
+                borderRadius: '25px',
+                textDecoration: 'none',
+                color: 'var(--color-p1)',
+                '&:hover': {
+                    color: 'var(--color-p4)',
+                    backgroundColor: 'transparent',
+                    textDecoration: 'none',
+                },
+            }}
+        >
             <Typography variant="body2" fontFamily={'var(--font-p1)'}>{address}</Typography>
         </ListItem>
     );
@@ -137,17 +159,20 @@ function Footer() {
                     <FooterHeading variant="h6">SkillMate</FooterHeading>
                     <FooterList>
                         <FooterItem>
-                            <FooterItemLink to="/about">About</FooterItemLink>
+                            <FooterItemLink to="/skillmate/about">About</FooterItemLink>
                         </FooterItem>
                         <FooterItem>
-                            <FooterItemLink to="/offerings">What We Offer</FooterItemLink>
+                            <FooterItemLink to="/skillmate/what-we-offer">What We Offer</FooterItemLink>
                         </FooterItem>
                         <FooterItem>
-                            <FooterItemLink to="/why-skillmate">Why SkillMate?</FooterItemLink>
+                            {/* <FooterItemLink to="/why-skillmate">Why SkillMate?</FooterItemLink> */}
                         </FooterItem>
                     </FooterList>
                     <FooterList>
-                        <AddressItem address="JQ4F+GM3, Pawar Nagar-3, Opposite of Sonai Mangal Karyalay, Thergaon, Wakad, Pimpri-Chinchwad, Maharashtra 411033" />
+                        <AddressItem
+                            address="JQ4F+GM3, Pawar Nagar-3, Opposite of Sonai Mangal Karyalay, Thergaon, Wakad, Pimpri-Chinchwad, Maharashtra 411033"
+                            href="https://www.google.com/maps/place/GBM+SoftTech/@18.6062625,73.771597,17z/data=!3m1!4b1!4m6!3m5!1s0x3bc2b9002bcfefd9:0x50c3f8246b26d5bf!8m2!3d18.6062625!4d73.7741719!16s%2Fg%2F11vr73l09p?entry=ttu&g_ep=EgoyMDI1MDIyNS4wIKXMDSoASAFQAw%3D%3D"
+                        />
                     </FooterList>
                 </FooterSection>
             </FooterContainer>

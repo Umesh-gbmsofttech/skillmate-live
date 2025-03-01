@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import CustomButton from './CustomButton';
 
 export default function ConfirmationDialog({ open, onClose, onConfirm, message }) {
     return (
@@ -8,24 +9,28 @@ export default function ConfirmationDialog({ open, onClose, onConfirm, message }
             onClose={onClose}
             sx={{
                 '& .MuiDialog-paper': {
-                    backgroundColor: '#16404D', // Light background color for the dialog
-                    borderRadius: 3, // Rounded corners
-                    padding: 2, // Adding padding to the dialog
-                    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)', // Light shadow effect
+                    backgroundColor: 'var(--color-p1)',
+                    borderRadius: 3,
+                    padding: 2,
+                    boxShadow: 5,
+                    transition: 'ease-in-out 0.3s',
+                    ":hover": { boxShadow: 10 }
                 },
                 '& .MuiDialogTitle-root': {
-                    fontSize: '1.25rem', // Larger title font size
-                    fontWeight: 'bold', // Make the title bold
-                    color: '#999', // Darker text color for the title
+                    fontWeight: 'bold',
+                    fontSize: 'var(--font-size-p1)',
+                    color: 'var(--color-p2)',
+                    fontFamily: 'var(--font-p2)',
                 },
                 '& .MuiDialogContentText-root': {
-                    fontSize: '1rem', // Slightly larger content text
-                    color: '#888', // Subtle text color
-                    padding: '10px 0', // Padding for spacing between title and message
+                    fontSize: 'var(--font-size-p3)',
+                    color: 'var(--color-p2)',
+                    fontFamily: 'var(--font-p2)',
+                    padding: '10px 0',
                 },
                 // '& .MuiDialogActions-root': {
-                //     paddingTop: '15px', 
-                //     justifyContent: 'space-between', 
+                //     paddingTop: '15px',
+                //     justifyContent: 'space-between',
                 // },
             }}
         >
@@ -34,38 +39,8 @@ export default function ConfirmationDialog({ open, onClose, onConfirm, message }
                 <DialogContentText>{message}</DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button
-                    onClick={onClose}
-                     // Slightly muted color for Cancel button
-                    sx={{
-                        padding: '8px 16px', // Adjust button padding
-                        fontWeight: 'bold', // Make Cancel text bold
-                        textTransform: 'none',
-                        backgroundColor: 'transparent',
-                        color:"#fff",
-                        '&:hover': {
-                            backgroundColor: 'transparent',
-                            color:'#FBFFE4'
-                        },
-                    }}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    onClick={onConfirm}
-                    color="black"
-                    sx={{
-                        padding: '6px 14px',
-                        fontWeight: 'bold',
-                        backgroundColor: '#D91656', // Custom blue color
-                        '&:hover': {
-                            backgroundColor:'rgba(217, 22, 86,0.8)', // Darker blue on hover
-                        },
-                        textTransform: 'none', // Remove uppercasing on text
-                    }}
-                >
-                    OK
-                </Button>
+                <CustomButton text={'Cancel'} onClick={onClose} />
+                <CustomButton text={'OK'} onClick={onConfirm} color={'var(--color-p2)'} backgroundColor={'var(--color-p4)'} />
             </DialogActions>
         </Dialog>
     );

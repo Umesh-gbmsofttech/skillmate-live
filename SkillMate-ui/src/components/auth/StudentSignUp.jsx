@@ -100,7 +100,7 @@ const StudentSignUp = () => {
             .then((data) => {
                 if (data) {
                     alert('Student data submitted successfully!');
-                    navigate("login/mobile");
+                    // navigate("/login/mobile");
                 }
             })
             .catch((error) => {

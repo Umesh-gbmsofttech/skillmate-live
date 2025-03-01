@@ -9,6 +9,7 @@ import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import Search from '../Search';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
 import baseUrl from '../urls/baseUrl'
+import CustomButton from '../utility/CustomButton';
 
 
 function ManageStudentsList() {
@@ -75,9 +76,9 @@ function ManageStudentsList() {
     const filteredStudents = searchQuery ? fuse.search(searchQuery).map(result => result.item) : students;
 
     return (
-        <Grid container spacing={3} sx={{ padding: 3 }}>
+        <Grid container spacing={3} sx={{ padding: 3, textAlign: 'center' }}>
             <Grid item xs={12}>
-                <Typography variant="h4" align="center" color='#3caacb'>
+                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
                     Student&apos;s List
                 </Typography>
             </Grid>
@@ -87,25 +88,21 @@ function ManageStudentsList() {
             </Grid>
 
             <Grid item xs={12}>
-                <Typography variant="body1" align="center" color='#3caacb'>
+                <Typography sx={{ marginBottom: 2, fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }}>
                     Number of Results: {filteredStudents.length}
                 </Typography>
             </Grid>
 
             <Grid item xs={12} textAlign="center" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="contained" color="primary" onClick={() => navigate('/')}>
-                    Assign Batch To New Students
-                </Button>
-                <Button variant="contained" color="primary" onClick={() => navigate('/student-signup')}>
-                    Add New Student
-                </Button>
+                <CustomButton text={' Assign Batch To New Students'} onClick={() => navigate('/')} />
+                <CustomButton text={' Add New Student'} onClick={() => navigate('/student-signup')} />
             </Grid>
 
             <Grid item xs={12}>
                 <Grid container spacing={3}>
                     {filteredStudents.length === 0 ? (
                         <Grid item xs={12}>
-                            <Typography variant="body1" align="center" color="textSecondary">
+                            <Typography sx={{ marginBottom: 2, fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }}>
                                 No Students available.
                             </Typography>
                         </Grid>
@@ -121,37 +118,25 @@ function ManageStudentsList() {
                                         alt={`${student.name} profile`}
                                     />
                                     <CardContent sx={{ flexGrow: 1 }} style={{ padding: "8px" }}>
-                                        <Typography variant="h6" gutterBottom>
+                                        <Typography sx={{ fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)', fontWeight: 'bold' }} gutterBottom>
                                             {student.name}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
+                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Average Attendance: {student.attendanceByDays || 'N/A'} {student.attendanceAverage || ''}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
+                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Batches: {Array.isArray(student.batches) ? student.batches.map(batch => batch.id).join(', ') : 'N/A'}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary" style={{ fontSize: "13px" }}>
+                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Remark By Trainer: {student.remarkByTrainer || 'N/A'}
                                         </Typography>
                                     </CardContent>
                                     <Grid container justifyContent="space-around" sx={{ marginBottom: '8px' }} spacing={1}>
                                         <Grid item>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={() => navigate(`/student-profile-update/${student.id}`)}
-                                            >
-                                                Edit
-                                            </Button>
+                                            <CustomButton text={'Edit'} padding={'5px 5px'} onClick={() => navigate(`/student-profile-update/${student.id}`)} />
                                         </Grid>
                                         <Grid item>
-                                            <Button
-                                                variant="contained"
-                                                color="secondary"
-                                                onClick={() => handleDeleteStudent(student.id)}
-                                            >
-                                                Delete
-                                            </Button>
+                                            <CustomButton text={'Delete'} padding={'5px 5px'} color={'var(--color-p2)'} backgroundColor={'var(--color-p4)'} onClick={() => handleDeleteStudent(student.id)} />
                                         </Grid>
                                     </Grid>
                                 </Card>

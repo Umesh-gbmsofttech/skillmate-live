@@ -18,28 +18,20 @@ import {
     CircularProgress,
     Box,
     Grid,
+    useMediaQuery,
 } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import baseUrl from "../urls/baseUrl";
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
     width: '100%',
-    maxWidth: 600,
-    mx: "auto",
     boxShadow: theme.shadows[2],
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-        minWidth: 600,
-    },
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
     overflowX: 'auto',
     boxShadow: theme.shadows[2],
     width: '100%',
-    [theme.breakpoints.up('md')]: {
-        overflowX: 'initial',
-    },
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -58,13 +50,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-
 const Attendances = ({ batches }) => {
     const [selectedBatch, setSelectedBatch] = useState("");
     const [attendances, setAttendances] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const token = useSelector((state) => state.auth.token);
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         const fetchAttendances = async () => {
@@ -107,7 +100,7 @@ const Attendances = ({ batches }) => {
 
         return (
             <StyledTableContainer component={Paper}>
-                <Table sx={{ minWidth: 300 }}>
+                <Table sx={{ width: '100%' }}>
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Sr. No.</StyledTableCell>
@@ -133,13 +126,13 @@ const Attendances = ({ batches }) => {
 
     return (
         <Box p={2}>
-            <Grid container spacing={2} direction="column" alignItems="center">
+            <Grid container spacing={0} direction="column" alignItems="stretch">
                 <Grid item xs={12}>
                     <Typography variant="h5" align="center" gutterBottom sx={{ fontFamily: "var(--font-p1)", color: "var(--color-p2)" }}>
                         Attendance Records
                     </Typography>
                 </Grid>
-                <Grid item xs={12} sm={8} md={6}>
+                <Grid item xs={12}>
                     <StyledFormControl>
                         <InputLabel id="batch-select-label" sx={{ fontFamily: "var(--font-p1)", color: "var(--color-p2)" }}>Select Batch</InputLabel>
                         <Select
@@ -148,8 +141,9 @@ const Attendances = ({ batches }) => {
                             value={selectedBatch}
                             onChange={handleBatchChange}
                             fullWidth
+                            label="Select Batch"
                         >
-                            <MenuItem value="">
+                            <MenuItem value="" >
                                 <em>-- Select Batch --</em>
                             </MenuItem>
                             {batches.map((batchItem) => (

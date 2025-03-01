@@ -65,27 +65,24 @@ public class StudentController {
 		}
 	}
 
-	// @PutMapping("/{id}")
-	// @JsonView(JsonResoponse_View.DetailedView.class)
-	// public ResponseEntity<Student> updateStudentProfile(@PathVariable("id") Long
-	// id,
-	// @Valid @RequestBody Student updatedStudent) {
-	// try {
-	// Student updatedProfile = studentService.updateStudentWithHistory(id,
-	// updatedStudent);
-	// return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
-	// } catch (RuntimeException e) {
-	// return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	// }
-	// }
+	@PutMapping("/{id}")
+	public ResponseEntity<Student> updateStudentProfile(@PathVariable("id") Long id,
+			@Valid @RequestBody Student updatedStudent) {
+		try {
+			Student updatedProfile = studentService.updateStudentWithHistory(id, updatedStudent);
+			return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
 		try {
 			studentService.deleteStudent(id);
-			return ResponseEntity.ok("Student profile deleted successfully");
+			return new ResponseEntity<>("Student deleted successfully", HttpStatus.OK);
 		} catch (RuntimeException e) {
-			return ResponseEntity.status(404).body(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 

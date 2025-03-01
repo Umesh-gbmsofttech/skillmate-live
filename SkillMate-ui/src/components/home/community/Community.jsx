@@ -30,7 +30,6 @@ const Community = () => {
           backgroundColor: "var(--color-p4)",
           transition: "box-shadow 0.3s ease",
           ":hover": { boxShadow: 5 },
-          fontFamily: "var(--font-p1)",
         }}
       >
         <Typography variant="h4" fontWeight="bold" gutterBottom fontFamily={'var(--font-p2)'}>

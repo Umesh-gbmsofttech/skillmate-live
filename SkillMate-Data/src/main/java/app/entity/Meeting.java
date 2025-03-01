@@ -22,18 +22,24 @@ public class Meeting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime startTime;
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime endTime;
+    // @JsonFormat(pattern = "HH:mm")
+    // private LocalTime startTime;
+    // @JsonFormat(pattern = "HH:mm")
+    // private LocalTime endTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime startTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime endTime;
     private String meetingLink;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;// extra to store the id of course for each meeting
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss") // Ensure date-time format
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createdAt;
+    // private LocalDateTime createdAt = LocalDateTime.now();
 
     // @JsonIgnore
     @ManyToOne
@@ -43,7 +49,7 @@ public class Meeting {
 
     @JsonIgnore // added becuse return attendace data aswell which not needed
     @JsonManagedReference
-    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attendance> attendances;
 
     @ManyToOne

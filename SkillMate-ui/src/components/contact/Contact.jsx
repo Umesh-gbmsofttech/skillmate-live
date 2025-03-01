@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, Card, CardMedia, CardContent } from '@mui/material';
+import { Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, Card, CardMedia, CardContent, Collapse } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import ReviewsSection from '../rating-review/ReviewsSection';
 import EnquiryForm from './EnquiryForm';
@@ -10,22 +10,26 @@ import logo from '../../assets/skillmate.jpg';
 import whatsapp from '../../assets/whatsapp.png';
 import writeIcon from '../../assets/writeIcon.png';
 import baseUrl from '../urls/baseUrl'
+import { ExpandMore } from '@mui/icons-material';
+import CustomButton from '../utility/CustomButton';
 
 function Contact() {
     const navigate = useNavigate();
     const location = useLocation();
     const course = location.state?.course;
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const [expanded, setExpanded] = useState(false);
+
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
+    };
+
 
     const [formData, setFormData] = useState({ query: '', selectedOption: '' });
 
     const handleWhatsAppClick = () => {
         showSuccessToast('Opening WhatsApp');
         window.open(`https://api.whatsapp.com/send?phone=+919226224019&text=Hi, I'm interested in enrolling in your React.js course. Please let me know your availability.`);
-    };
-
-    const handleRateUsClick = () => {
-        navigate('/rating-reviews/page/card', { state: { course } });
     };
 
     const handleInputChange = (e) => {
@@ -41,60 +45,68 @@ function Contact() {
     };
 
     return (
-        <Box sx={{ maxWidth: '100%', fontFamily: 'Arial, sans-serif', p: 2 }}>
-            {course && (
-                <>
-                    <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, maxWidth: 1200, m: '40px auto', p: 2, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#f7f7f71b' }}>
-                        <CardMedia
-                            component="img"
-                            sx={{ width: { xs: '100%', md: '50%' }, borderRadius: 2 }}
-                            image={course?.image ? `data:image/jpeg;base64,${course.image}` : logo}
-                            alt="Course Image"
-                        />
-                        <CardContent sx={{ width: { xs: '100%', md: '50%' } }}>
-                            <Typography variant="h4" fontWeight="bold" mb={2}>Course: {course?.title}</Typography>
-                            <Typography variant="h5" color="primary" mb={2}>Price: {course?.price}</Typography>
-                            <Typography variant="body1" color="text.secondary" mb={2}>Duration: {course?.days} days</Typography>
+        <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 1 }}>            {course && (
+            <>
+                <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, maxWidth: 1200, m: '40px auto', p: 2, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#f7f7f71b' }}>
+                    <CardMedia
+                        component="img"
+                        sx={{ objectPosition: "top", objectFit: "cover", position: "relative", minHeight: 400, maxHeight: 500, width: { xs: '100%', md: '50%' }, borderRadius: 2 }}
+                        image={course?.image ? `data:image/jpeg;base64,${course.image}` : logo}
+                        alt="Course Image"
+                    />
+                    <CardContent sx={{ width: { xs: '100%', md: '50%' } }}>
+                        <Typography sx={{ color: 'var(--color-p2)', fontWeight: 'bolder', fontFamily: 'var(--font-p1)', fontSize: 'var(--font-size-p1)' }} gutterBottom>
+                            Price: ₹ {course.price}/-
+                        </Typography>
+                        <Typography sx={{ color: 'var(--color-p3)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p2)' }} gutterBottom>
+                            Price: {course?.price}
+                        </Typography>
+                        <Typography sx={{ color: 'var(--color-p3)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p2)' }} gutterBottom>
+                            Duration: {course?.days} days
+                        </Typography>
 
-                            <FormControl fullWidth>
-                                <InputLabel>Select Query</InputLabel>
-                                <Select name="selectedOption" value={formData.selectedOption} onChange={handleInputChange}>
-                                    <MenuItem value="">Select an option</MenuItem>
-                                    <MenuItem value="General Inquiry">General Inquiry</MenuItem>
-                                    <MenuItem value="Course Details">Course Details</MenuItem>
-                                    <MenuItem value="Enrollment Process">Enrollment Process</MenuItem>
-                                    <MenuItem value="Payment Issues">Payment Issues</MenuItem>
-                                </Select>
-                            </FormControl>
+                        <FormControl fullWidth>
+                            <InputLabel>Select Query</InputLabel>
+                            <Select name="selectedOption" value={formData.selectedOption} onChange={handleInputChange}>
+                                <MenuItem value="">Select an option</MenuItem>
+                                <MenuItem value="General Inquiry">General Inquiry</MenuItem>
+                                <MenuItem value="Course Details">Course Details</MenuItem>
+                                <MenuItem value="Enrollment Process">Enrollment Process</MenuItem>
+                                <MenuItem value="Payment Issues">Payment Issues</MenuItem>
+                            </Select>
+                        </FormControl>
 
-                            <details>
-                                <summary>See full details of this course...</summary>
-                                <Typography variant="body2" sx={{ bgcolor: '#f7f7f71b', p: 1, borderRadius: 1 }}>{course?.description}</Typography>
-                            </details>
+                        <Button
+                            onClick={handleExpandClick}
+                            sx={{ marginTop: 2, textTransform: 'none', ":focus": { outline: "none", border: "none" }, fontFamily: 'var(--font-p1)', fontSize: 'var(--font-size-p2)' }}
+                            endIcon={<ExpandMore />}
+                        >
+                            See the full details of this course...
+                        </Button>
+                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+                            <Typography sx={{ color: 'var(--color-p2)', fontFamily: 'var(--font-p1)', fontSize: 'var(--font-size-p2)' }} gutterBottom>
+                                {course.description}
+                            </Typography>
+                        </Collapse>
 
-                            <Box mt={2}>
-                                <TextField
-                                    fullWidth
-                                    multiline
-                                    minRows={4}
-                                    name="query"
-                                    label="Enter your detailed query here..."
-                                    value={formData.query}
-                                    onChange={handleInputChange}
-                                />
-                                <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>Submit</Button>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                    <Button
-                        sx={{ display: 'flex', alignItems: 'center', justifySelf: 'center', fontWeight: 'bold', fontSize: '1.2rem', color: 'primary.main', mt: 2, textTransform: 'none', '&:hover': { textShadow: '0 0 5px rgb(7, 212, 244)', bgcolor: 'rgb(214, 214, 214)' } }}
-                        onClick={handleRateUsClick}
-                    >
-                        Leave a Rating and Review <img src={writeIcon} alt="Rate Us" style={{ marginLeft: 8, width: 24 }} />
-                    </Button>
-                    <ReviewsSection course={course} />
-                </>
-            )}
+                        <Box mt={2}>
+                            <TextField
+                                f
+                                fullWidth
+                                multiline
+                                minRows={4}
+                                name="query"
+                                label="Enter your detailed query here..."
+                                value={formData.query}
+                                onChange={handleInputChange}
+                            />
+                            <CustomButton text={'Submit'} width={'100%'} marginTop={2} onClick={handleSubmit} />
+                        </Box>
+                    </CardContent>
+                </Card>
+                <ReviewsSection course={course} />
+            </>
+        )}
 
 
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', p: 2, mt: 4, borderRadius: 2, fontFamily: 'var(--font-p2)' }}>

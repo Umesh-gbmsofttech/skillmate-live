@@ -92,13 +92,18 @@ function Courses({ topCourses = false }) {
               <Card
                 key={course.id}
                 sx={{
-                  boxShadow: 3,
+                  // boxShadow: 3,
                   borderRadius: 3,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   padding: 2,
                   height: '100%',
+                  transition: 'box-shadow 0.3s ease, transform 0.3s ease',
+                  '&:hover': {
+                    boxShadow: 6,
+                    transform: 'translateY(-2px)',
+                  }
                 }}
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flexGrow: 1 }}>
@@ -131,11 +136,11 @@ function Courses({ topCourses = false }) {
         <Typography>No courses available.</Typography>
       )}
       {!topCourses && (
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: 4, boxShadow: 3, borderRadius: 1, backgroundColor: 'var(--color-p4)', margin: '1% 1% 0', transition: "box-shadow 0.3s ease", ":hover": { boxShadow: 5 } }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: 4, boxShadow: 3, borderRadius: 1, backgroundColor: 'var(--color-p4)', margin: '1% 1% 1% ', transition: "box-shadow 0.3s ease", ":hover": { boxShadow: 5 } }}>
           <Box>
             <Typography variant="h5" gutterBottom fontWeight={'bold'} color='var(--color-p2)'>Refer and Earn</Typography>
             <Typography variant="body1" gutterBottom color='var(--color-p2)'>Earn extra money by referring your friends and family to SkillMate.</Typography>
-            <CustomButton onClick={handleReferNowClick} text="Refer Now" />
+            <CustomButton onClick={handleReferNowClick} text="Refer Now" marginTop={2} />
           </Box>
           <Box>
             <img src={referAndEarn} alt="Refer and Earn" style={{ width: '20vh', height: '20vh' }} />

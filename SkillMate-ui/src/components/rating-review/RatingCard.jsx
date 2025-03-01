@@ -68,7 +68,7 @@ function RatingCard() {
             {(trainer || course) && (
                 <div className="rating___-container-card">
                     <img className="rating___-container-card-image"
-                        src={(course?.coverImage || trainer?.profilePic) ? `data:image/png;base64,${course?.coverImage || trainer?.profilePic}` : altImage}
+                        src={(course?.image || trainer?.image) ? `data:image/png;base64,${course?.image || trainer?.image}` : altImage}
                         alt="Profile" />
                     <div className="rating___-container-card-data">
                         <h1>{course ? course.Title : trainer.name}</h1>

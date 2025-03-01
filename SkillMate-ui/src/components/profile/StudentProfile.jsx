@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Typography, IconButton, Avatar, Dialog, Button, Divider, Card, DialogTitle } from '@mui/material';
 import { Visibility, VisibilityOff, Edit, Close } from '@mui/icons-material';
@@ -7,6 +7,8 @@ import { motion } from 'framer-motion';
 import MyCourses from '../courses/MyCourses';
 import defaultProfilePic from '../../assets/skillmate.jpg';
 import CustomButton from '../utility/CustomButton';
+import LiveSessions from '../subscription/LiveSessions';
+import { fetchCoursesAndBatches, fetchEnrolledCoursesOnly } from '../redux/myCoursesSlice';
 
 const containerVariants = {
     hidden: { opacity: 0, y: -30 },
@@ -20,6 +22,10 @@ function StudentProfile() {
     const location = useLocation();
     const navigate = useNavigate();
     const { username } = location.state || { username: 'Admin' };
+    const [openDialog, setOpenDialog] = useState(null);
+    const { courses, batches } = useSelector((state) => state.myCourses); // Access batches from state
+    const token = useSelector((state) => state.auth.token);
+    const dispatch = useDispatch();
 
     const user = {
         name: userData?.name || 'John Doe',
@@ -35,6 +41,21 @@ function StudentProfile() {
 
     const handleUpdateAccountClick = () => {
         navigate(`/student-profile-update/${userData.id}`);
+    };
+
+    useEffect(() => {
+        if (userData?.id && token) {
+            dispatch(fetchCoursesAndBatches(userData.id)); //Keeps original functionality
+            dispatch(fetchEnrolledCoursesOnly(userData.id)); //Fetches only enrolled courses
+        }
+    }, [userData?.id, token, dispatch]);
+
+    const myCoursesLength = useSelector((state) => state.myCourses.enrolledCoursesOnly.length); //Use the new state variable
+    const meetingsLength = useSelector(state => state.myCourses.courses.reduce((acc, course) => acc + (course.meetings ? course.meetings.length : 0), 0));
+    const batchesLength = useSelector(state => state.myCourses.batches.length);
+
+    const handleCloseDialog = () => {
+        setOpenDialog(null);
     };
 
     return (
@@ -75,7 +96,7 @@ function StudentProfile() {
                     <Typography variant="subtitle2">{user.email}</Typography>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-                        {[{ label: "Courses", value: 0 }, { label: "Batches", value: 0 }, { label: "Meetings", value: 0 }].map((item, index) => (
+                        {[{ label: "Courses", value: myCoursesLength }, { label: "Batches", value: batchesLength }, { label: "Meetings", value: meetingsLength }].map((item, index) => (
                             <Box key={index} sx={{ textAlign: "center", mx: 1 }}>
                                 <Typography variant="h6">{item.value}</Typography>
                                 <CustomButton text={`${item.label}`} onClick={() => setOpenDialog(item.label.toLowerCase())} />
@@ -133,7 +154,15 @@ function StudentProfile() {
                 </Box>
             </Dialog>
 
-            <MyCourses />
+            <Dialog open={openDialog === 'courses'} onClose={handleCloseDialog} fullWidth maxWidth="md">
+                <DialogTitle>My Courses</DialogTitle>
+                <MyCourses />
+            </Dialog>
+
+            <Dialog open={openDialog === 'meetings'} onClose={handleCloseDialog} fullWidth maxWidth="md">
+                <DialogTitle>My Meetings</DialogTitle>
+                <LiveSessions myCourses={courses} userData={userData} token={token} />
+            </Dialog>
         </>
     );
 }

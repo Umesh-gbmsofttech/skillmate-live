@@ -15,7 +15,6 @@ function BackendDeveloper() {
                 backgroundAttachment: 'fixed',
                 position: 'relative',
                 zIndex: 1,
-                backgroundColor: 'var(--color-p4)', // Apply theme background
             }}
         >
             {/* Overlay */}

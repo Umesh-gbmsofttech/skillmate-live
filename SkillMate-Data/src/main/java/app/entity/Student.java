@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityResult;
@@ -61,15 +62,16 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     @JsonIgnore
-    @OneToMany(mappedBy = "student")
-    // @JsonManagedReference
     private List<Enrollment> enrollments;
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     @JsonIgnore
-    @OneToMany(mappedBy = "student")
     private List<Attendance> attendances;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    // @JsonIgnore
     private List<AssignmentStatus> assignmentStatuses;
+
 }

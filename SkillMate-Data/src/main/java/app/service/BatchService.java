@@ -4,6 +4,8 @@ import app.entity.Batch;
 import app.entity.Student;
 import app.exception.EntityNotFoundException;
 import app.repository.BatchRepository;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,15 +72,24 @@ public class BatchService {
     public Batch updateBatch(Long id, Batch batchDetails) {
         Batch batch = getBatchById(id);
 
-        batch.setCourse(batchDetails.getCourse());
-        batch.setStudents(batchDetails.getStudents());
+        batch.setTrainer_id(batchDetails.getTrainer_id()); // Update trainer_id
+        batch.setCourse(batchDetails.getCourse()); // Update course
+        batch.setStudents(batchDetails.getStudents()); // Update students list
+        batch.setStartTime(batchDetails.getStartTime()); // Update start time
+        batch.setEndTime(batchDetails.getEndTime()); // Update end time
 
         return batchRepository.save(batch);
     }
 
     // Delete a batch
-    public void deleteBatch(Long id) {
-        Batch batch = getBatchById(id);
-        batchRepository.delete(batch);
+    // public void deleteBatch(Long id) {
+    // batchRepository.deleteByBatchId(id);
+    // }
+    @Transactional
+    public void deleteBatch(Long batchId) {
+        batchRepository.deleteAttendanceByBatchId(batchId);
+        batchRepository.deleteMeetingsByBatchId(batchId);
+        batchRepository.deleteBatchStudentsByBatchId(batchId);
+        batchRepository.deleteBatchById(batchId);
     }
 }

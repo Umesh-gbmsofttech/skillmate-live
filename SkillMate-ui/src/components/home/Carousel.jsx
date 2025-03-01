@@ -5,7 +5,9 @@ import logo from '../../assets/skillmate.jpg';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 // import carouselImg1 from '../../assets/carousel.jpg';
-import carouselImg1 from '../../assets/carousel1.jpg';
+import carouselImg1 from '../../assets/carousel/carousel1.jpg';
+import carouselImg2 from '../../assets/carousel/carousel2.jpg';
+import carouselImg3 from '../../assets/carousel/carousel3.jpg';
 
 
 const Carousel = () => {
@@ -15,11 +17,11 @@ const Carousel = () => {
       caption: "Experience Peace"
     },
     {
-      image: carouselImg1,
+      image: carouselImg2,
       caption: "Embrace Growth"
     },
     {
-      image: carouselImg1,
+      image: carouselImg3,
       caption: "Find Balance"
     },
   ];

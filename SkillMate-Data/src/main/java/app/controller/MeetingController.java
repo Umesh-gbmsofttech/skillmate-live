@@ -3,6 +3,7 @@ package app.controller;
 import app.entity.Meeting;
 import app.service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,20 +32,21 @@ public class MeetingController {
     }
 
     // find meeting for student's course
-    // @GetMapping("/student/{batchId}/{courseId}/{trainerId}")
+    // Find meeting for student's course
     @GetMapping("/student/{batchId}/{courseId}")
-    public Optional<Meeting> getMeetingforStudent(@PathVariable Long batchId, @PathVariable Long courseId) {
+    public Optional<Meeting> getMeetingForStudent(@PathVariable Long batchId, @PathVariable Long courseId) {
         System.err.println("batchId: " + batchId + " courseId: " + courseId);
-        System.err.println(meetingService.getMeetingForStudent(batchId, courseId));
-        return meetingService.getMeetingForStudent(batchId, courseId);
+        System.err.println(meetingService.getUpcomingMeetingForStudent(batchId, courseId));
+        return meetingService.getUpcomingMeetingForStudent(batchId, courseId);
     }
 
     // find meetings for trainer
     @GetMapping("/trainer/{trainerId}/{courseId}")
-    public List<Meeting> getMeetingsforTrainer(
-            @PathVariable Long trainerId, @PathVariable Long courseId) {
-        System.err.println("trainerId: " + trainerId + " courseId: " + courseId);
-        return meetingService.getMeetingsForTrainer(trainerId, courseId);
+    public ResponseEntity<Meeting> getLatestUpcomingMeetingForTrainer(
+            @PathVariable Long trainerId,
+            @PathVariable Long courseId) {
+        Meeting meeting = meetingService.getLatestUpcomingMeetingForTrainer(trainerId, courseId);
+        return meeting != null ? ResponseEntity.ok(meeting) : ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

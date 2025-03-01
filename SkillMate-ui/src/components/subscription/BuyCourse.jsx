@@ -9,6 +9,7 @@ import { ExpandMore } from '@mui/icons-material';
 import writeIcon from '../../assets/writeIcon.png';
 import baseUrl from '../urls/baseUrl'
 import { addToMyCourses } from '../redux/coursesSlice';
+import CustomButton from '../utility/CustomButton';
 
 
 function BuyCourse({ course }) {
@@ -39,7 +40,7 @@ function BuyCourse({ course }) {
 
       if (orderId) {
         const options = {
-          key: 'rzp_test_rAFpbDqro1nE6t',
+          key: 'rzp_test_kkfcoqYStM8mEe',
           amount: course.price * 100,
           currency: 'INR',
           name: course.courseName,
@@ -76,7 +77,7 @@ function BuyCourse({ course }) {
       if (response.data === 'Payment verified and captured successfully.') {
         await handleUpdateCourse();
         navigate('/my-courses');
-        showSuccessToast('Course purchased successfully!');
+        showSuccessToast(`Course purchased successfully!`);
       } else {
         showErrorToast('Payment verification failed. Please try again.');
       }
@@ -114,37 +115,37 @@ function BuyCourse({ course }) {
   };
 
   return (
-    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 4 }}>
+    <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 1 }}>
       {course && (
-        <Card sx={{ display: 'flex', marginBottom: 4 }}>
+        <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, maxWidth: 1200, m: '40px auto', p: 2, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#f7f7f71b' }}>
           <CardMedia
             component="img"
-            sx={{ width: '50%', borderRadius: 2 }}
+            sx={{ objectPosition: "top", objectFit: "cover", position: "relative", minHeight: 400, maxHeight: 500, width: { xs: '100%', md: '50%' }, borderRadius: 2 }}
             image={`data:image/jpeg;base64,${course.image}`}
-            alt={course.courseName}
+            alt={course?.title}
           />
           <CardContent sx={{ flex: '1', paddingLeft: 4 }}>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
-              {course.title}
+            <Typography sx={{ color: 'var(--color-p2)', fontWeight: 'bolder', fontFamily: 'var(--font-p1)', fontSize: 'var(--font-size-p1)' }} gutterBottom>
+              {course?.title}
             </Typography>
-            <Typography variant="h6" color="primary" gutterBottom>
-              Price: ₹{course.price}
+            <Typography sx={{ color: 'var(--color-p3)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p2)' }} gutterBottom>
+              Price: ₹ {course?.price}/-
             </Typography>
-            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              Duration: {course.days} days
+            <Typography sx={{ color: 'var(--color-p3)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p2)' }} gutterBottom>
+              Duration: {course?.days} days
             </Typography>
-            <Button variant="contained" color="primary" fullWidth sx={{ mb: 2 }} onClick={handleBuyCourse}>
-              Buy Now
-            </Button>
+            <CustomButton text={' Buy Now'} width={'100%'} onClick={handleBuyCourse} />
             <Button
               onClick={handleExpandClick}
-              sx={{ marginTop: 2, textTransform: 'none' }}
+              sx={{ marginTop: 2, textTransform: 'none', ":focus": { outline: "none", border: "none" }, fontFamily: 'var(--font-p1)', fontSize: 'var(--font-size-p2)' }}
               endIcon={<ExpandMore />}
             >
               See the full details of this course...
             </Button>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <Typography sx={{ marginTop: 2 }}>{course.description}</Typography>
+              <Typography sx={{ color: 'var(--color-p2)', fontFamily: 'var(--font-p1)', fontSize: 'var(--font-size-p2)' }} gutterBottom>
+                {course.description}
+              </Typography>
             </Collapse>
           </CardContent>
         </Card>

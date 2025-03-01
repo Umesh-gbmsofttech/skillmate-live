@@ -4,6 +4,7 @@ import Search from '../Search';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Loading from '../../Loading';
+import CustomButton from '../utility/CustomButton';
 import {
     List,
     ListItem,
@@ -99,27 +100,25 @@ function ManageBatches() {
             {loading ? (
                 <Loading />
             ) : (
-                <Box sx={{ padding: 2 }}>
-                    <Typography variant="h4" gutterBottom color="#3caacb" align="center">
-                        Batches List
+                <Box sx={{ padding: 2, textAlign: 'center' }}>
+                    <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+                        Batch&apos;s List
                     </Typography>
 
                     <Search onSearch={setSearchQuery} />
-                    <Typography variant="body1" color="#3caacb" align="center" sx={{ marginBottom: 2 }}>
+                    <Typography sx={{ marginBottom: 2, fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }}>
                         Number of Results: {filteredBatches?.length}
                     </Typography>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
-                        <Button onClick={handleBatchCreateClick} color="primary" variant="contained">
-                            Create New Batch
-                        </Button>
+                        <CustomButton text={' Create New Batch'} onClick={handleBatchCreateClick} />
                     </Box>
 
                     <Grid container spacing={2}>
                         {filteredBatches.length > 0 ? (
                             filteredBatches.map((batch) => (
                                 <Grid item xs={12} sm={6} md={4} key={batch.id}>
-                                    <Box sx={{ padding: 2, borderRadius: 2, boxShadow: 3, bgcolor: '#f7f7f71b' }}>
+                                    <Box sx={{ padding: 2, borderRadius: 2, boxShadow: 3, transition: 'box-shadow 0.3s ease', ':hover': { boxShadow: 5 } }}>
                                         <ListItem
                                             secondaryAction={
                                                 <>
@@ -128,14 +127,14 @@ function ManageBatches() {
                                                         onClick={() => handleBatchEditClick(batch.id)}
                                                         aria-label="edit"
                                                     >
-                                                        <EditIcon color="secondary" />
+                                                        <EditIcon color="success" />
                                                     </IconButton>
                                                     <IconButton
                                                         edge="end"
                                                         onClick={() => handleDeleteBatch(batch.id)}
                                                         aria-label="delete"
                                                     >
-                                                        <DeleteIcon color="warning" />
+                                                        <DeleteIcon color="info" />
                                                     </IconButton>
                                                 </>
                                             }
@@ -152,19 +151,19 @@ function ManageBatches() {
                                             </ListItemAvatar>
                                             <ListItemText
                                                 primary={
-                                                    <Typography variant="h6" color="#3caacb" sx={{ fontWeight: 'bold' }}>
+                                                    <Typography sx={{ fontWeight: 'bold', fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }}>
                                                         Course: {batch.trainer?.course?.title}
                                                     </Typography>
                                                 }
                                                 secondary={
                                                     <>
-                                                        <Box component="span" display="block" variant="body2" sx={{ color: '#F5EFFF' }}>
+                                                        <Box sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                                             Batch ID: {batch.id}
                                                         </Box>
-                                                        <Box component="span" display="block" variant="body2" sx={{ color: '#F5EFFF' }}>
+                                                        <Box sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                                             Trainer: {batch.trainer?.trainer?.name}
                                                         </Box>
-                                                        <Box component="span" display="block" variant="body2" sx={{ color: '#F5EFFF' }}>
+                                                        <Box sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                                             Students Enrolled: {batch.students.length}
                                                         </Box>
                                                     </>

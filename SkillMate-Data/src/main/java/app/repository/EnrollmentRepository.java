@@ -10,6 +10,7 @@ import app.entity.Enrollment;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     Enrollment findByStudentIdAndCourseId(Long studentId, Long courseId);
+
     @Query("SELECT e.course FROM Enrollment e WHERE e.student.id = :studentId")
     List<Course> findByStudentId(Long studentId);
 }

@@ -22,7 +22,8 @@ public class PaymentController {
 
         try {
             // Create Razorpay payment request
-            String orderId = razerPayService.createPaymentRequest(paymentRequest.getAmount(), paymentRequest.getCurrency());
+            String orderId = razerPayService.createPaymentRequest(paymentRequest.getAmount(),
+                    paymentRequest.getCurrency());
 
             if (orderId.startsWith("Error")) {
                 return ResponseEntity.status(500).body("Error creating payment request");
@@ -54,7 +55,6 @@ public class PaymentController {
     // DTO class for request body
     public static class VerifyPaymentRequest {
         private String paymentId;
-
 
         // Getters and setters
         public String getPaymentId() {

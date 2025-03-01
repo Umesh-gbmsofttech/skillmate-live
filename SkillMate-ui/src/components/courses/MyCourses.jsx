@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Typography, Grid, Card, CardContent, CardMedia, CircularProgress } from "@mui/material";
 import logo from "../../assets/skillmate.jpg";
-import { fetchCourses } from "../redux/myCoursesSlice";
+import { fetchCoursesAndBatches } from "../redux/myCoursesSlice";
 import LiveSessions from "../subscription/LiveSessions";
 
 function MyCourses() {
@@ -12,9 +12,11 @@ function MyCourses() {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const { courses, loading, error } = useSelector((state) => state.myCourses);
 
+    console.log(courses)
+
     useEffect(() => {
-        if (isAuthenticated && userData?.id && courses.length === 0) {
-            dispatch(fetchCourses(userData.id));
+        if (isAuthenticated && userData?.id && courses.length >= 0) {
+            dispatch(fetchCoursesAndBatches(userData.id));
         }
     }, [isAuthenticated, userData?.id, courses.length, dispatch]);
 
@@ -26,7 +28,7 @@ function MyCourses() {
         return <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh"><Typography variant="h6" color="error">{error}</Typography></Box>;
     }
 
-    if (courses.length === 0) {
+    if (courses.length < 0) {
         return <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh"><Typography variant="h6">No courses purchased yet.</Typography></Box>;
     }
 

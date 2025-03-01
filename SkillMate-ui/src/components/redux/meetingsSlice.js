@@ -6,24 +6,40 @@ import { showErrorToast } from '../utility/ToastService';
 // Async thunk to fetch meetings by trainer ID and course ID
 export const fetchTrainerMeetings = createAsyncThunk(
     "meetings/fetchTrainerMeetings",
-    async ({ trainerId, courses }, { rejectWithValue }) => {
-        try {
-            if (!Array.isArray(courses) || courses.length === 0) {
-                return [];
-            }
+    async ({ trainerId, courses }, { getState, rejectWithValue }) => {
+        const token = getState().auth.token;
 
-            const allMeetings = [];
-            for (const courseId of courses) {
-                const response = await axios.get(
-                    `${baseUrl}meetings/trainer/${trainerId}/${courseId}`
-                );
-                allMeetings.push(...response.data);
-            }
-            return allMeetings;
-        } catch (error) {
-            showErrorToast(`Error fetching meetings: ${error.message}`);
-            return rejectWithValue(error.response?.data || error.message);
+        if (!Array.isArray(courses) || courses.length === 0) {
+            return [];
         }
+
+        const allMeetings = [];
+
+        for (const courseId of courses) {
+            try {
+                console.log(`Fetching meetings for trainer ${trainerId} and course ${courseId}`);
+
+                const response = await axios.get(
+                    `${baseUrl}meetings/trainer/${trainerId}/${courseId}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+
+                console.log("API response:", response.data);
+
+                // Ensure response.data is an array before spreading
+                if (Array.isArray(response.data)) {
+                    allMeetings.push(...response.data);
+                } else if (response.data) {
+                    allMeetings.push(response.data); // Push as single object
+                }
+
+            } catch (error) {
+                console.error(`Error fetching meetings for course ${courseId}:`, error);
+                showErrorToast(`Error fetching meetings for course ${courseId}: ${error.message}`);
+            }
+        }
+
+        return allMeetings;
     }
 );
 

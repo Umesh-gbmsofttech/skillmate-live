@@ -38,9 +38,15 @@ export const addCourse = createAsyncThunk('courses/addCourse', async (courseData
  */
 export const updateCourse = createAsyncThunk('courses/updateCourse', async (updatedCourse, { rejectWithValue }) => {
     try {
-        const response = await axios.put(`${baseUrl}courses/${updatedCourse._id}`, updatedCourse, {
+        const courseId = Number(updatedCourse.id); // Ensure ID is a number
+        if (isNaN(courseId)) {
+            throw new Error("Invalid course ID");
+        }
+
+        const response = await axios.put(`${baseUrl}courses/${courseId}`, updatedCourse, {
             headers: { 'Content-Type': 'application/json' },
         });
+
         showSuccessToast('Course updated successfully!');
         return response.data;
     } catch (error) {
@@ -48,6 +54,7 @@ export const updateCourse = createAsyncThunk('courses/updateCourse', async (upda
         return rejectWithValue(error.response?.data || 'Failed to update course.');
     }
 });
+
 
 /** 
  * Async thunk to delete a course 
@@ -119,11 +126,12 @@ const coursesSlice = createSlice({
             })
             .addCase(updateCourse.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                const index = state.courses.findIndex((course) => course._id === action.payload._id);
+                const index = state.courses.findIndex((course) => course.id === action.payload.id); // Use id, not _id
                 if (index !== -1) {
                     state.courses[index] = action.payload;
                 }
             })
+
             .addCase(updateCourse.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;

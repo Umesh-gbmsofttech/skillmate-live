@@ -21,6 +21,8 @@ function AssignCourseToTrainer() {
 
     const [filteredTrainers, setFilteredTrainers] = useState([]);
     const [filteredCourses, setFilteredCourses] = useState([]);
+    const [showNewTrainers, setShowNewTrainers] = useState(true); // Track which trainers to show
+    const [allTrainers, setAllTrainers] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,8 +37,14 @@ function AssignCourseToTrainer() {
                 // Filter trainers who are not assigned to any course
                 const trainersWithoutCourses = trainersResponse.data.filter((trainer) => !trainerIdsWithCourses.includes(trainer.id));
 
+                // Filter trainers who ARE assigned to courses
+                const trainersWithCourses = trainersResponse.data.filter((trainer) => trainerIdsWithCourses.includes(trainer.id));
+
+                // Store all trainers for later filtering
+                setAllTrainers(trainersResponse.data);
+
                 // Set trainers and courses
-                setTrainers(trainersWithoutCourses);
+                setTrainers(trainersWithoutCourses); // Initially show new trainers
                 setCourses(coursesResponse.data);
                 setFilteredTrainers(trainersWithoutCourses); // Initially set filtered trainers to all trainers
                 setFilteredCourses(coursesResponse.data); // Initially set filtered courses to all courses
@@ -68,11 +76,16 @@ function AssignCourseToTrainer() {
             setFilteredTrainers(filteredTrainerResults);
             setFilteredCourses(filteredCourseResults);
         } else {
-            // Reset filtered results if no search query
-            setFilteredTrainers(trainers);
+            if (showNewTrainers) {
+                const trainerIdsWithCourses = allTrainers.filter(trainer => trainers.some(t => t.id === trainer.id))
+                setFilteredTrainers(trainerIdsWithCourses);
+            } else {
+                const trainerIdsWithCourses = allTrainers.filter(trainer => !trainers.some(t => t.id === trainer.id))
+                setFilteredTrainers(trainerIdsWithCourses)
+            }
             setFilteredCourses(courses);
         }
-    }, [searchQuery, trainers, courses]);
+    }, [searchQuery, trainers, courses, showNewTrainers, allTrainers]);
 
     const handleAssignCourse = () => {
         // Send empty trainer and course if they are not selected
@@ -97,6 +110,14 @@ function AssignCourseToTrainer() {
                     showSuccessToast('Course assigned to trainer successfully!');
                     setIsConfirmDialogOpen(false);
                     setTrainerToAssignCourse(null);
+                    // Refetch data to update the lists
+                    const trainerCoursesResponse = await axios.get(`${baseUrl}trainer-courses`);
+                    const trainersResponse = await axios.get(`${baseUrl}trainers`);
+                    const trainerIdsWithCourses = trainerCoursesResponse.data.map((trainerCourse) => trainerCourse.trainer.id);
+                    const trainersWithoutCourses = trainersResponse.data.filter((trainer) => !trainerIdsWithCourses.includes(trainer.id));
+                    setTrainers(trainersWithoutCourses)
+                    setAllTrainers(trainersResponse.data);
+                    setShowNewTrainers(true);
                 } else {
                     showErrorToast('Failed to assign course to trainer.');
                 }
@@ -109,6 +130,20 @@ function AssignCourseToTrainer() {
     const handleCancel = () => {
         setIsConfirmDialogOpen(false);
         setTrainerToAssignCourse(null);
+    };
+
+    const handleShowNewTrainers = () => {
+        setShowNewTrainers(true);
+        setSearchQuery('');
+        const trainerIdsWithCourses = allTrainers.filter(trainer => trainers.some(t => t.id === trainer.id))
+        setFilteredTrainers(trainerIdsWithCourses);
+    };
+
+    const handleShowAssignedTrainers = () => {
+        setShowNewTrainers(false);
+        setSearchQuery('');
+        const trainerIdsWithCourses = allTrainers.filter(trainer => !trainers.some(t => t.id === trainer.id))
+        setFilteredTrainers(trainerIdsWithCourses)
     };
 
     return (
@@ -140,6 +175,10 @@ function AssignCourseToTrainer() {
                     </Grid>
 
                     <Grid item xs={12}>
+                        {/*  on click on this button show only Trainers already not assigned to courses */}
+                        <Button onClick={handleShowNewTrainers} variant={showNewTrainers ? "contained" : "outlined"}>New Trainers</Button>
+                        {/* on click on this button show only Trainers already assigned to courses */}
+                        <Button onClick={handleShowAssignedTrainers} variant={!showNewTrainers ? "contained" : "outlined"}>Already course Trainers</Button>
                         <Grid container spacing={3}>
                             {filteredTrainers.map((trainer) => (
                                 <Grid key={trainer.id} item xs={12} sm={6} md={4} lg={3}>

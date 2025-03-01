@@ -70,9 +70,9 @@ public class TrainerController {
 	public ResponseEntity<String> deleteTrainer(@PathVariable Long id) {
 		try {
 			trainerService.deleteTrainer(id);
-			return ResponseEntity.ok("trainer profile deleted successfully");
+			return new ResponseEntity<>("Trainer deleted successfully", HttpStatus.OK);
 		} catch (RuntimeException e) {
-			return ResponseEntity.status(404).body(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
 

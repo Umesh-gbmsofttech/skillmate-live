@@ -65,12 +65,12 @@ public class TrainerService {
         if (trainer.getEmail() != null) {
             existingTrainer.setEmail(trainer.getEmail());
         }
-        // if (trainer.getImage() != null) {
-        // existingTrainer.setImage(trainer.getImage());
-        // }
-        // if (trainer.getResume() != null) {
-        // existingTrainer.setResume(trainer.getResume());
-        // }
+        if (trainer.getImage() != null) {
+            existingTrainer.setImage(trainer.getImage());
+        }
+        if (trainer.getResume() != null) {
+            existingTrainer.setResume(trainer.getResume());
+        }
         if (trainer.getAddress() != null) {
             existingTrainer.setAddress(trainer.getAddress());
         }
@@ -86,7 +86,18 @@ public class TrainerService {
         return trainerRepository.save(existingTrainer);
     }
 
-    public void deleteTrainer(Long id) {
-        trainerRepository.deleteById(id);
+    // public void deleteTrainer(Long id) {
+
+    // trainerRepository.deleteByTrainerId(id);
+    // }
+    @Transactional
+    public void deleteTrainer(Long trainerId) {
+        trainerRepository.deleteTrainerRatings(trainerId);
+        trainerRepository.deleteTrainerCourses(trainerId);
+        trainerRepository.deleteTrainerTechnologies(trainerId);
+        trainerRepository.deleteTrainerAttendance(trainerId);
+        trainerRepository.deleteTrainerMeetings(trainerId);
+        trainerRepository.deleteTrainerRoles(trainerId);
+        trainerRepository.deleteTrainerById(trainerId);
     }
 }

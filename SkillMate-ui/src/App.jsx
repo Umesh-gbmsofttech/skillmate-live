@@ -10,7 +10,6 @@ import TrainerSignUp from './components/auth/TrainerSignUp';
 // import Footer from './components/home/Footer';
 import Community from './components/home/community/Community';
 import Subscription from './components/subscription/Subscription';
-import DeleteProfile from './components/profile/DeleteProfile';
 import TopTrainersAndStudents from './components/trainer/TopTrainersAndStudents';
 import TestimonialsOfPlatformUsers from './components/home/TestimonialsOfPlatformUsers';
 import TechnologyStack from './components/home/technologyStack/TechnologyStack';
@@ -56,6 +55,8 @@ import Prototyping_Wireframing from './components/home/footer/explore/Prototypin
 import WebDevelopmentTools from './components/home/footer/explore/WebDevelopmentTools';
 import Chatbot from './components/home/chatbot/Chatbot';
 import AssignCourseToTrainer from './components/admin/AssignCourseToTrainer';
+import About from './components/home/footer/skillmate/About';
+import WhatWeOffer from './components/home/footer/skillmate/WhatWeOffer';
 
 
 function App() {
@@ -151,8 +152,6 @@ function App() {
         <Route path="/admin-profile/manage-students" element={<ManageStudentsList />} />
         <Route path="/admin-profile/edit-courses" element={<AdEditCourse />} />
         <Route path="/admin-profile/manage-courses" element={<ManageCoursesList />} />
-        <Route path="/delete-profile" element={<DeleteProfile />} />
-
         <Route path="/rating-reviews/page" element={<LeaveRatingReview />} />
         <Route path="/rating-reviews/page/card" element={<RatingCard />} />
         <Route path="/admin-profile/edit-course" element={<AddCourseForm />} />
@@ -175,6 +174,9 @@ function App() {
         <Route path="/explore/design-systems" element={<DesignSystems />} />
         <Route path="/explore/prototyping-wireframing" element={<Prototyping_Wireframing />} />
         <Route path="/explore/web-development-tools" element={<WebDevelopmentTools />} />
+        {/* Footer Skillmate section */}
+        <Route path="/skillmate/about" element={<About />} />
+        <Route path="/skillmate/what-we-offer" element={<WhatWeOffer />} />
 
       </Routes>
 

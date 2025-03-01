@@ -95,10 +95,26 @@ function Meetings({ userData, trainerId }) {
             return;
         }
 
+        // 🟢 Get local date in correct format (YYYY-MM-DD)
+        const today = new Date();
+        const localDate = today.toLocaleDateString('en-CA'); // Ensures 'YYYY-MM-DD' format
+
+        // 🟢 Get batch start date or fallback to today's date
+        const selectedBatch = batches.find(batch => batch.id === meetingDetails.selectedBatches[0]);
+        const batchDate = selectedBatch?.startDate || localDate;
+
+        // 🟢 Format date-time correctly without 'Z'
+        const formattedFromTime = `${batchDate}T${meetingDetails.fromTime}:00`;
+        const formattedToTime = `${batchDate}T${meetingDetails.toTime}:00`;
+
+        // 🟢 Get current timestamp for createdAt (without 'Z')
+        const createdAt = new Date().toISOString().split('.')[0]; // Removes milliseconds & 'Z'
+
         const payload = {
-            startTime: meetingDetails.fromTime,
-            endTime: meetingDetails.toTime,
+            startTime: formattedFromTime,
+            endTime: formattedToTime,
             meetingLink: meetingDetails.meetingLink,
+            createdAt: createdAt, // 🟢 Ensures 'Z' is removed
             course: { id: meetingDetails.selectedCourse },
             trainer: { id: trainerId },
             batch: { id: meetingDetails.selectedBatches[0] },
@@ -124,7 +140,8 @@ function Meetings({ userData, trainerId }) {
         } catch (error) {
             showErrorToast(`Error saving meeting: ${error}`);
         }
-    }, [meetingDetails, trainerId]);
+    }, [meetingDetails, trainerId, batches]);
+
 
     // Memoized batch selection information
     const selectedBatch =

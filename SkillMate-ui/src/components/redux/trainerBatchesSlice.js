@@ -7,6 +7,7 @@ export const fetchTrainerBatches = createAsyncThunk(
     async (trainerId, { rejectWithValue }) => {
         try {
             const response = await axios.get(`${baseUrl}batches/trainer/${trainerId}`);
+            console.log('trainer id:', trainerId)
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);

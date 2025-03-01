@@ -27,12 +27,12 @@ function ReviewsSection({ course, trainer }) {
   return (
     <>
       {filteredReviews.length > 0 ? (
-        <Box sx={{ padding: '40px 20px' }}>
+        <Box sx={{ padding: { xs: '20px 10px', md: '40px 20px' } }}>
           <Box sx={{ padding: 2, textAlign: 'center' }}>
-            <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
-              {course ? 'Course Reviews' : trainer ? 'Trainer Reviews' : 'Student	Reviews	–	Hear	from	Our	Successful	Learners'}
+            <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' } }}>
+              {course ? 'Course Reviews' : trainer ? 'Trainer Reviews' : 'Student Reviews – Hear from Our Successful Learners'}
             </Typography>
-            <Typography sx={{ textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>
+            <Typography sx={{ textAlign: 'center', fontSize: { xs: 'var(--font-size-p3)', md: 'var(--font-size-p2)' }, fontWeight: 'bold', fontFamily: 'var(--font-p2)' }}>
               At Skillmate, we take pride in delivering high-quality training that transforms careers.
               Here’s what our students have to say about their experience with our Java Full-Stack
               Development program:
@@ -46,21 +46,21 @@ function ReviewsSection({ course, trainer }) {
             <Box
               sx={{
                 display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
                 gap: 2,
-                overflowX: 'auto',
+                overflowX: { xs: 'visible', md: 'auto' },
                 paddingBottom: 2,
                 paddingTop: 2,
-                scrollSnapType: 'x mandatory',
+                scrollSnapType: { xs: 'none', md: 'x mandatory' },
                 scrollbarWidth: 'thin',
               }}
             >
-
               {filteredReviews.map((review, index) => (
                 <Card
                   key={index}
                   sx={{
-                    minWidth: 320,
-                    maxWidth: 320,
+                    minWidth: { xs: '100%', md: 320 },
+                    maxWidth: { xs: '100%', md: 320 },
                     backgroundColor: '#fff',
                     padding: 2,
                     borderRadius: 3,

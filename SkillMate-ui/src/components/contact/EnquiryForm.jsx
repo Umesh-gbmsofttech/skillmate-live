@@ -50,8 +50,9 @@ function EnquiryForm({ closeForm, contact }) {
         alignItems: 'stretch', // Ensures equal height for image and form
         flexDirection: { xs: 'column', md: 'row' },
         gap: 2,
-        backgroundColor: '#394852',
-        // backgroundColor: '#6f7e87',
+        // backgroundColor: '#394852',
+        // backgroundColor: 'var(--color-p4)',
+        backgroundColor: '#6f7e87',
         width: '100%',
         padding: 2,
         height: 'auto',
@@ -117,7 +118,7 @@ function EnquiryForm({ closeForm, contact }) {
           onChange={handleInputChange}
           fullWidth
           required
-          sx={{ marginBottom: 1 }} // Reduced margin bottom
+          sx={{ marginBottom: 1, ":focus": { backgroundColor: 'none' } }} // Reduced margin bottom
         />
         <TextField
           label="Contact Number"

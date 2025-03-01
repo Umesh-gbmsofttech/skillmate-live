@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,9 +46,9 @@ public class Batch {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "batch")
-    private List<Meeting> meetings;
+    // @JsonIgnore
+    // @OneToMany(mappedBy = "batch")
+    // private List<Meeting> meetings;
 
     @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
@@ -57,7 +58,15 @@ public class Batch {
     // @JoinTable(name = "batch_students", joinColumns = @JoinColumn(name =
     // "batch_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     // private List<Student> students;
-    @ManyToMany
+    // @ManyToMany
+    // @JoinTable(name = "batch_students", joinColumns = @JoinColumn(name =
+    // "batch_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+    // private List<Student> students;
+
+    @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Meeting> meetings;
+
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "batch_students", joinColumns = @JoinColumn(name = "batch_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<Student> students;
 

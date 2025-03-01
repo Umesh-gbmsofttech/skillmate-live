@@ -14,30 +14,31 @@ import java.util.Optional;
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
-        // Custom query to find the most recent meeting for a specific student
+        // Find the most recent meeting for a specific student
         @Query("SELECT m FROM Meeting m WHERE m.batch.id = :batchId " +
                         "AND m.course.id = :courseId " +
-                        "AND (:currentTime BETWEEN m.startTime AND m.endTime " +
-                        "OR :currentTimePlus30 BETWEEN m.startTime AND m.endTime) " +
-                        "AND m.createdAt >= :yesterday " +
-                        "ORDER BY m.createdAt DESC, m.startTime DESC")
-        Optional<Meeting> findLatestMeeting(@Param("batchId") Long batchId,
+                        "AND (m.startTime >= :currentTimePlus30 AND m.endTime > :currentTime " + // Meetings starting
+                                                                                                 // ahead 30 mins
+                        "OR m.endTime > :currentTime) " + // Ongoing meetings
+                        "AND m.createdAt >= :yesterday " + // Created within last 24 hours
+                        "ORDER BY m.startTime ASC")
+        List<Meeting> findUpcomingMeeting(
+                        @Param("batchId") Long batchId,
                         @Param("courseId") Long courseId,
-                        @Param("currentTime") LocalTime currentTime,
-                        @Param("currentTimePlus30") LocalTime currentTimePlus30,
+                        @Param("currentTime") LocalDateTime currentTime,
+                        @Param("currentTimePlus30") LocalDateTime currentTimePlus30,
                         @Param("yesterday") LocalDateTime yesterday);
 
-        // Custom query to find upcoming meetings for a specific trainer
-        @Query("SELECT m FROM Meeting m WHERE m.trainer.id = :trainerId " +
+        // Find upcoming meetings for a trainer and course
+        @Query("SELECT m FROM Meeting m " +
+                        "WHERE m.trainer.id = :trainerId " +
                         "AND m.course.id = :courseId " +
-                        "AND m.createdAt >= :yesterday " + // Only consider meetings from the last 24 hours
-                        "AND (m.startTime >= :currentTime OR (m.startTime <= :currentTime AND m.endTime >= :currentTime)) "
-                        +
-                        "ORDER BY m.startTime ASC")
-        List<Meeting> findUpcomingMeetingsByTrainerIdAndCourseId(
+                        "AND m.endTime > :currentDateTime " + // Meeting has not ended yet
+                        "AND m.createdAt >= :timeThreshold " +
+                        "ORDER BY m.startTime ASC") // Next upcoming meeting first
+        List<Meeting> findUpcomingMeetingsByTrainerAndCourse(
                         @Param("trainerId") Long trainerId,
                         @Param("courseId") Long courseId,
-                        @Param("currentTime") LocalTime currentTime,
-                        @Param("yesterday") LocalDateTime yesterday);
-
+                        @Param("currentDateTime") LocalDateTime currentDateTime, // Now
+                        @Param("timeThreshold") LocalDateTime timeThreshold); // Meetings from past 24h
 }

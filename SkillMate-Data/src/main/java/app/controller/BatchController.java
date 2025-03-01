@@ -99,7 +99,7 @@ public class BatchController {
     public ResponseEntity<HttpStatus> deleteBatch(@PathVariable("id") Long id) {
         try {
             batchService.deleteBatch(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

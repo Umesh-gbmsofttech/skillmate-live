@@ -7,6 +7,7 @@ export const fetchTrainerCourses = createAsyncThunk(
     async (trainerId, { rejectWithValue }) => {
         try {
             const response = await axios.get(`${baseUrl}trainer-courses/courses/${trainerId}`);
+            console.log('trainer id:', trainerId)
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);

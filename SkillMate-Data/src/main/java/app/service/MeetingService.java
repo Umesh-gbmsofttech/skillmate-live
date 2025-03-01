@@ -19,6 +19,7 @@ public class MeetingService {
     private MeetingRepository meetingRepository;
 
     public Meeting saveMeeting(Meeting meeting) {
+        meeting.setCreatedAt(LocalDateTime.now());
         return meetingRepository.save(meeting);
     }
 
@@ -30,21 +31,38 @@ public class MeetingService {
         return meetingRepository.findById(id);
     }
 
-    // find meeting for student course
-    public Optional<Meeting> getMeetingForStudent(Long batchId, Long courseId) {
-        LocalTime currentTime = LocalTime.now();
-        LocalTime currentTimePlus30 = currentTime.plusMinutes(30);
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1); // 24 hours ago
+    // Find the latest meeting for a student’s batch and course
+    public Optional<Meeting> getUpcomingMeetingForStudent(Long batchId, Long courseId) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime currentTimePlus30 = currentTime.plusMinutes(30);
+        LocalDateTime yesterday = currentTime.minusDays(1);
 
-        return meetingRepository.findLatestMeeting(batchId, courseId, currentTime, currentTimePlus30, yesterday);
+        System.out.println("Finding meetings for Batch: " + batchId + ", Course: " + courseId);
+        System.out.println("Current Time: " + currentTime);
+        System.out.println("Current Time + 30: " + currentTimePlus30);
+        System.out.println("Yesterday: " + yesterday);
+
+        List<Meeting> meetings = meetingRepository.findUpcomingMeeting(batchId, courseId, currentTime,
+                currentTimePlus30, yesterday);
+
+        if (meetings.isEmpty()) {
+            System.out.println("No meetings found.");
+            return Optional.empty();
+        } else {
+            System.out.println("Meeting found: " + meetings.get(0));
+            return Optional.of(meetings.get(0));
+        }
     }
 
-    // find meetings for Trainer
-    public List<Meeting> getMeetingsForTrainer(Long trainerId, Long courseId) {
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-        LocalTime currentTime = LocalTime.now();
-        return meetingRepository.findUpcomingMeetingsByTrainerIdAndCourseId(trainerId, courseId, currentTime,
-                yesterday);
+    // Find the next upcoming meeting for a trainer in a course
+    public Meeting getLatestUpcomingMeetingForTrainer(Long trainerId, Long courseId) {
+        LocalDateTime timeThreshold = LocalDateTime.now().minusDays(1); // Last 24 hours
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        List<Meeting> meetings = meetingRepository.findUpcomingMeetingsByTrainerAndCourse(
+                trainerId, courseId, currentDateTime, timeThreshold);
+
+        return meetings.isEmpty() ? null : meetings.get(0); // Return the first upcoming meeting
     }
 
     public void deleteMeeting(Long id) {

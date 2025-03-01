@@ -9,6 +9,8 @@ import { showSuccessToast, showErrorToast, showWarningToast, showInfoToast } fro
 import Search from '../Search';
 import baseUrl from '../urls/baseUrl'
 import { fetchCourses, deleteCourse } from '../redux/coursesSlice';
+import CustomButton from '../utility/CustomButton';
+import ConfirmationDialog from '../utility/ConfirmationDialog';
 
 
 function ManageCoursesList() {
@@ -89,10 +91,10 @@ function ManageCoursesList() {
     // }
 
     return (
-        <Grid container spacing={3} sx={{ padding: 3 }}>
+        <Grid container spacing={3} sx={{ padding: 3, textAlign: 'center' }}>
             <Grid item xs={12}>
-                <Typography variant="h4" align="center" gutterBottom color='#3caacb'>
-                    Courses List
+                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+                    Course&apos;s List
                 </Typography>
             </Grid>
 
@@ -101,22 +103,20 @@ function ManageCoursesList() {
             </Grid>
 
             <Grid item xs={12}>
-                <Typography variant="body1" align="center" color='#3caacb'>
+                <Typography sx={{ marginBottom: 2, fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }}>
                     Number of Results: {filteredCourses.length}
                 </Typography>
             </Grid>
 
             <Grid item xs={12} textAlign="center">
-                <Button variant="contained" color="primary" onClick={handleCourseAddClick}>
-                    Add New Course
-                </Button>
+                <CustomButton text={'Add New Course'} onClick={handleCourseAddClick} />
             </Grid>
 
             <Grid item xs={12}>
                 <Grid container spacing={3}>
                     {filteredCourses.length === 0 ? (
                         <Grid item xs={12}>
-                            <Typography variant="body1" align="center" color="textSecondary">
+                            <Typography sx={{ marginBottom: 2, fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }}>
                                 No courses available.
                             </Typography>
                         </Grid>
@@ -130,24 +130,24 @@ function ManageCoursesList() {
                                         image={`data:image/jpeg;base64,${course.image}` || '/path/to/placeholder-image.jpg'}
                                         alt={`${course.courseName} cover`}
                                     />
-                                    <CardContent sx={{ flexGrow: 1 }}>
-                                        <Typography variant="h6" gutterBottom>
+                                    <CardContent sx={{ flexGrow: 1 }} style={{ padding: "8px" }}>
+                                        <Typography sx={{ fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)', fontWeight: 'bold' }} gutterBottom>
                                             {course.title}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Duration: {course.days}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Time: {course.time}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Price: {course.price}
                                         </Typography>
 
-                                        <Typography variant="body2" color="textSecondary" overflow="hidden">
+                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Description: {course.description.length > 40 ? `${course.description.substring(0, 40)}...` : course.description}
                                             {course.description.length > 40 && (
-                                                <Button size="small" sx={{ marginLeft: 'auto' }} onClick={() => handleReadMore(course.description)}>
+                                                <Button size="small" sx={{ marginLeft: 'auto', ":focus": { border: "none", outline: "none" }, ":hover": { border: "none", outline: "none" } }} onClick={() => handleReadMore(course.description)}>
                                                     Read More
                                                 </Button>
                                             )}
@@ -156,22 +156,10 @@ function ManageCoursesList() {
 
                                     <Grid container justifyContent="space-around" spacing={1} sx={{ paddingBottom: 2 }}>
                                         <Grid item>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={() => handleCourseEditClick(course)}
-                                            >
-                                                Edit
-                                            </Button>
+                                            <CustomButton text={'Edit'} padding={'5px 5px'} onClick={() => handleCourseEditClick(course)} />
                                         </Grid>
                                         <Grid item>
-                                            <Button
-                                                variant="contained"
-                                                color="secondary"
-                                                onClick={() => handleDeleteCourse(course.id)}
-                                            >
-                                                Delete
-                                            </Button>
+                                            <CustomButton text={'Delete'} padding={'5px 5px'} color={'var(--color-p2)'} backgroundColor={'var(--color-p4)'} onClick={() => handleDeleteCourse(course.id)} />
                                         </Grid>
                                     </Grid>
                                 </Card>
@@ -182,20 +170,12 @@ function ManageCoursesList() {
             </Grid>
 
             {/* Confirmation Dialog */}
-            <Dialog open={isConfirmDialogOpen} onClose={handleCancel}>
-                <DialogTitle>Confirm Deletion</DialogTitle>
-                <DialogContent>
-                    <Typography>Are you sure you want to delete this course?</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCancel} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleConfirmDelete} color="secondary">
-                        Confirm
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmationDialog
+                open={isConfirmDialogOpen}
+                onClose={handleCancel}
+                onConfirm={handleConfirmDelete}
+                message="Are you sure you want to delete this course?"
+            />
 
             {/* Full Description Dialog */}
             <Dialog open={isFullDescriptionDialogOpen} onClose={handleCloseDescriptionDialog}>

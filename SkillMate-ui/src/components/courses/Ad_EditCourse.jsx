@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { Box, Typography, TextField, Button, CircularProgress } from '@mui/material';
+import { Box, Typography, TextField, Button, CircularProgress, Grid } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
 import baseUrl from '../urls/baseUrl';
@@ -11,26 +11,24 @@ import { updateCourse } from '../redux/coursesSlice';
 function AdEditCourse() {
     const [title, setTitle] = useState('');
     const [days, setDays] = useState('');
-    const [time, setTime] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
     const [courseCoverImage, setProfilePic] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [previewImage, setPreviewImage] = useState(null);  // New state for image preview
+    const [previewImage, setPreviewImage] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
     const courseData = location.state?.course;
 
+    console.log(courseData)
+
     useEffect(() => {
         if (courseData) {
             setTitle(courseData.title || '');
             setDays(courseData.days || '');
-            setTime(courseData.time || '');
             setPrice(courseData.price || '');
             setDescription(courseData.description || '');
             setStartDate(courseData.startDate || '');
@@ -42,45 +40,57 @@ function AdEditCourse() {
         }
     }, [courseData]);
 
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result.split(',')[1]; // Remove the "data:image/*;base64," prefix
+                resolve(base64String);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    };
+
+
 
     const handleSubmitClick = async () => {
-        const convertToBase64 = (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        };
+        if (!courseData?.id) {
+            showErrorToast("Invalid course data. Please try again.");
+            return;
+        }
 
-        let coverImageBase64 = previewImage;
+        const courseId = Number(courseData.id); // Ensure ID is a number
+        if (isNaN(courseId)) {
+            showErrorToast("Invalid course ID. Please try again.");
+            return;
+        }
+
+        let coverImageBase64 = null; // Only send new image if changed
+
         if (courseCoverImage && courseCoverImage instanceof File) {
             coverImageBase64 = await convertToBase64(courseCoverImage);
+            console.log("Converted Image:", coverImageBase64);
         }
-
-        if (coverImageBase64 && coverImageBase64.startsWith('data:image')) {
-            coverImageBase64 = coverImageBase64.replace(/^data:image\/[a-z]+;base64,/, "");
-        }
-
+        console.log(courseData.id)
         const updatedCourse = {
             ...courseData,
+            id: courseId,
             title,
             days,
-            time,
             price,
             description,
             startDate,
             endDate,
-            image: coverImageBase64 || courseData.image,
+            ...(coverImageBase64 ? { image: coverImageBase64 } : {}), // Only include if changed
         };
 
-        setLoading(true);
         try {
             const response = await axios.put(
-                `${baseUrl}courses/${courseData.id}`,
+                `${baseUrl}courses/${courseId}`,
                 updatedCourse
             );
-
+            console.log(response)
             if (response.status === 200) {
                 showSuccessToast('Course updated successfully');
                 dispatch(updateCourse(updatedCourse));
@@ -94,6 +104,7 @@ function AdEditCourse() {
     };
 
 
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -102,133 +113,46 @@ function AdEditCourse() {
         }
     };
 
-
     if (!courseData) {
-        return <CircularProgress />;
+        return <CircularProgress sx={{ display: 'block', margin: 'auto' }} />;
     }
 
     return (
-        <Box sx={{ padding: 4 }}>
-            <Typography variant="h4" gutterBottom>Edit Course</Typography>
+        <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: '100vh', padding: 2 }}>
+            <Grid item xs={12} sm={10} md={8} lg={6}>
+                <Box sx={{ textAlign: 'center', mb: 3 }}>
+                    <Typography variant="h4" gutterBottom>Edit Course</Typography>
+                </Box>
 
-            {/* Image Preview */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
                     <img
-                        src={previewImage}  // Use preview image state for displaying the image
+                        src={previewImage}
                         alt="Course Cover"
-                        style={{
-                            width: 300,
-                            height: 200,
-                            objectFit: 'cover',
-                            borderRadius: 10,
-                            marginBottom: 20,
-                        }}
+                        style={{ width: '100%', maxWidth: 400, height: 'auto', borderRadius: 10, marginBottom: 20 }}
                     />
-                    <Button
-                        variant="contained"
-                        component="label"
-                        sx={{
-                            backgroundColor: '#e5e5e7',
-                            color: '#000',
-                            '&:hover': { backgroundColor: '#0056b3' },
-                            borderRadius: '5px',
-                            padding: '10px 20px',
-                        }}
-                    >
+                    <Button variant="contained" component="label">
                         <CloudUpload sx={{ marginRight: 1 }} />
                         Choose Cover Image
-                        <input
-                            type="file"
-                            hidden
-                            onChange={handleFileChange}
-                        />
+                        <input type="file" hidden onChange={handleFileChange} />
                     </Button>
                 </Box>
-            </Box>
 
-            <Box sx={{
-                width: '100%',
-                maxWidth: 600,
-                bgcolor: '#f5f5f5',
-                boxShadow: 3,
-                borderRadius: 2,
-                p: 3,
-            }}>
-                <TextField
-                    label="Course Name"
-                    fullWidth
-                    variant="outlined"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    sx={{ marginBottom: 2 }}
-                />
-                <TextField
-                    type='number'
-                    label="Duration"
-                    fullWidth
-                    variant="outlined"
-                    value={days}
-                    onChange={(e) => setDays(e.target.value)}
-                    sx={{ marginBottom: 2 }}
-                />
-                <TextField
-                    type='number'
-                    label="Price"
-                    fullWidth
-                    variant="outlined"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    sx={{ marginBottom: 2 }}
-                />
-                <TextField
-                    label="Description"
-                    fullWidth
-                    variant="outlined"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    sx={{ marginBottom: 2 }}
-                />
+                <Box sx={{ p: 3, bgcolor: '#f5f5f5', boxShadow: 3, borderRadius: 2 }}>
+                    <TextField label="Course Name" fullWidth variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} sx={{ mb: 2 }} />
+                    <TextField type='number' label="Duration" fullWidth variant="outlined" value={days} onChange={(e) => setDays(e.target.value)} sx={{ mb: 2 }} />
+                    <TextField type='number' label="Price" fullWidth variant="outlined" value={price} onChange={(e) => setPrice(e.target.value)} sx={{ mb: 2 }} />
+                    <TextField label="Description" fullWidth variant="outlined" multiline rows={3} value={description} onChange={(e) => setDescription(e.target.value)} sx={{ mb: 2 }} />
+                    <TextField type="date" label="Start Date" fullWidth variant="outlined" value={startDate} onChange={(e) => setStartDate(e.target.value)} sx={{ mb: 2 }} />
+                    <TextField type="date" label="End Date" fullWidth variant="outlined" value={endDate} onChange={(e) => setEndDate(e.target.value)} sx={{ mb: 2 }} />
+                </Box>
 
-                {/* Start Date */}
-                <TextField
-                    type="date"
-                    label="Start Date"
-                    fullWidth
-                    variant="outlined"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    sx={{ marginBottom: 2 }}
-                />
-
-                {/* End Date */}
-                <TextField
-                    type="date"
-                    label="End Date"
-                    fullWidth
-                    variant="outlined"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    sx={{ marginBottom: 2 }}
-                />
-            </Box>
-
-            <Box sx={{ textAlign: 'center', marginTop: 4 }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmitClick}
-                    disabled={loading}
-                    sx={{
-                        padding: '12px 30px',
-                        fontSize: '16px',
-                        '&:hover': { backgroundColor: '#0056b3' },
-                    }}
-                >
-                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Update Course'}
-                </Button>
-            </Box>
-        </Box>
+                <Box sx={{ textAlign: 'center', mt: 3 }}>
+                    <Button variant="contained" color="primary" onClick={handleSubmitClick} disabled={loading} sx={{ padding: '12px 30px', fontSize: '16px' }}>
+                        {loading ? <CircularProgress size={24} color="inherit" /> : 'Update Course'}
+                    </Button>
+                </Box>
+            </Grid>
+        </Grid>
     );
 }
 
