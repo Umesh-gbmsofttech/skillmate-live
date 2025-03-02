@@ -93,9 +93,9 @@ const TechnologyStack = () => {
                 Common Technology Stack Layers used in Development
             </Typography> */}
             <Box sx={{ padding: 2, textAlign: 'center' }}>
-                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundColor: 'var(--color-p4)', display: 'inline-block', padding: '0 8px', borderRadius: '5px' }}>
+                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' } }}>
                     Common Technology Stack	Layers Used In Develpment</Typography>
-                <Typography sx={{ marginBottom: 10, textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>
+                <Typography sx={{ textAlign: 'center', fontSize: { xs: 'var(--font-size-p3)', md: 'var(--font-size-p2)' }, fontWeight: 'bold', fontFamily: 'var(--font-p2)' }}>
                     At Skillmate, our Java Full-Stack Development program is designed to equip you with a
                     comprehensive technology stack used by top IT companies. By mastering these
                     technologies, you’ll be prepared to build scalable, high-performance web applications

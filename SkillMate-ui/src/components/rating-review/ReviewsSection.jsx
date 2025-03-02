@@ -24,6 +24,7 @@ function ReviewsSection({ course, trainer }) {
     return reviews;
   }, [reviews, course, trainer]);
 
+  console.log(filteredReviews)
   return (
     <>
       {filteredReviews.length > 0 ? (
@@ -75,7 +76,7 @@ function ReviewsSection({ course, trainer }) {
                     <Rating value={review.rating || 0} readOnly precision={0.5} />
                   </Box>
                   <Typography fontSize={'var(--font-size-p3)'} mb={1} fontWeight="bold" color="var(--color-p2)" fontFamily={'var(--font-p2)'}>
-                    {review.title || 'Review title'}
+                    {review.course ? course.title : review.trainer?.name || 'Review title'}
                   </Typography>
                   <Typography fontSize={'var(--font-size-p3)'} color="var(--color-p2)" fontFamily={'var(--font-p2)'}>
                     {review.feedback || 'Review body'}

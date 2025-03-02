@@ -4,7 +4,9 @@ import { setUserData } from '../redux/authSlice';
 import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 import { TextField, Button, Checkbox, FormControl, InputLabel, Select, MenuItem, Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Link } from 'react-router-dom';
-import baseUrl from '../urls/baseUrl'
+import baseUrl from '../urls/baseUrl';
+import { handleProfilePicChange, handleResumeChange } from '../utility/FileUploadHelper';
+
 
 
 const TrainerSignUp = () => {
@@ -35,45 +37,6 @@ const TrainerSignUp = () => {
             }
         });
     };
-
-    const handleProfilePicChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (!file.type.startsWith('image/')) {
-                setError('Please upload a valid image file.');
-                return;
-            }
-            if (file.size > 2 * 1024 * 1024) {
-                setError('File size must be less than 2MB.');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setProfilePic(reader.result.split(',')[1]);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleResumeChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.type !== 'application/pdf') {
-                setError('Please upload a valid PDF file.');
-                return;
-            }
-            if (file.size > 5 * 1024 * 1024) {
-                setError('File size must be less than 5MB.');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setResume(reader.result.split(',')[1]);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name === 'name') setName(value);
@@ -158,7 +121,7 @@ const TrainerSignUp = () => {
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleProfilePicChange}
+                            onChange={(e) => handleProfilePicChange(e, setProfilePic, setError)}
                             style={{ display: 'none' }}
                             id="profilePicInput"
                         />
@@ -264,7 +227,7 @@ const TrainerSignUp = () => {
                         <input
                             type="file"
                             accept="application/pdf"
-                            onChange={handleResumeChange}
+                            onChange={(e) => handleResumeChange(e, setResume, setError)}
                             style={{ display: 'none' }}
                             id="resumeInput"
                         />

@@ -66,17 +66,19 @@ function TopTrainersAndStudents({ sectionHeading, student, trainer, community = 
         return (
                 <Box sx={{ padding: 1 }}>
                         {data.length > 0 && (
-                                <Box Box sx={{ padding: 2, textAlign: 'center' }}>
-                                        <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+                                <Box sx={{ padding: 2, textAlign: 'center' }}>
+                                        <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' } }}>
                                                 {sectionHeading}
                                         </Typography>
-                                        {trainer && !community && <Typography sx={{ textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>
+                                        {trainer && !community && <Typography sx={{ textAlign: 'center', fontSize: { xs: 'var(--font-size-p3)', md: 'var(--font-size-p2)' }, fontWeight: 'bold', fontFamily: 'var(--font-p2)' }}>
+
                                                 Our Top Trainers
                                                 At Skillmate, we take pride in offering expert-led training to help you excel in Java Full-Stack
                                                 Development. Our top trainer is a highly experienced IT professional with years of industry
                                                 expertise, ensuring you receive the best guidance throughout your learning journey.
                                         </Typography>}
-                                        {student && !community && <Typography sx={{ textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>
+                                        {student && !community && <Typography sx={{ textAlign: 'center', fontSize: { xs: 'var(--font-size-p3)', md: 'var(--font-size-p2)' }, fontWeight: 'bold', fontFamily: 'var(--font-p2)' }}>
+
                                                 At Skillmate, we are committed to not just training but also helping our students secure rewarding
                                                 jobs in the IT industry. Our Java Full-Stack Development program has successfully placed
                                                 numerous students in top tech companies, proving the effectiveness of our training and placement
@@ -105,24 +107,24 @@ function TopTrainersAndStudents({ sectionHeading, student, trainer, community = 
                                                 }),
                                         }}
                                 >
-                                        {data.map((person) => {
+                                        {data.map((person, index) => {
                                                 const { avg, count } = calculateAverageRating(person.id);
+                                                const isLastOddTrainerCard = trainer && (index === data.length - 1) && (data.length % 2 !== 0);
                                                 return (
                                                         <Card
                                                                 key={person.id}
                                                                 sx={{
-                                                                        width: trainer ? (isMobileOrTablet ? '100%' : 600) : '100%',
+                                                                        width: isLastOddTrainerCard ? '100%' : (trainer ? (isMobileOrTablet ? '100%' : 600) : '100%'),
                                                                         flexGrow: student ? 1 : 0,
                                                                         display: 'flex',
                                                                         alignItems: 'center',
                                                                         padding: 2,
-                                                                        // boxShadow: 2,
                                                                         transition: 'box-shadow 0.3s ease',
                                                                         borderRadius: 3,
                                                                         ":hover": { boxShadow: 5 },
                                                                 }}
                                                                 onClick={() => {
-                                                                        if (trainer) { // Only navigate if it's a trainer card
+                                                                        if (trainer) {
                                                                                 navigate('/rating-reviews/page', { state: { trainer: person } });
                                                                         }
                                                                 }}

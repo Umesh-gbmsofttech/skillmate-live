@@ -5,6 +5,7 @@ import { Box, TextField, Button, CircularProgress, Typography, Checkbox, FormCon
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
 import { useSelector } from 'react-redux';
 import baseUrl from '../urls/baseUrl'
+import { handleProfilePicChange, handleResumeChange } from '../utility/FileUploadHelper';
 
 
 function TrainerProfileUpdate() {
@@ -26,6 +27,7 @@ function TrainerProfileUpdate() {
     const [previewImage, setPreviewImage] = useState(''); // To show the selected image preview
     const [pdfFile, setPdfFile] = useState(null);
     const [showResume, setShowResume] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchTrainerData = async () => {
@@ -85,44 +87,6 @@ function TrainerProfileUpdate() {
         }));
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            convertToBase64(file).then((base64Image) => {
-                const base64Data = base64Image.split(',')[1]; // Strip the prefix
-                setFormData((prevData) => ({
-                    ...prevData,
-                    image: base64Data // Update image in formData
-                }));
-                setPreviewImage(base64Image); // Update preview image immediately
-            });
-        }
-    };
-
-    const convertToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-    };
-
-    const handleResumeChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData((prevData) => ({
-                    ...prevData,
-                    resume: reader.result.split(',')[1] // Store base64 encoded resume without prefix
-                }));
-                setPdfFile(reader.result); // Preview the resume as base64
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -163,7 +127,15 @@ function TrainerProfileUpdate() {
                         />
                         <Button variant="contained" component="label">
                             Upload Profile Picture
-                            <input type="file" hidden accept="image/*" onChange={handleFileChange} />
+                            <input type="file" hidden accept="image/*"
+                                onChange={(e) => handleProfilePicChange(
+                                    e,
+                                    (img) => {
+                                        setFormData((prev) => ({ ...prev, image: img }));
+                                        setPreviewImage(`data:image/png;base64,${img}`);
+                                    },
+                                    setError
+                                )} />
                         </Button>
                     </Box>
 
@@ -300,7 +272,13 @@ function TrainerProfileUpdate() {
                         )}
                         <Button variant="contained" component="label">
                             Upload Resume
-                            <input type="file" hidden accept="application/pdf" onChange={handleResumeChange} />
+                            <input type="file" hidden accept="application/pdf"
+                                onChange={(e) => handleResumeChange(e, (pdf) => {
+                                    setFormData((prev) => ({ ...prev, resume: pdf }));
+                                    setPdfFile(pdf);  // Ensure the preview updates
+                                }, setError)}
+
+                            />
                         </Button>
                     </div>
 

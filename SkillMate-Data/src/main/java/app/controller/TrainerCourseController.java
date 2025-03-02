@@ -24,9 +24,8 @@ public class TrainerCourseController {
 
     // Create a new TrainerCourse
     @PostMapping
-    public ResponseEntity<TrainerCourse> createTrainerCourse(@RequestBody TrainerCourse trainerCourse) {
-        TrainerCourse createdTrainerCourse = trainerCourseService.createTrainerCourse(trainerCourse);
-        return new ResponseEntity<>(createdTrainerCourse, HttpStatus.CREATED);
+    public ResponseEntity<?> createTrainerCourse(@RequestBody TrainerCourse trainerCourse) {
+        return trainerCourseService.createTrainerCourse(trainerCourse);
     }
 
     // Get all TrainerCourses

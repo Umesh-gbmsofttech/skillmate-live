@@ -3,10 +3,8 @@ package app.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -39,12 +37,9 @@ public class Meeting {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
-    // private LocalDateTime createdAt = LocalDateTime.now();
 
-    // @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "trainer_id")
-    // @JsonManagedReference
     private Trainer trainer;
 
     @JsonIgnore // added becuse return attendace data aswell which not needed
@@ -54,6 +49,5 @@ public class Meeting {
 
     @ManyToOne
     @JoinColumn(name = "batch_id")
-    // @JsonManagedReference
     private Batch batch;
 }

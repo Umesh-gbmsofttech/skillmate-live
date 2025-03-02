@@ -63,15 +63,17 @@ function Courses({ topCourses = false }) {
     <div>
       {!topCourses ? (
         <Box sx={{ padding: 2, textAlign: 'center' }}>
-          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' } }}>
             Explore a wide range of courses designed to help you succeed in the tech industry</Typography>
           <Search onSearch={setSearchQuery} />
         </Box>
       ) : (
         <Box sx={{ padding: 2, textAlign: 'center' }}>
-          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: 'var(--font-size-p1)', fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: 'inline-block', padding: '0 80px', border: "none" }}>
+          <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' } }}>
             Top Courses</Typography>
-          <Typography sx={{ textAlign: 'center', fontSize: 'var(--font-size-p2)', fontWeight: 'bold', fontFamily: 'var(--font-p2)', padding: '10px 68px 0 68px' }}>Courses designed for aspiring developers, this courses equips you with the skills and hands-on experience needed to excel in software development.</Typography>
+          <Typography sx={{ textAlign: 'center', fontSize: { xs: 'var(--font-size-p3)', md: 'var(--font-size-p2)' }, fontWeight: 'bold', fontFamily: 'var(--font-p2)' }}>
+            Courses designed for aspiring developers, this courses equips you with the skills and hands-on experience needed to excel in software development.
+          </Typography>
         </Box>
       )}
       {status === 'loading' ? (
@@ -92,13 +94,13 @@ function Courses({ topCourses = false }) {
               <Card
                 key={course.id}
                 sx={{
-                  // boxShadow: 3,
                   borderRadius: 3,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   padding: 2,
                   height: '100%',
+                  position: 'relative',
                   transition: 'box-shadow 0.3s ease, transform 0.3s ease',
                   '&:hover': {
                     boxShadow: 6,
@@ -106,6 +108,9 @@ function Courses({ topCourses = false }) {
                   }
                 }}
               >
+                {username === 'ADMIN' && (
+                  <img onClick={() => handleCourseEditClick(course)} src={editIcon} alt="edit" style={{ width: 20, height: 20, cursor: 'pointer', position: 'absolute', top: 8, right: 8 }} />
+                )}
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flexGrow: 1 }}>
                   <Typography sx={{ fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p2)' }}>{course.title}</Typography>
                   <Typography sx={{ overflow: 'hidden', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p3)' }}>{course.description}</Typography>
@@ -120,9 +125,6 @@ function Courses({ topCourses = false }) {
                       </>
                     )}
                   </Box>
-                  {username === 'ADMIN' && (
-                    <img onClick={() => handleCourseEditClick(course)} src={editIcon} alt="edit" style={{ width: 20, height: 20, cursor: 'pointer', position: 'absolute', top: 10, right: 10 }} />
-                  )}
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', paddingTop: 1 }}>
                   <CustomButton onClick={() => handleContactUsClick(course)} text="Contact Us" marginBottom={'4px'} width={'100%'} />

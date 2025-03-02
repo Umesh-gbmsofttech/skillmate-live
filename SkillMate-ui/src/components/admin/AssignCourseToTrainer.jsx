@@ -7,6 +7,8 @@ import Search from '../Search';
 import baseUrl from '../urls/baseUrl';
 import ConfirmationDialog from '../utility/ConfirmationDialog';
 import Fuse from 'fuse.js';
+import CustomButton from '../utility/CustomButton'; // Import CustomButton
+
 
 function AssignCourseToTrainer() {
     const navigate = useNavigate();
@@ -110,22 +112,30 @@ function AssignCourseToTrainer() {
                     showSuccessToast('Course assigned to trainer successfully!');
                     setIsConfirmDialogOpen(false);
                     setTrainerToAssignCourse(null);
+
                     // Refetch data to update the lists
                     const trainerCoursesResponse = await axios.get(`${baseUrl}trainer-courses`);
                     const trainersResponse = await axios.get(`${baseUrl}trainers`);
                     const trainerIdsWithCourses = trainerCoursesResponse.data.map((trainerCourse) => trainerCourse.trainer.id);
                     const trainersWithoutCourses = trainersResponse.data.filter((trainer) => !trainerIdsWithCourses.includes(trainer.id));
-                    setTrainers(trainersWithoutCourses)
+
+                    setTrainers(trainersWithoutCourses);
                     setAllTrainers(trainersResponse.data);
                     setShowNewTrainers(true);
                 } else {
                     showErrorToast('Failed to assign course to trainer.');
                 }
             } catch (error) {
-                showErrorToast('An error occurred while assigning the course.');
+                if (error.response && error.response.status === 409) {
+                    setIsConfirmDialogOpen(false);
+                    showErrorToast('Record already exists! This trainer is already assigned to the selected course.');
+                } else {
+                    showErrorToast('An error occurred while assigning the course.');
+                }
             }
         }
     };
+
 
     const handleCancel = () => {
         setIsConfirmDialogOpen(false);
@@ -151,35 +161,36 @@ function AssignCourseToTrainer() {
             {loading ? (
                 <CircularProgress />
             ) : (
-                <Grid container spacing={3} sx={{ padding: 3 }}>
-                    <Grid item xs={12}>
-                        <Typography variant="h4" align="center" color='#3caacb'>
+                <Grid container spacing={3} sx={{ padding: 3, justifyContent: 'center' }}>
+                    <Grid item xs={12} textAlign="center">
+                        <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' } }}>
                             Assign Course to Trainer
                         </Typography>
                     </Grid>
 
-                    <Grid item xs={12}>
+                    <Grid item xs={12} textAlign="center">
                         <Search onSearch={setSearchQuery} />
                     </Grid>
 
-                    <Grid item xs={12}>
-                        <Typography variant="body1" align="center" color='#3caacb'>
+                    <Grid item xs={12} textAlign="center">
+                        <Typography sx={{ fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }} textAlign={'center'}>
                             Number of Results: {filteredTrainers.length}
                         </Typography>
                     </Grid>
 
-                    <Grid item xs={12}>
-                        <Typography variant="body1" align="center" color='#3caacb'>
+                    <Grid item xs={12} textAlign="center">
+                        <Typography sx={{ alignSelf: 'center', marginTop: 1, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' } }}>
                             Select Trainer and Course to Assign
                         </Typography>
                     </Grid>
 
+                    <Grid item xs={12} textAlign="center" gap={2}>
+                        <CustomButton text="New Trainers" onClick={handleShowNewTrainers} marginRight={'2px'} />
+                        <CustomButton text="Enrolled Course-Trainers" onClick={handleShowAssignedTrainers} />
+                    </Grid>
+
                     <Grid item xs={12}>
-                        {/*  on click on this button show only Trainers already not assigned to courses */}
-                        <Button onClick={handleShowNewTrainers} variant={showNewTrainers ? "contained" : "outlined"}>New Trainers</Button>
-                        {/* on click on this button show only Trainers already assigned to courses */}
-                        <Button onClick={handleShowAssignedTrainers} variant={!showNewTrainers ? "contained" : "outlined"}>Already course Trainers</Button>
-                        <Grid container spacing={3}>
+                        <Grid container spacing={3} justifyContent="center">
                             {filteredTrainers.map((trainer) => (
                                 <Grid key={trainer.id} item xs={12} sm={6} md={4} lg={3}>
                                     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -198,19 +209,15 @@ function AssignCourseToTrainer() {
                                                 Experience: {trainer.experience}
                                             </Typography>
                                             <Typography variant="body2" color="textSecondary" style={{ fontSize: '13px' }}>
-                                                Experties: {trainer.technologies.join(', ')}
-                                            </Typography>
+                                                Experties: {trainer.technologies.join(', ')}</Typography>
                                         </CardContent>
-                                        <Grid container justifyContent="space-around" sx={{ marginBottom: '8px' }} spacing={1}>
+                                        <Grid container justifyContent="center" sx={{ marginBottom: '8px' }} spacing={1}>
                                             <Grid item>
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    size="small"
+                                                <CustomButton
+                                                    text="Select Trainer"
                                                     onClick={() => setSelectedTrainer(trainer)}
-                                                >
-                                                    Select Trainer
-                                                </Button>
+                                                    width="100%"
+                                                />
                                             </Grid>
                                         </Grid>
                                     </Card>
@@ -225,7 +232,7 @@ function AssignCourseToTrainer() {
                                 Select a Course for {selectedTrainer.name}
                             </Typography>
 
-                            <Grid container spacing={3}>
+                            <Grid container spacing={3} justifyContent="center">
                                 {filteredCourses.map((course) => (
                                     <Grid key={course.id} item xs={12} sm={6} md={4} lg={3}>
                                         <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -244,16 +251,13 @@ function AssignCourseToTrainer() {
                                                     Duration: {course.days} days
                                                 </Typography>
                                             </CardContent>
-                                            <Grid container justifyContent="space-around" sx={{ marginBottom: '8px' }} spacing={1}>
+                                            <Grid container justifyContent="center" sx={{ marginBottom: '8px' }} spacing={1}>
                                                 <Grid item>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        size="small"
+                                                    <CustomButton
+                                                        text="Select Course"
                                                         onClick={() => setSelectedCourse(course)}
-                                                    >
-                                                        Select Course
-                                                    </Button>
+                                                        width="100%"
+                                                    />
                                                 </Grid>
                                             </Grid>
                                         </Card>
@@ -265,14 +269,11 @@ function AssignCourseToTrainer() {
 
                     {selectedTrainer && selectedCourse && (
                         <Grid item xs={12} textAlign="center" style={{ marginTop: '20px' }}>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                size="large"
+                            <CustomButton
+                                text={`Assign ${selectedCourse.title} to ${selectedTrainer.name}`}
                                 onClick={handleAssignCourse}
-                            >
-                                Assign {selectedCourse.title} to {selectedTrainer.name}
-                            </Button>
+                                width="50%"
+                            />
                         </Grid>
                     )}
 

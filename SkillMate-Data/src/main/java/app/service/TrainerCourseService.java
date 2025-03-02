@@ -4,7 +4,11 @@ import app.entity.Course;
 import app.entity.TrainerCourse;
 import app.exception.EntityNotFoundException;
 import app.repository.TrainerCourseRepository;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +25,18 @@ public class TrainerCourseService {
     }
 
     // Create a new TrainerCourse
-    public TrainerCourse createTrainerCourse(TrainerCourse trainerCourse) {
-        return trainerCourseRepository.save(trainerCourse);
+    @Transactional
+    public ResponseEntity<?> createTrainerCourse(TrainerCourse trainerCourse) {
+        boolean exists = trainerCourseRepository.existsByTrainerIdAndCourseId(
+                trainerCourse.getTrainer().getId(), trainerCourse.getCourse().getId());
+
+        if (exists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Record already exists for this trainer and course.");
+        }
+
+        TrainerCourse savedTrainerCourse = trainerCourseRepository.save(trainerCourse);
+        return new ResponseEntity<>(savedTrainerCourse, HttpStatus.CREATED);
     }
 
     // Get all TrainerCourses

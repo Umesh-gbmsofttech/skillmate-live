@@ -74,13 +74,12 @@ public class BatchController {
 
     // Create a new batch
     @PostMapping
-    public ResponseEntity<Batch> createBatch(@Valid @RequestBody Batch batch) {
-        try {
-            Batch newBatch = batchService.createBatch(batch);
-            return new ResponseEntity<>(newBatch, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> createBatch(@RequestBody Batch batch) {
+        if (batch.getTrainer_id() == null || batch.getCourse() == null) {
+            return ResponseEntity.badRequest().body("Trainer or Course is missing");
         }
+        batchService.createBatch(batch);
+        return ResponseEntity.ok("Batch created successfully");
     }
 
     // Update an existing batch

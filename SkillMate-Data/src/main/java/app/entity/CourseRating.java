@@ -1,5 +1,7 @@
 package app.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,4 +35,6 @@ public class CourseRating {
 
     private Integer rating;
     private String feedback;
+
+    private LocalDate date;
 }

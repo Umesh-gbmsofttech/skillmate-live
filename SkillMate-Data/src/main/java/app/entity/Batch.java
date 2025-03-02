@@ -3,12 +3,8 @@ package app.entity;
 import java.time.LocalTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,36 +33,22 @@ public class Batch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @JsonManagedReference
-    // @ManyToOne
-    // @JoinColumn(name = "trainer_id")
     private Long trainer_id;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
 
-    // @JsonIgnore
-    // @OneToMany(mappedBy = "batch")
-    // private List<Meeting> meetings;
-
     @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
-    // @OneToMany
-    // @JoinTable(name = "batch_students", joinColumns = @JoinColumn(name =
-    // "batch_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    // private List<Student> students;
-    // @ManyToMany
-    // @JoinTable(name = "batch_students", joinColumns = @JoinColumn(name =
-    // "batch_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    // private List<Student> students;
 
-    @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "batch")
     private List<Meeting> meetings;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "batch_students", joinColumns = @JoinColumn(name = "batch_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<Student> students;
 

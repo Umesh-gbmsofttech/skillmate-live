@@ -62,15 +62,15 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student")
     @JsonIgnore
     private List<Enrollment> enrollments;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student")
     @JsonIgnore
     private List<Attendance> attendances;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student")
     // @JsonIgnore
     private List<AssignmentStatus> assignmentStatuses;
 

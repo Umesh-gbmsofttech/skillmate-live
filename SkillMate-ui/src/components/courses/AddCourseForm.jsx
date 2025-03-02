@@ -5,6 +5,7 @@ import { Box, Typography, TextField, Button, CircularProgress, Grid, Container, 
 import { showSuccessToast, showErrorToast, showWarningToast } from '../utility/ToastService';
 import { CloudUpload } from '@mui/icons-material';
 import { addCourse } from '../redux/coursesSlice'; // Import Redux action
+import { handleProfilePicChange } from '../utility/FileUploadHelper'; // Import helper function
 
 function AddCourseForm() {
   const dispatch = useDispatch();
@@ -19,27 +20,13 @@ function AddCourseForm() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [previewImage, setPreviewImage] = useState(null);
+  const [fileError, setFileError] = useState(null);
 
-  const handleImageChange = (e) => {
+  const handleFileChange = (e) => {
+    handleProfilePicChange(e, setImage, setFileError);
     const file = e.target.files[0];
     if (file) {
-      if (!file.type.startsWith('image/')) {
-        showErrorToast('Please upload a valid image file.');
-        setImage(null);
-        setPreviewImage(null);
-        return;
-      }
-      if (file.size > 2 * 1024 * 1024) {
-        showErrorToast('File size must be less than 2MB.');
-        setImage(null);
-        setPreviewImage(null);
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => setPreviewImage(reader.result);
-      reader.readAsDataURL(file);
-      setImage(file);
+      setPreviewImage(URL.createObjectURL(file));
     }
   };
 
@@ -51,32 +38,30 @@ function AddCourseForm() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64Image = reader.result.split(',')[1];
+    if (fileError) {
+      showErrorToast(fileError);
+      return;
+    }
 
-      const newCourse = {
-        title,
-        days,
-        price,
-        description,
-        startDate,
-        endDate,
-        image: base64Image,
-      };
-
-      dispatch(addCourse(newCourse))
-        .unwrap()
-        .then(() => {
-          showSuccessToast('Course added successfully!');
-          navigate('/courses'); // Redirect after success
-        })
-        .catch((err) => {
-          showErrorToast(err || 'Failed to add course.');
-        });
+    const newCourse = {
+      title,
+      days,
+      price,
+      description,
+      startDate,
+      endDate,
+      image,
     };
 
-    reader.readAsDataURL(image);
+    dispatch(addCourse(newCourse))
+      .unwrap()
+      .then(() => {
+        showSuccessToast('Course added successfully!');
+        navigate('/courses'); // Redirect after success
+      })
+      .catch((err) => {
+        showErrorToast(err || 'Failed to add course.');
+      });
   };
 
   return (
@@ -98,8 +83,9 @@ function AddCourseForm() {
               <Button variant="outlined" component="label" fullWidth>
                 <CloudUpload sx={{ marginRight: 1 }} />
                 Choose Cover Image
-                <input type="file" hidden accept="image/*" onChange={handleImageChange} />
+                <input type="file" hidden accept="image/*" onChange={handleFileChange} />
               </Button>
+              {fileError && <Typography color="error" sx={{ textAlign: 'center', marginTop: 1 }}>{fileError}</Typography>}
             </Grid>
 
             <Grid item xs={12}><TextField label="Course Name" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} required /></Grid>

@@ -18,6 +18,7 @@ public class MeetingController {
 
     @PostMapping
     public Meeting addMeeting(@RequestBody Meeting meeting) {
+        here i need to write a notification or reminder logic for student to say their meeting is sceduled at
         return meetingService.saveMeeting(meeting);
     }
 
@@ -31,7 +32,6 @@ public class MeetingController {
         return meetingService.getMeetingById(id);
     }
 
-    // find meeting for student's course
     // Find meeting for student's course
     @GetMapping("/student/{batchId}/{courseId}")
     public Optional<Meeting> getMeetingForStudent(@PathVariable Long batchId, @PathVariable Long courseId) {
