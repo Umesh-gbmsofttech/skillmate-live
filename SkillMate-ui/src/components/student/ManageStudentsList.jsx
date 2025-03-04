@@ -121,15 +121,15 @@ function ManageStudentsList() {
                                         <Typography sx={{ fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)', fontWeight: 'bold' }} gutterBottom>
                                             {student.name}
                                         </Typography>
-                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
+                                        {/* <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Average Attendance: {student.attendanceByDays || 'N/A'} {student.attendanceAverage || ''}
-                                        </Typography>
+                                        </Typography> */}
                                         <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Batches: {Array.isArray(student.batches) ? student.batches.map(batch => batch.id).join(', ') : 'N/A'}
                                         </Typography>
-                                        <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
+                                        {/* <Typography sx={{ fontSize: 'var(--font-size-p3)', fontFamily: 'var(--font-p1)', color: 'var(--color-p2)' }}>
                                             Remark By Trainer: {student.remarkByTrainer || 'N/A'}
-                                        </Typography>
+                                        </Typography> */}
                                     </CardContent>
                                     <Grid container justifyContent="space-around" sx={{ marginBottom: '8px' }} spacing={1}>
                                         <Grid item>

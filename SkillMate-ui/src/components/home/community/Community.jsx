@@ -1,18 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Typography, Paper } from "@mui/material";
-import { clearCommunityData } from "../../redux/communityDataSlice";
 import TopTrainersAndStudents from "../../trainer/TopTrainersAndStudents";
-import TrainerSection from "./TrainerSection";
-import StudentSection from "./StudentSection";
 
 const Community = () => {
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(clearCommunityData()); // Clear selected trainer/student
-  }, [token]);
 
   return (
     <div>
@@ -97,8 +90,6 @@ const Community = () => {
       </Box>
       <TopTrainersAndStudents student={"student"} community={true} />
 
-      {/* <TrainerSection />
-      <StudentSection /> */}
     </div>
   );
 };

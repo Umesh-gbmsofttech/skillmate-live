@@ -23,11 +23,11 @@ function adjustBrightness(hexColor, amount) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-const CustomButton = ({ backgroundColor, color, width, text, onClick, padding, margin, marginTop, marginBottom, marginLeft, marginRight }) => {
+const CustomButton = ({ fontWeight, fontSize, fontFamily, backgroundColor, color, width, text, onClick, padding, margin, marginTop, marginBottom, marginLeft, marginRight }) => {
     return (
         <Button
-            onClick={onClick}
-            sx={{
+            onClick={ onClick }
+            sx={ {
                 backgroundColor: backgroundColor || 'var(--color-p3)',
                 color: color || 'var(--color-p1)',
                 width: width || 'auto',
@@ -38,8 +38,9 @@ const CustomButton = ({ backgroundColor, color, width, text, onClick, padding, m
                 marginLeft: marginLeft || 0,
                 marginRight: marginRight || 0,
                 borderRadius: 1,
-                fontFamily: 'var(--font-p1)',
-                fontWeight: 'bold',
+                fontFamily: fontFamily || 'var(--font-p2)',
+                fontSize: fontSize || 'var(--font-size-p3)',
+                fontWeight: fontWeight || 'bold',
                 textTransform: 'uppercase',
                 transition: 'background-color 0.3s ease, transform 0.2s ease',
                 border: 'none',
@@ -56,9 +57,9 @@ const CustomButton = ({ backgroundColor, color, width, text, onClick, padding, m
                     outline: 'none',
                     border: 'none',
                 },
-            }}
+            } }
         >
-            {text}
+            { text }
         </Button>
     );
 };

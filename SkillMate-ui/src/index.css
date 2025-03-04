@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+
 :root {
   --color-p1: #f7f7f7;
   --color-p2: #1A2130;
@@ -9,8 +10,9 @@
   /* --bg-smt: rgba(89, 89, 89, 0.4); */
 
 
-  --font-p1: Cambria;
-  --font-p2: Cochin;
+  --font-p1: Georgia, sans-serif;
+  --font-p2: "PT Sans", Arial, sans-serif;
+  ;
 
   --font-size-p1: 1.6rem;
   --font-size-p2: 1.3rem;
@@ -21,12 +23,12 @@ body {
   margin: 0;
   color: var(--color-p2);
   background-color: var(--color-p1);
-  font-family: var(--font-p1);
+  font-family: var(--font-p2);
   scroll-behavior: smooth;
 }
 
 
-.cursor-tracker {
+/* .cursor-tracker {
   position: absolute;
   width: 100px;
   height: 100px;
@@ -38,4 +40,4 @@ body {
   z-index: 9999;
   filter: blur(50px);
   box-shadow: 0 0 12px rgba(116, 255, 255, 0.4);
-}
+} */

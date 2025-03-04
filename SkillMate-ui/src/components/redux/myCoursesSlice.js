@@ -96,7 +96,7 @@ const fetchCoursesAndBatches = createAsyncThunk(
                                             { headers: { Authorization: `Bearer ${token}` } }
                                         );
                                         if (meetingResponse.data) {
-                                            courseMeetings.push(...(Array.isArray(meetingResponse.data) ? meetingResponse.data : [meetingResponse.data]));
+                                            courseMeetings.push(...(Array.isArray(meetingResponse.data) ? meetingResponse.data : [ meetingResponse.data ]));
                                         }
                                     } catch (meetingError) {
                                         console.error(`Error fetching meetings for batch ${batch.id}:`, meetingError);
@@ -157,7 +157,6 @@ const myCoursesSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
-            //Extra reducers for the new thunk
             .addCase(fetchEnrolledCoursesOnly.pending, (state) => {
                 state.loading = true;
                 state.error = null;

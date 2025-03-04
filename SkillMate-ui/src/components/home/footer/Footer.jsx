@@ -15,7 +15,6 @@ const FooterContainer = styled(Box)({
     justifyContent: 'space-around',
     flexWrap: 'wrap',
     borderTop: '1px solid rgb(78, 78, 78)',
-    // marginTop: '20px',
 });
 
 const FooterSection = styled(Box)({
@@ -37,7 +36,7 @@ const FooterList = styled(List)({
     padding: 0,
 });
 
-const FooterItem = styled(ListItem)({
+const FooterItem = styled(ListItem)(() => ({
     fontFamily: 'var(--font-p1)',
     display: 'flex',
     alignItems: 'center',
@@ -50,19 +49,19 @@ const FooterItem = styled(ListItem)({
     borderRadius: '25px',
     '&:hover': {
         color: 'var(--color-p4)',
-        backgroundColor: 'hsla(0, 0%, 11%, 0.426)',
+        // backgroundColor: 'hsla(0, 0%, 11%, 0.426)', 
         textDecoration: 'none',
     },
-});
+}));
 
 const AddressItem = ({ address, href }) => {
     return (
         <ListItem
             component="a"
-            href={href}
+            href={ href }
             target="_blank"
             rel="noopener noreferrer"
-            sx={{
+            sx={ {
                 fontFamily: 'var(--font-p1)',
                 display: 'flex',
                 alignItems: 'center',
@@ -78,21 +77,21 @@ const AddressItem = ({ address, href }) => {
                     backgroundColor: 'transparent',
                     textDecoration: 'none',
                 },
-            }}
+            } }
         >
-            <Typography variant="body2" fontFamily={'var(--font-p1)'}>{address}</Typography>
+            <Typography variant="body2" fontFamily={ 'var(--font-p1)' }>{ address }</Typography>
         </ListItem>
     );
 };
 
-const FooterItemLink = styled(Link)({
+const FooterItemLink = styled(Link)(() => ({
     textDecoration: 'none',
     color: 'var(--color-p1)',
     '&:hover': {
         color: 'var(--color-p4)',
         textDecoration: 'none',
     },
-});
+}));
 
 function Footer() {
     return (
@@ -102,16 +101,13 @@ function Footer() {
                     <FooterHeading variant="h6">Get in touch</FooterHeading>
                     <FooterList>
                         <FooterItem component="a" href="https://www.instagram.com/_skillmate/" target="_blank" rel="noopener noreferrer">
-                            <ListItemIcon><InstagramIcon sx={{ color: '#FDFFE2' }} /></ListItemIcon>
-                            Instagram
+                            <ListItemIcon><InstagramIcon sx={ { color: 'var(--color-p1)' } } /><p style={ { color: "var(--color-p1)", marginLeft: "10px" } }>Instagram</p></ListItemIcon>
                         </FooterItem>
                         <FooterItem component="a" href="https://www.facebook.com/profile.php?id=61563688179860" target="_blank" rel="noopener noreferrer">
-                            <ListItemIcon><FacebookIcon sx={{ color: '#FDFFE2' }} /></ListItemIcon>
-                            Facebook
+                            <ListItemIcon><FacebookIcon sx={ { color: 'var(--color-p1)' } } /><p style={ { color: "var(--color-p1)", marginLeft: "10px" } }>Facebook</p></ListItemIcon>
                         </FooterItem>
                         <FooterItem component="a" href="https://www.linkedin.com/company/104900751/admin/dashboard/" target="_blank" rel="noopener noreferrer">
-                            <ListItemIcon><LinkedInIcon sx={{ color: '#FDFFE2' }} /></ListItemIcon>
-                            LinkedIn
+                            <ListItemIcon><LinkedInIcon sx={ { color: 'var(--color-p1)' } } /><p style={ { color: "var(--color-p1)", marginLeft: "10px" } }>LinkedIn</p></ListItemIcon>
                         </FooterItem>
                     </FooterList>
                 </FooterSection>
@@ -163,9 +159,6 @@ function Footer() {
                         </FooterItem>
                         <FooterItem>
                             <FooterItemLink to="/skillmate/what-we-offer">What We Offer</FooterItemLink>
-                        </FooterItem>
-                        <FooterItem>
-                            {/* <FooterItemLink to="/why-skillmate">Why SkillMate?</FooterItemLink> */}
                         </FooterItem>
                     </FooterList>
                     <FooterList>

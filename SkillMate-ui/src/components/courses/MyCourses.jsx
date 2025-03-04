@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Typography, Grid, Card, CardContent, CardMedia, CircularProgress } from "@mui/material";
 import logo from "../../assets/skillmate.jpg";
 import { fetchCoursesAndBatches } from "../redux/myCoursesSlice";
 import LiveSessions from "../subscription/LiveSessions";
+import { showErrorToast, showSuccessToast } from "../utility/ToastService";
+import Details from "../utility/Details";
 
 function MyCourses() {
     const dispatch = useDispatch();
@@ -11,6 +13,8 @@ function MyCourses() {
     const userData = useSelector((state) => state.auth.userData);
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const { courses, loading, error } = useSelector((state) => state.myCourses);
+    const [fullDescription, setFullDescription] = useState('');
+    const [openDialog, setOpenDialog] = useState(false);
 
     console.log(courses)
 
@@ -19,6 +23,18 @@ function MyCourses() {
             dispatch(fetchCoursesAndBatches(userData.id));
         }
     }, [isAuthenticated, userData?.id, courses.length, dispatch]);
+
+    // Handle open dialog
+    const handleOpenDialog = (description) => {
+        setFullDescription(description);
+        setOpenDialog(true);
+    };
+
+    // Handle close dialog
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setFullDescription('');
+    };
 
     if (loading) {
         return <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh"><CircularProgress /></Box>;
@@ -33,12 +49,12 @@ function MyCourses() {
     }
 
     return (
-        <Box padding={4}>
-            <Typography variant="h4" color="primary" gutterBottom align="center">
+        <Box padding={4} textAlign={'center'}>
+            <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' }, mb: 3 }}>
                 My Courses
             </Typography>
 
-            <Typography variant="body1" color="textSecondary" align="center" sx={{ marginBottom: 2 }}>
+            <Typography sx={{ marginBottom: 2, fontSize: 'var(--font-size-p2)', fontFamily: 'var(--font-p2)', color: 'var(--color-p2)' }}>
                 Number of Courses: {courses.length}
             </Typography>
 
@@ -53,20 +69,25 @@ function MyCourses() {
                                 image={course.image ? `data:image/png;base64,${course.image}` : logo}
                             />
                             <CardContent sx={{ flexGrow: 1 }}>
-                                <Typography variant="h6" gutterBottom>{course.title}</Typography>
-                                <Typography variant="body2" color="textSecondary">Price: {course.price}</Typography>
-                                <Typography variant="body2" color="textSecondary">Description: {course.description}</Typography>
-                                <Typography variant="body2" color="textSecondary">Days: {course.days}</Typography>
+                                <Typography sx={{ fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p2)', mb: 1 }}>{course.title}</Typography>
+                                <Typography sx={{ fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p3)' }}>Price: {course.price} /-</Typography>
+                                <Typography sx={{ fontWeight: 'bold', fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p3)' }}>Duration: {course.days} Days</Typography>
+                                <Typography onClick={() => handleOpenDialog(course.description)} sx={{ overflow: 'hidden', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, fontFamily: 'var(--font-p2)', fontSize: 'var(--font-size-p3)', cursor: 'pointer', mt: 1 }}>Description: {course.description}</Typography>
                                 <Typography variant="body2" color="textSecondary">
                                     Meetings: {course.meetings?.length || 0}
                                 </Typography>
                             </CardContent>
+                            <Box sx={{ textAlign: "center", justifyContent: "center", paddingTop: "10px" }}>
+                                <Typography onClick={async () => { showSuccessToast(`hi ${userData?.name} redirecting to review page`) }} sx={{ cursor: "pointer", display: 'inline' }}>  write review</Typography>
+                            </Box>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
 
             <LiveSessions myCourses={courses} userData={userData} token={token} />
+
+            <Details open={openDialog} onClose={handleCloseDialog} title="Course Description" content={fullDescription} />
         </Box>
     );
 }

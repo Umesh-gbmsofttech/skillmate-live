@@ -16,13 +16,14 @@ const containerVariants = {
 };
 
 function StudentProfile() {
-    const [showProfile, setShowProfile] = useState(false);
-    const [showPDF, setShowPDF] = useState(false);
+    const [ tilt, setTilt ] = useState({ x: 0, y: 0 });
+    const [ showProfile, setShowProfile ] = useState(false);
+    const [ showPDF, setShowPDF ] = useState(false);
     const userData = useSelector((state) => state.auth.userData);
     const location = useLocation();
     const navigate = useNavigate();
     const { username } = location.state || { username: 'Admin' };
-    const [openDialog, setOpenDialog] = useState(null);
+    const [ openDialog, setOpenDialog ] = useState(null);
     const { courses, batches } = useSelector((state) => state.myCourses); // Access batches from state
     const token = useSelector((state) => state.auth.token);
     const dispatch = useDispatch();
@@ -34,7 +35,7 @@ function StudentProfile() {
         address: userData?.address || '123 Main St, City, State, Zip',
         qualification: userData?.qualification || 'Bachelor of Science, Computer Science',
         workStatus: userData?.workingStatus || 'Full-Time',
-        technologies: userData?.technologies || ['JavaScript', 'React', 'Node.js'],
+        technologies: userData?.technologies || [ 'JavaScript', 'React', 'Node.js' ],
         image: userData?.image ? `data:image/jpeg;base64,${userData.image}` : defaultProfilePic,
         resume: userData?.resume,
     };
@@ -45,12 +46,27 @@ function StudentProfile() {
 
     useEffect(() => {
         if (userData?.id && token) {
-            dispatch(fetchCoursesAndBatches(userData.id)); //Keeps original functionality
-            dispatch(fetchEnrolledCoursesOnly(userData.id)); //Fetches only enrolled courses
+            dispatch(fetchCoursesAndBatches(userData.id));
+            dispatch(fetchEnrolledCoursesOnly(userData.id));
         }
-    }, [userData?.id, token, dispatch]);
 
-    const myCoursesLength = useSelector((state) => state.myCourses.enrolledCoursesOnly.length); //Use the new state variable
+        const handleMouseMove = (e) => {
+            const { clientX, clientY } = e;
+            const { innerWidth, innerHeight } = window;
+            const x = (clientX / innerWidth - 0.5) * 20;
+            const y = (clientY / innerHeight - 0.5) * -20;
+            setTilt({ x, y });
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+
+        // Cleanup event listener when component is unmounted
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, [ userData?.id, token, dispatch ]);
+
+    const myCoursesLength = useSelector((state) => state.myCourses.enrolledCoursesOnly.length);
     const meetingsLength = useSelector(state => state.myCourses.courses.reduce((acc, course) => acc + (course.meetings ? course.meetings.length : 0), 0));
     const batchesLength = useSelector(state => state.myCourses.batches.length);
 
@@ -60,108 +76,117 @@ function StudentProfile() {
 
     return (
         <>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', p: 2 }}>
-                <Card
-                    component={motion.div}
-                    initial="hidden"
-                    animate="visible"
-                    variants={containerVariants}
-                    sx={{ width: 400, textAlign: 'center', p: 4, borderRadius: 4, boxShadow: 6 }}
-                >
-                    <Avatar
-                        src={user.image}
-                        alt={user.name}
-                        sx={{
-                            width: 100,
-                            height: 100,
-                            cursor: 'pointer',
-                            boxShadow: 4,
-                            m: '0 auto',
-                            transition: '0.3s',
-                            '&:hover': { transform: 'scale(1.1)' },
-                        }}
-                        onClick={() => setShowProfile(!showProfile)}
-                    />
-                    <Typography variant="h5" fontWeight="bold" mt={2}>
-                        {userData?.roles[0] !== 'STUDENT' ? username : user.name}
-                        <IconButton onClick={handleUpdateAccountClick} color="secondary" sx={{
-                            '&:focus': {
-                                outline: 'none',
-                                border: 'none',
-                            },
-                        }}>
-                            <Edit />
-                        </IconButton>
-                    </Typography>
-                    <Typography variant="subtitle2">{user.email}</Typography>
+            <Box sx={ { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', p: 2 } }>
+                <motion.div style={ { perspective: "1000px" } }>
+                    <motion.div
+                        style={ {
+                            transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
+                            transition: "transform 0.1s ease-out",
+                        } }
+                    >
+                        <Card
+                            component={ motion.div }
+                            initial="hidden"
+                            animate="visible"
+                            variants={ containerVariants }
+                            sx={ { width: 370, textAlign: 'center', p: 4, borderRadius: 4, boxShadow: 6 } }
+                        >
+                            <Avatar
+                                src={ user.image }
+                                alt={ user.name }
+                                sx={ {
+                                    width: 100,
+                                    height: 100,
+                                    cursor: 'pointer',
+                                    boxShadow: 4,
+                                    m: '0 auto',
+                                    transition: '0.3s',
+                                    '&:hover': { transform: 'scale(1.1)' },
+                                } }
+                                onClick={ () => setShowProfile(!showProfile) }
+                            />
+                            <Typography variant="h5" fontWeight="bold" mt={ 2 }>
+                                { userData?.roles[ 0 ] !== 'STUDENT' ? username : user.name }
+                                <IconButton onClick={ handleUpdateAccountClick } color="secondary" sx={ {
+                                    '&:focus': {
+                                        outline: 'none',
+                                        border: 'none',
+                                    },
+                                } }>
+                                    <Edit />
+                                </IconButton>
+                            </Typography>
+                            <Typography variant="subtitle2">{ user.email }</Typography>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-                        {[{ label: "Courses", value: myCoursesLength }, { label: "Batches", value: batchesLength }, { label: "Meetings", value: meetingsLength }].map((item, index) => (
-                            <Box key={index} sx={{ textAlign: "center", mx: 1 }}>
-                                <Typography variant="h6">{item.value}</Typography>
-                                <CustomButton text={`${item.label}`} onClick={() => setOpenDialog(item.label.toLowerCase())} />
+                            <Box sx={ { display: 'flex', justifyContent: 'center', mt: 3 } }>
+                                { [ { label: "Courses", value: myCoursesLength }, { label: "Batches", value: batchesLength }, { label: "Meetings", value: meetingsLength } ].map((item, index) => (
+                                    <Box key={ index } sx={ { textAlign: "center", mx: 1 } }>
+                                        <Typography variant="h6">{ item.value }</Typography>
+                                        <CustomButton text={ `${item.label}` } onClick={ () => setOpenDialog(item.label.toLowerCase()) } />
+                                    </Box>
+                                )) }
                             </Box>
-                        ))}
-                    </Box>
-                </Card>
-            </Box>
+                        </Card>
+                    </motion.div>
+                </motion.div>
+            </Box >
 
-            {showProfile && (
-                <Dialog open={showProfile} onClose={() => setShowProfile(false)} maxWidth="sm" fullWidth>
-                    <Box sx={{ p: 3 }}>
+            { showProfile && (
+                <Dialog open={ showProfile } onClose={ () => setShowProfile(false) } maxWidth="sm" fullWidth>
+                    <Box sx={ { p: 3 } }>
                         <Typography variant="h6" textAlign="center">My Details</Typography>
-                        <IconButton onClick={() => setShowProfile(false)} sx={{ position: 'absolute', right: 8, top: 8 }}>
+                        <IconButton onClick={ () => setShowProfile(false) } sx={ { position: 'absolute', right: 8, top: 8 } }>
                             <Close />
                         </IconButton>
-                        {[
+                        { [
                             { label: 'Phone', value: user.mobile },
                             { label: 'Address', value: user.address },
                             { label: 'Education', value: user.qualification },
                             { label: 'Work Status', value: user.workStatus },
                         ].map(({ label, value }, index) => (
-                            <Box key={index} sx={{ boxShadow: 2, borderRadius: 1, p: 1, mb: 1, ":hover": { boxShadow: 5 }, fontFamily: "var(--font-p1)", }}>
-                                <Typography variant="body1" fontWeight="bold">{label}:</Typography>
-                                <Typography variant="body2">{value}</Typography>
+                            <Box key={ index } sx={ { boxShadow: 2, borderRadius: 1, p: 1, mb: 1, ":hover": { boxShadow: 5 }, fontFamily: "var(--font-p1)", } }>
+                                <Typography variant="body1" fontWeight="bold">{ label }:</Typography>
+                                <Typography variant="body2">{ value }</Typography>
                             </Box>
-                        ))}
-                        {user.resume && (
-                            <Button variant="outlined" sx={{ mt: 3 }} onClick={() => setShowPDF(true)}>
+                        )) }
+                        { user.resume && (
+                            <Button variant="outlined" sx={ { mt: 3 } } onClick={ () => setShowPDF(true) }>
                                 View Resume
                             </Button>
-                        )}
+                        ) }
                     </Box>
                 </Dialog>
-            )}
+            )
+            }
 
-            <Dialog open={showPDF} onClose={() => setShowPDF(false)} maxWidth="md" fullWidth>
+            <Dialog open={ showPDF } onClose={ () => setShowPDF(false) } maxWidth="md" fullWidth>
                 <DialogTitle>
                     <Typography variant="h6" textAlign="center">My Resume</Typography>
-                    <IconButton onClick={() => setShowPDF(false)} sx={{ position: 'absolute', right: 8, top: 8 }}>
+                    <IconButton onClick={ () => setShowPDF(false) } sx={ { position: 'absolute', right: 8, top: 8 } }>
                         <Close />
                     </IconButton>
                 </DialogTitle>
-                <Box sx={{ p: 2 }}>
-                    {user.resume ? (
+                <Box sx={ { p: 2 } }>
+                    { user.resume ? (
                         <iframe
-                            src={`data:application/pdf;base64,${user.resume}`}
+                            src={ `data:application/pdf;base64,${user.resume}` }
                             width="100%"
                             height="600px"
                             title="Resume"
                         />
                     ) : (
                         <Typography>No resume uploaded.</Typography>
-                    )}
+                    ) }
                 </Box>
             </Dialog>
 
-            <Dialog open={openDialog === 'courses'} onClose={handleCloseDialog} fullWidth maxWidth="md">
-                <DialogTitle>My Courses</DialogTitle>
+            <Dialog open={ openDialog === 'courses' } onClose={ handleCloseDialog } fullWidth maxWidth="md">
                 <MyCourses />
             </Dialog>
 
-            <Dialog open={openDialog === 'meetings'} onClose={handleCloseDialog} fullWidth maxWidth="md">
+            <Dialog open={ openDialog === 'meetings' } onClose={ handleCloseDialog } fullWidth maxWidth="md">
                 <DialogTitle>My Meetings</DialogTitle>
-                <LiveSessions myCourses={courses} userData={userData} token={token} />
+                <LiveSessions myCourses={ courses } userData={ userData } token={ token } />
             </Dialog>
         </>
     );

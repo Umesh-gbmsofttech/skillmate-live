@@ -3,9 +3,7 @@ import axios from 'axios';
 import baseUrl from '../../components/urls/baseUrl';
 import { showSuccessToast, showErrorToast } from '../../components/utility/ToastService';
 
-/** 
- * Async thunk to fetch courses 
- */
+
 export const fetchCourses = createAsyncThunk('courses/fetchCourses', async (_, { rejectWithValue }) => {
     try {
         const response = await axios.get(`${baseUrl}courses`, {
@@ -17,9 +15,6 @@ export const fetchCourses = createAsyncThunk('courses/fetchCourses', async (_, {
     }
 });
 
-/** 
- * Async thunk to add a course 
- */
 export const addCourse = createAsyncThunk('courses/addCourse', async (courseData, { rejectWithValue }) => {
     try {
         const response = await axios.post(`${baseUrl}courses`, courseData, {
@@ -33,9 +28,6 @@ export const addCourse = createAsyncThunk('courses/addCourse', async (courseData
     }
 });
 
-/** 
- * Async thunk to update a course 
- */
 export const updateCourse = createAsyncThunk('courses/updateCourse', async (updatedCourse, { rejectWithValue }) => {
     try {
         const courseId = Number(updatedCourse.id); // Ensure ID is a number
@@ -55,10 +47,6 @@ export const updateCourse = createAsyncThunk('courses/updateCourse', async (upda
     }
 });
 
-
-/** 
- * Async thunk to delete a course 
- */
 export const deleteCourse = createAsyncThunk('courses/deleteCourse', async (courseId, { rejectWithValue, dispatch }) => {
     try {
         const response = await axios.delete(`${baseUrl}courses/${courseId}`, {
@@ -78,9 +66,7 @@ export const deleteCourse = createAsyncThunk('courses/deleteCourse', async (cour
     }
 });
 
-/** 
- * Redux Slice 
- */
+
 const coursesSlice = createSlice({
     name: 'courses',
     initialState: {
@@ -128,7 +114,7 @@ const coursesSlice = createSlice({
                 state.status = 'succeeded';
                 const index = state.courses.findIndex((course) => course.id === action.payload.id); // Use id, not _id
                 if (index !== -1) {
-                    state.courses[index] = action.payload;
+                    state.courses[ index ] = action.payload;
                 }
             })
 
@@ -141,7 +127,5 @@ const coursesSlice = createSlice({
             });
     },
 });
-
-// Export actions and reducer
 export const { addToMyCourses } = coursesSlice.actions;
 export default coursesSlice.reducer;

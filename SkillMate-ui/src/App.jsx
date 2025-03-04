@@ -4,10 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/home/Navbar';
 import Contact from './components/contact/Contact';
 import Courses from './components/courses/Courses';
-import CardSection from './components/home/CardSection';
 import StudentSignUp from './components/auth/StudentSignUp';
 import TrainerSignUp from './components/auth/TrainerSignUp';
-// import Footer from './components/home/Footer';
 import Community from './components/home/community/Community';
 import Subscription from './components/subscription/Subscription';
 import TopTrainersAndStudents from './components/trainer/TopTrainersAndStudents';
@@ -24,8 +22,6 @@ import ManageStudentsList from './components/student/ManageStudentsList';
 import AdEditCourse from './components/courses/Ad_EditCourse';
 import ManageCoursesList from './components/courses/ManageCoursesList';
 import ReviewsSection from './components/rating-review/ReviewsSection';
-import LeaveRatingReview from './components/rating-review/Leave_Rating_Review';
-import RatingCard from './components/rating-review/RatingCard';
 import LoginWithEmail from './components/auth/LoginWithEmail';
 import LoginWithMobile from './components/auth/LoginWithMobile';
 import Student_Or_Trainer_signup from './components/auth/Student_Or_Trainer_signup';
@@ -57,6 +53,7 @@ import Chatbot from './components/home/chatbot/Chatbot';
 import AssignCourseToTrainer from './components/admin/AssignCourseToTrainer';
 import About from './components/home/footer/skillmate/About';
 import WhatWeOffer from './components/home/footer/skillmate/WhatWeOffer';
+import WriteReview from './components/rating-review/WriteReview';
 
 
 function App() {
@@ -79,37 +76,34 @@ function App() {
   useEffect(() => {
     if (!showForm) {
       const timer = setTimeout(() => {
-        openForm(); // Open form after 5 seconds
-      }, 100000);
+        openForm(); // Open form after 5 minutes in loop
+      }, 50000);
       return () => clearTimeout(timer); // Cleanup timer
     }
   }, [showForm]);
 
 
   // Mouse move event listener for cursor tracker
-  useEffect(() => {
-    const handleMouseMove = (event) => {
-      const cursor = document.querySelector('.cursor-tracker');
-      cursor.style.left = `${event.pageX}px`;
-      cursor.style.top = `${event.pageY}px`;
-    };
+  // useEffect(() => {
+  //   const handleMouseMove = (event) => {
+  //     const cursor = document.querySelector('.cursor-tracker');
+  //     cursor.style.left = `${event.pageX}px`;
+  //     cursor.style.top = `${event.pageY}px`;
+  //   };
 
-    // Adding the event listener when component mounts
-    document.addEventListener("mousemove", handleMouseMove);
+  //   // Adding the event listener when component mounts
+  //   document.addEventListener("mousemove", handleMouseMove);
 
-    // Cleanup the event listener when component unmounts
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+  //   // Cleanup the event listener when component unmounts
+  //   return () => {
+  //     document.removeEventListener("mousemove", handleMouseMove);
+  //   };
+  // }, []);
   return (
     // debouncing throatling
-    //rahulrathod2002
-
-
 
     <Router>
-      <div className="cursor-tracker"></div>
+      {/* <div className="cursor-tracker"></div> */}
       <Navbar />
       <Routes>
         <Route path="*" element={<h1 className='page-not-found-error-msg'>404 - Page Not Found</h1>} />
@@ -118,7 +112,6 @@ function App() {
             {/* home */}
             <Carousel />
             <ConfirmationDialog />
-            {/* <CardSection /> */}
             <Courses topCourses={true} />
             <TopTrainersAndStudents sectionHeading={'Our Top Trainers'} trainer={'trainer'} />
             <TopTrainersAndStudents sectionHeading={'Successfully	Placed	Students'} student={'student'} />
@@ -139,6 +132,7 @@ function App() {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/student-or-trainer/signup" element={<Student_Or_Trainer_signup />} />
         <Route path="/reviews-section" element={<ReviewsSection />} />
+        <Route path="/reviews-section/write" element={<WriteReview />} />
         <Route path="/community" element={<Community />} />
         <Route path="/subscriptions" element={<Subscription />} />
         <Route path="/about" element={<Footer />} />
@@ -152,8 +146,6 @@ function App() {
         <Route path="/admin-profile/manage-students" element={<ManageStudentsList />} />
         <Route path="/admin-profile/edit-courses" element={<AdEditCourse />} />
         <Route path="/admin-profile/manage-courses" element={<ManageCoursesList />} />
-        <Route path="/rating-reviews/page" element={<LeaveRatingReview />} />
-        <Route path="/rating-reviews/page/card" element={<RatingCard />} />
         <Route path="/admin-profile/edit-course" element={<AddCourseForm />} />
 
         <Route path="/buy-course" element={<BuyCourse />} />
@@ -161,7 +153,6 @@ function App() {
         <Route path="/admin-profile/manage-batches" element={<ManageBatches />} />
         <Route path="/admin-profile/manage-batches/create/new" element={<CreateBatch />} />
         <Route path="/admin-profile/manage-batches/edit/:batchId" element={<UpdateBatch />} />
-        {/* <Route path="/rating_review_form" element={<RatingForm />} /> */}
 
         {/* Footer Career section */}
         <Route path="/careers/software-engineer" element={<SoftwareEngineer />} />
@@ -185,7 +176,7 @@ function App() {
 
       <ToastContainer
         // position="bottom-center"
-        position="bottom-right"
+        position="top-center"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}

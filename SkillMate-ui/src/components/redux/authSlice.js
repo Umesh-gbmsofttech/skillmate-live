@@ -5,11 +5,11 @@ const authSlice = createSlice({
   initialState: {
     token: localStorage.getItem('token') || null,
     isAuthenticated: !!localStorage.getItem('token'),
-    username: localStorage.getItem('username') || null,  // Retrieve username from localStorage
+    username: localStorage.getItem('username') || null,
     email: '',
     mobileNumber: '',
     otp: '',
-    userData: localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null, // Safe check
+    userData: localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null,
     error: null,
     isOtpSent: false,
     isOtpVerified: false,
@@ -17,36 +17,36 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (state, action) => {
       state.token = action.payload.token;
-      localStorage.setItem('token', action.payload.token); // Persist token
+      localStorage.setItem('token', action.payload.token);
 
       // Check if userData exists in payload, otherwise fallback for Admin
       if (action.payload.userData) {
         state.username = action.payload.userData.name || state.username;
         state.userData = action.payload.userData;
-        localStorage.setItem('userData', JSON.stringify(action.payload.userData)); // Persist userData
+        localStorage.setItem('userData', JSON.stringify(action.payload.userData));
       } else {
         // Admin case - only token is returned, so username is hardcoded or kept null
-        state.username = 'ADMIN'; // Admin role or fallback username
+        state.username = 'ADMIN';
         state.userData = null;
-        localStorage.removeItem('userData'); // Ensure userData is removed for Admin
+        localStorage.removeItem('userData');
       }
 
       // Persist username in localStorage
-      localStorage.setItem('username', state.username);  // Set username to localStorage
+      localStorage.setItem('username', state.username);
 
       state.isAuthenticated = true;
     },
     logout: (state) => {
       state.token = null;
-      localStorage.removeItem('token'); // Clear token
+      localStorage.removeItem('token');
       state.username = null;
-      localStorage.removeItem('username'); // Clear username from localStorage
+      localStorage.removeItem('username');
       state.isAuthenticated = false;
       state.mobileNumber = '';
       state.email = null;
       state.otp = '';
       state.userData = null;
-      localStorage.removeItem('userData'); // Clear userData
+      localStorage.removeItem('userData');
       state.isOtpSent = false;
       state.isOtpVerified = false;
       state.error = null;

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Box, TextField, Button, CircularProgress, Typography, MenuItem } from '@mui/material';
 import baseUrl from '../urls/baseUrl';
 import { handleProfilePicChange, handleResumeChange } from '../utility/FileUploadHelper';
+import { showErrorToast, showSuccessToast, showWarningToast } from '../utility/ToastService';
 
 function StudentProfileUpdate() {
     const [formData, setFormData] = useState({
@@ -62,16 +63,16 @@ function StudentProfileUpdate() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.name || !formData.mobileNumber || !formData.email) {
-            alert('Please fill in all required fields!');
+            showWarningToast('Please fill in all required fields!');
             return;
         }
         try {
             await axios.put(`${baseUrl}students/${studentId}`, formData);
-            alert('Student updated successfully!');
+            showSuccessToast('Student updated successfully!');
             navigate('/admin-profile/manage-students');
         } catch (error) {
             console.error('Error updating student data:', error.response || error.message);
-            alert('An error occurred while updating the student.');
+            showErrorToast('An error occurred while updating the student.');
         }
     };
 

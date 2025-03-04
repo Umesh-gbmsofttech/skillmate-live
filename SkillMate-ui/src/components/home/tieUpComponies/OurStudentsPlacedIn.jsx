@@ -1,101 +1,99 @@
 import React from 'react';
-import companyLogo from '../../../assets/google.png'; // Sample logo, replace with actual logo paths.
 import styled, { keyframes } from 'styled-components';
 import { Box, Typography } from '@mui/material';
+import l1 from '../../../assets/tieUpCompanies/1.png';
+import l2 from '../../../assets/tieUpCompanies/2.png';
+import l3 from '../../../assets/tieUpCompanies/3.png';
+import l4 from '../../../assets/tieUpCompanies/4.png';
+import l5 from '../../../assets/tieUpCompanies/5.png';
+import l6 from '../../../assets/tieUpCompanies/6.png';
+import l7 from '../../../assets/tieUpCompanies/7.png';
+import l8 from '../../../assets/tieUpCompanies/8.png';
+import l9 from '../../../assets/tieUpCompanies/9.png';
+import l10 from '../../../assets/tieUpCompanies/10.png';
+import l11 from '../../../assets/tieUpCompanies/11.png';
+import l12 from '../../../assets/tieUpCompanies/12.png';
+import l13 from '../../../assets/tieUpCompanies/13.png';
+import l14 from '../../../assets/tieUpCompanies/14.png';
+import l15 from '../../../assets/tieUpCompanies/15.png';
+import l16 from '../../../assets/tieUpCompanies/16.png';
+import l17 from '../../../assets/tieUpCompanies/17.png';
+import l18 from '../../../assets/tieUpCompanies/18.png';
+import l19 from '../../../assets/tieUpCompanies/19.png';
 
-// Define the scroll animation
+const logos = [ l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19 ];
+const duplicatedLogos = [ ...logos, ...logos ];
+const scrollDuration = logos.length * 2;
+
 const scrollAnimation = keyframes`
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 `;
 
 const Container = styled.div`
     text-align: center;
     margin-top: 50px;
-`;
-
-const Heading = styled.h1`
-    font-family: 'var(--font-p2)';
     margin-bottom: 30px;
-    font-size: 2rem;
-    font-weight: bold;
-`;
-
-const Carousel = styled.div`
-    pointer-events: none; /* Disable all interaction with carousel */
-`;
-
-const CarouselInner = styled.div`
-    display: flex;
     overflow: hidden;
+    white-space: nowrap;
 `;
 
-const CarouselItem = styled.div`
-    flex: 0 0 auto; /* Ensure all items stay in a single row */
+const CarouselWrapper = styled.div`
     display: flex;
-    justify-content: center;
     align-items: center;
-    animation: ${scrollAnimation} 10s linear infinite; /* Animation for auto scroll */
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+`;
+
+const CarouselTrack = styled.div`
+    display: flex;
+    animation: ${scrollAnimation} ${scrollDuration}s linear infinite;
 `;
 
 const CompanyLogo = styled.div`
-    width: 150px; /* Equal width */
-    height: 150px; /* Equal height */
-    overflow: hidden;
-    border-radius: 10px;
+    width: 150px;
+    height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 5px;
+    margin: 0 10px;
 `;
 
 const CompanyLogoImage = styled.img`
-   width: 100%;
+    width: 100%;
     height: 100%;
     object-fit: contain;
     mix-blend-mode: multiply;
 `;
 
 const OurStudentsPlacedIn = () => {
-    const companyLogos = [
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-        companyLogo,
-    ];
 
     return (
         <Container>
-            {/* <Heading>Our Students Placed In</Heading> */}
-            <Box sx={{ padding: 2, textAlign: 'center' }}>
-                <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' } }}>
-                    Our Students Placed In</Typography>
+            <Box sx={ { padding: 2, textAlign: 'center', } }>
+                <Typography sx={ {
+                    textAlign: 'center',
+                    marginTop: 3,
+                    fontWeight: 'bold',
+                    fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' },
+                    fontFamily: 'var(--font-p1)',
+                    backgroundImage: 'linear-gradient(to right, var(--color-p1), rgba(0, 128, 128, 0.6), var(--color-p1))',
+                    display: { xs: 'block', md: 'inline-block' },
+                    padding: { xs: '0 20px', md: '0px' }
+                } }>
+                    Our Students Placed In
+                </Typography>
             </Box>
-
-            {/* Carousel */}
-            <Carousel>
-                <CarouselInner>
-                    {companyLogos.map((logo, index) => (
-                        <CarouselItem key={index}>
-                            <CompanyLogo>
-                                <CompanyLogoImage src={logo} alt={`Company ${index + 1}`} />
-                            </CompanyLogo>
-                        </CarouselItem>
-                    ))}
-                </CarouselInner>
-            </Carousel>
+            <CarouselWrapper>
+                <CarouselTrack>
+                    { duplicatedLogos.map((logo, index) => (
+                        <CompanyLogo key={ index }>
+                            <CompanyLogoImage src={ logo } alt={ `Company ${index + 1}` } />
+                        </CompanyLogo>
+                    )) }
+                </CarouselTrack>
+            </CarouselWrapper>
         </Container>
     );
 };

@@ -66,8 +66,8 @@ function LiveSessions({ myCourses, userData, token }) {
     };
 
     return (
-        <Box padding={4}>
-            <Typography variant="h4" color="primary" gutterBottom align="center">
+        <Box padding={4} textAlign={'center'}>
+            <Typography sx={{ textAlign: 'center', marginTop: 3, fontWeight: 'bold', fontSize: { xs: 'var(--font-size-p2)', md: 'var(--font-size-p1)' }, fontFamily: 'var(--font-p2)', backgroundImage: 'linear-gradient(to right, var(--color-p1),rgba(0, 128, 128, 0.6),var(--color-p1))', display: { xs: 'block', md: 'inline-block' }, border: "none", padding: { xs: '0 20px', md: '0px' }, mb: 3 }}>
                 Upcoming Live Sessions
             </Typography>
 
@@ -106,7 +106,7 @@ function LiveSessions({ myCourses, userData, token }) {
                         ))
                     )
                 ) : (
-                    <Typography variant="h6" color="textSecondary" align="center">
+                    <Typography sx={{ textAlign: 'center', fontSize: { xs: 'var(--font-size-p3)', md: 'var(--font-size-p2)' }, fontFamily: 'var(--font-p2)', color: 'var(--color-p4)' }}>
                         No live sessions available.
                     </Typography>
                 )}

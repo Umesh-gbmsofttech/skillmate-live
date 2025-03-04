@@ -18,7 +18,8 @@ public class MeetingController {
 
     @PostMapping
     public Meeting addMeeting(@RequestBody Meeting meeting) {
-        here i need to write a notification or reminder logic for student to say their meeting is sceduled at
+        // here i need to write a notification or reminder logic for student to say
+        // their meeting is sceduled at
         return meetingService.saveMeeting(meeting);
     }
 

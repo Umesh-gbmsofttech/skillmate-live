@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import { Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './ToastService.css';  // Import the custom styles
+import './ToastService.css';
 
 // Success Toast
 export const showSuccessToast = (message, options = {}) => {
@@ -14,7 +14,7 @@ export const showSuccessToast = (message, options = {}) => {
         progress: undefined,
         theme: "light",
         transition: Bounce,
-        className: "toast-success",  // Apply custom class
+        className: "toast-success",
         ...options,
     });
 };

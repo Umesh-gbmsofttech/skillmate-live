@@ -2,7 +2,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import coursesReducer from './coursesSlice';
-import communityDataReducer from './communityDataSlice';
 import myCoursesReducer from './myCoursesSlice';
 import trainerCoursesReducer from './trainerCoursesSlice';
 import trainerBatchesReducer from './trainerBatchesSlice';
@@ -13,7 +12,6 @@ const store = configureStore({
   reducer: {
     auth: authReducer,
     courses: coursesReducer,
-    communityData: communityDataReducer,
     myCourses: myCoursesReducer,
     trainerCourses: trainerCoursesReducer,
     trainerBatches: trainerBatchesReducer,
