@@ -142,8 +142,8 @@ function Courses({ topCourses = false }) {
                   </Box>
                 </Box>
                 <Box sx={ { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', paddingTop: 1 } }>
-                  <CustomButton onClick={ () => handleContactUsClick(course) } text="Contact" padding={ '1px 10px' } />
-                  <CustomButton onClick={ () => handleBuyNowClick(course) } text="BUY NOW" padding={ '1px 10px' } />
+                  <CustomButton onClick={ () => handleContactUsClick(course) } text="Contact" padding={ '4px 10px' } buttonFontSize={ '0.7rem' } />
+                  <CustomButton onClick={ () => handleBuyNowClick(course) } text="BUY NOW" padding={ '4px 10px' } buttonFontSize={ '0.7rem' } />
                 </Box>
               </Card>
             );

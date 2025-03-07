@@ -7,7 +7,7 @@ import { handleProfilePicChange, handleResumeChange } from '../utility/FileUploa
 import { showErrorToast, showSuccessToast, showWarningToast } from '../utility/ToastService';
 
 function StudentProfileUpdate() {
-    const [formData, setFormData] = useState({
+    const [ formData, setFormData ] = useState({
         name: '',
         mobileNumber: '',
         email: '',
@@ -17,16 +17,23 @@ function StudentProfileUpdate() {
         image: '',
         resume: '',
     });
-    const [loading, setLoading] = useState(true);
+    const [ loading, setLoading ] = useState(true);
     const { studentId } = useParams();
     const navigate = useNavigate();
-    const [previewImage, setPreviewImage] = useState('');
-    const [pdfFile, setPdfFile] = useState(null);
-    const [showResume, setShowResume] = useState(false);
-    const [error, setError] = useState('');
+    const [ previewImage, setPreviewImage ] = useState('');
+    const [ pdfFile, setPdfFile ] = useState(null);
+    const [ showResume, setShowResume ] = useState(false);
+    const [ error, setError ] = useState('');
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
 
     useEffect(() => {
         const fetchStudentData = async () => {
+            if (!isAuthenticated) {
+                setLoading(false);
+                navigate('/login/mobile');
+                return;
+            }
             try {
                 const response = await axios.get(`${baseUrl}students/${studentId}`);
                 const student = response.data;
@@ -53,11 +60,11 @@ function StudentProfileUpdate() {
         } else {
             navigate('/admin-dashboard');
         }
-    }, [studentId, navigate]);
+    }, [ studentId, navigate ]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
+        setFormData((prevData) => ({ ...prevData, [ name ]: value }));
     };
 
     const handleSubmit = async (e) => {
@@ -68,11 +75,12 @@ function StudentProfileUpdate() {
         }
         try {
             await axios.put(`${baseUrl}students/${studentId}`, formData);
-            showSuccessToast('Student updated successfully!');
-            navigate('/admin-profile/manage-students');
+            showSuccessToast('Profile updated successfully \n Please login again!');
+            navigate('/login/mobile');
+            // navigate('/admin-profile/manage-students');
         } catch (error) {
-            console.error('Error updating student data:', error.response || error.message);
-            showErrorToast('An error occurred while updating the student.');
+            console.error('Error updating student profile:', error.response || error.message);
+            showErrorToast('An error occurred while updating the Profile.');
         }
     };
 
@@ -84,15 +92,15 @@ function StudentProfileUpdate() {
     }
 
     return (
-        <Box sx={{ padding: 4, backgroundColor: '#f7f7f71b', borderRadius: 2, marginTop: 2, marginLeft: 2, marginRight: 2 }}>
+        <Box sx={ { padding: 4, backgroundColor: '#f7f7f71b', borderRadius: 2, marginTop: 2, marginLeft: 2, marginRight: 2 } }>
             <Typography variant="h4" gutterBottom>Edit Student Information</Typography>
-            <form onSubmit={handleSubmit}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <form onSubmit={ handleSubmit }>
+                <Box sx={ { display: 'flex', flexDirection: 'column', gap: 2 } }>
+                    <Box sx={ { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 } }>
                         <img
-                            src={previewImage}
+                            src={ previewImage }
                             alt="Student Profile"
-                            style={{ width: 200, height: 200, objectFit: 'cover', borderRadius: '50%' }}
+                            style={ { width: 200, height: 200, objectFit: 'cover', borderRadius: '50%' } }
                         />
                         <Button variant="contained" component="label">
                             Upload Profile Picture
@@ -100,45 +108,45 @@ function StudentProfileUpdate() {
                                 type="file"
                                 hidden
                                 accept="image/*"
-                                onChange={(e) => handleProfilePicChange(
+                                onChange={ (e) => handleProfilePicChange(
                                     e,
                                     (img) => {
                                         setFormData((prev) => ({ ...prev, image: img }));
                                         setPreviewImage(`data:image/png;base64,${img}`);
                                     },
                                     setError
-                                )}
+                                ) }
                             />
                         </Button>
                     </Box>
-                    <TextField label="Full Name" name="name" value={formData.name} onChange={handleChange} fullWidth variant="outlined" margin="normal" />
-                    <TextField label="Mobile Number" name="mobileNumber" value={formData.mobileNumber} onChange={handleChange} fullWidth variant="outlined" margin="normal" />
-                    <TextField label="Email" name="email" value={formData.email} onChange={handleChange} fullWidth variant="outlined" margin="normal" />
-                    <TextField label="Address" name="address" value={formData.address} onChange={handleChange} fullWidth variant="outlined" margin="normal" multiline rows={2} />
-                    <TextField label="Qualification" name="qualification" value={formData.qualification} onChange={handleChange} fullWidth variant="outlined" margin="normal" />
-                    <TextField select label="Working Status" name="workingStatus" value={formData.workingStatus} onChange={handleChange} fullWidth variant="outlined" margin="normal">
+                    <TextField label="Full Name" name="name" value={ formData.name } onChange={ handleChange } fullWidth variant="outlined" margin="normal" />
+                    <TextField label="Mobile Number" name="mobileNumber" value={ formData.mobileNumber } onChange={ handleChange } fullWidth variant="outlined" margin="normal" />
+                    <TextField label="Email" name="email" value={ formData.email } onChange={ handleChange } fullWidth variant="outlined" margin="normal" />
+                    <TextField label="Address" name="address" value={ formData.address } onChange={ handleChange } fullWidth variant="outlined" margin="normal" multiline rows={ 2 } />
+                    <TextField label="Qualification" name="qualification" value={ formData.qualification } onChange={ handleChange } fullWidth variant="outlined" margin="normal" />
+                    <TextField select label="Working Status" name="workingStatus" value={ formData.workingStatus } onChange={ handleChange } fullWidth variant="outlined" margin="normal">
                         <MenuItem value="full-time">Full-Time</MenuItem>
                         <MenuItem value="part-time">Part-Time</MenuItem>
                         <MenuItem value="unemployed">Unemployed</MenuItem>
                     </TextField>
                     <div>
-                        {formData.resume || pdfFile ? (
+                        { formData.resume || pdfFile ? (
                             <div className='mb-2'>
                                 <Typography variant="h6">Existing Resume:</Typography>
-                                <Button variant="outlined" color="secondary" onClick={() => setShowResume(!showResume)}>
-                                    {showResume ? 'Hide Resume' : 'View Resume'}
+                                <Button variant="outlined" color="secondary" onClick={ () => setShowResume(!showResume) }>
+                                    { showResume ? 'Hide Resume' : 'View Resume' }
                                 </Button>
-                                {showResume && <iframe src={validViewPdf} width="100%" height="600px" title="Resume Preview" />}
+                                { showResume && <iframe src={ validViewPdf } width="100%" height="600px" title="Resume Preview" /> }
                             </div>
-                        ) : <Typography variant="h6">No resume uploaded</Typography>}
+                        ) : <Typography variant="h6">No resume uploaded</Typography> }
                         <Button variant="contained" component="label">
                             Upload Resume
-                            <input type="file" hidden accept="application/pdf" onChange={(e) => handleResumeChange(e, (resume) => setFormData(prev => ({ ...prev, resume })), setError)} />
+                            <input type="file" hidden accept="application/pdf" onChange={ (e) => handleResumeChange(e, (resume) => setFormData(prev => ({ ...prev, resume })), setError) } />
                         </Button>
                     </div>
-                    <Box sx={{ textAlign: 'center', marginTop: 4 }}>
-                        <Button variant="contained" color="primary" type="submit" disabled={loading}>
-                            {loading ? 'Updating...' : 'Update Student'}
+                    <Box sx={ { textAlign: 'center', marginTop: 4 } }>
+                        <Button variant="contained" color="primary" type="submit" disabled={ loading }>
+                            { loading ? 'Updating...' : 'Update Student' }
                         </Button>
                     </Box>
                 </Box>

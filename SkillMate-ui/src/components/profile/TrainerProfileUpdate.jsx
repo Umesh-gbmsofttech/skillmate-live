@@ -3,14 +3,16 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, TextField, Button, CircularProgress, Typography, Checkbox, FormControlLabel, MenuItem } from '@mui/material';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import baseUrl from '../urls/baseUrl'
 import { handleProfilePicChange, handleResumeChange } from '../utility/FileUploadHelper';
+import { logout } from '../redux/authSlice'
 
 
 function TrainerProfileUpdate() {
     const token = useSelector((state) => state.auth.token);
-    const [formData, setFormData] = useState({
+    const dispatch = useDispatch();
+    const [ formData, setFormData ] = useState({
         name: '',
         mobileNumber: '',
         email: '',
@@ -21,16 +23,23 @@ function TrainerProfileUpdate() {
         technologies: [],
         image: '', // To store base64 image data
     });
-    const [loading, setLoading] = useState(true);
+    const [ loading, setLoading ] = useState(true);
     const { trainerId } = useParams();
     const navigate = useNavigate();
-    const [previewImage, setPreviewImage] = useState(''); // To show the selected image preview
-    const [pdfFile, setPdfFile] = useState(null);
-    const [showResume, setShowResume] = useState(false);
-    const [error, setError] = useState('');
+    const [ previewImage, setPreviewImage ] = useState(''); // To show the selected image preview
+    const [ pdfFile, setPdfFile ] = useState(null);
+    const [ showResume, setShowResume ] = useState(false);
+    const [ error, setError ] = useState('');
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
 
     useEffect(() => {
         const fetchTrainerData = async () => {
+            if (!isAuthenticated) {
+                setLoading(false);
+                navigate('/login/mobile');
+                return;
+            }
             try {
                 const response = await axios.get(`${baseUrl}trainers/${trainerId}`);
                 const trainer = response.data;
@@ -67,13 +76,13 @@ function TrainerProfileUpdate() {
         } else {
             navigate('/admin-dashboard');
         }
-    }, [trainerId, navigate]);
+    }, [ trainerId, navigate ]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value
+            [ name ]: value
         }));
     };
 
@@ -82,7 +91,7 @@ function TrainerProfileUpdate() {
         setFormData((prevData) => ({
             ...prevData,
             technologies: checked
-                ? [...prevData.technologies, value]
+                ? [ ...prevData.technologies, value ]
                 : prevData.technologies.filter((tech) => tech !== value)
         }));
     };
@@ -96,9 +105,11 @@ function TrainerProfileUpdate() {
                 }
             });
             if (response.status === 200) {
-                showSuccessToast('Trainer updated successfully!');
+                showSuccessToast('Profile updated successfully \n Please login again!');
+                navigate('/login/mobile');
+                dispatch(logout());
             } else {
-                showErrorToast('Trainer not updated!');
+                showErrorToast('Profile not updated!');
             }
         } catch (error) {
             showErrorToast('An error occurred while updating the trainer.');
@@ -114,37 +125,37 @@ function TrainerProfileUpdate() {
         validViewPdf = `data:application/pdf;base64,${validViewPdf}`; // Add the base64 prefix if it's missing
     }
     return (
-        <Box sx={{ padding: 4, backgroundColor: '#f7f7f71b', borderRadius: 2, marginTop: 2, marginLeft: 2, marginRight: 2 }}>
+        <Box sx={ { padding: 4, backgroundColor: '#f7f7f71b', borderRadius: 2, marginTop: 2, marginLeft: 2, marginRight: 2 } }>
             <Typography variant="h4" gutterBottom>Edit Trainer Information</Typography>
-            <form onSubmit={handleSubmit}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    {/* Profile Picture Section */}
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <form onSubmit={ handleSubmit }>
+                <Box sx={ { display: 'flex', flexDirection: 'column', gap: 2 } }>
+                    {/* Profile Picture Section */ }
+                    <Box sx={ { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 } }>
                         <img
-                            src={previewImage}
+                            src={ previewImage }
                             alt="Trainer Profile"
-                            style={{ width: 200, height: 200, objectFit: 'cover', borderRadius: '50%' }}
+                            style={ { width: 200, height: 200, objectFit: 'cover', borderRadius: '50%' } }
                         />
                         <Button variant="contained" component="label">
                             Upload Profile Picture
                             <input type="file" hidden accept="image/*"
-                                onChange={(e) => handleProfilePicChange(
+                                onChange={ (e) => handleProfilePicChange(
                                     e,
                                     (img) => {
                                         setFormData((prev) => ({ ...prev, image: img }));
                                         setPreviewImage(`data:image/png;base64,${img}`);
                                     },
                                     setError
-                                )} />
+                                ) } />
                         </Button>
                     </Box>
 
-                    {/* Form Fields */}
+                    {/* Form Fields */ }
                     <TextField
                         label="Full Name"
                         name="name"
-                        value={formData.name}
-                        onChange={handleChange}
+                        value={ formData.name }
+                        onChange={ handleChange }
                         fullWidth
                         variant="outlined"
                         margin="normal"
@@ -152,8 +163,8 @@ function TrainerProfileUpdate() {
                     <TextField
                         label="Mobile Number"
                         name="mobileNumber"
-                        value={formData.mobileNumber}
-                        onChange={handleChange}
+                        value={ formData.mobileNumber }
+                        onChange={ handleChange }
                         fullWidth
                         variant="outlined"
                         margin="normal"
@@ -161,8 +172,8 @@ function TrainerProfileUpdate() {
                     <TextField
                         label="Email"
                         name="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                        value={ formData.email }
+                        onChange={ handleChange }
                         fullWidth
                         variant="outlined"
                         margin="normal"
@@ -170,19 +181,19 @@ function TrainerProfileUpdate() {
                     <TextField
                         label="Address"
                         name="address"
-                        value={formData.address}
-                        onChange={handleChange}
+                        value={ formData.address }
+                        onChange={ handleChange }
                         fullWidth
                         variant="outlined"
                         margin="normal"
                         multiline
-                        rows={2}
+                        rows={ 2 }
                     />
                     <TextField
                         label="Qualification"
                         name="qualification"
-                        value={formData.qualification}
-                        onChange={handleChange}
+                        value={ formData.qualification }
+                        onChange={ handleChange }
                         fullWidth
                         variant="outlined"
                         margin="normal"
@@ -190,8 +201,8 @@ function TrainerProfileUpdate() {
                     <TextField
                         label="Experience"
                         name="experience"
-                        value={formData.experience}
-                        onChange={handleChange}
+                        value={ formData.experience }
+                        onChange={ handleChange }
                         type='number'
                         fullWidth
                         variant="outlined"
@@ -201,8 +212,8 @@ function TrainerProfileUpdate() {
                         select
                         label="Working Status"
                         name="workingStatus"
-                        value={formData.workingStatus}
-                        onChange={handleChange}
+                        value={ formData.workingStatus }
+                        onChange={ handleChange }
                         fullWidth
                         variant="outlined"
                         margin="normal"
@@ -212,85 +223,85 @@ function TrainerProfileUpdate() {
                         <MenuItem value="unemployed">Unemployed</MenuItem>
                     </TextField>
 
-                    {/* Technologies Section */}
+                    {/* Technologies Section */ }
                     <div className="selected-technologies">
                         <h5>Selected Technologies:</h5>
                         <div className="technologies-display">
-                            {formData.technologies.map((tech, index) => (
-                                <span key={index} className="technology-tag">
+                            { formData.technologies.map((tech, index) => (
+                                <span key={ index } className="technology-tag">
                                     <Button
                                         variant="outlined"
                                         color="info"
-                                        sx={{ padding: '4px 25px' }}
-                                        onClick={() => setShowResume(!showResume)}>
-                                        {tech}
+                                        sx={ { padding: '4px 25px' } }
+                                        onClick={ () => setShowResume(!showResume) }>
+                                        { tech }
                                     </Button>,
                                 </span>
-                            ))}
+                            )) }
                         </div>
                     </div>
                     <div >
-                        {['Java', 'Spring Boot', 'JavaScript', 'React', 'Angular', 'React Native'].map((tech) => (
+                        { [ 'Java', 'Spring Boot', 'JavaScript', 'React', 'Angular', 'React Native' ].map((tech) => (
                             <FormControlLabel
-                                key={tech}
+                                key={ tech }
                                 control={
                                     <Checkbox
-                                        value={tech}
-                                        checked={formData.technologies.includes(tech)}
-                                        onChange={handleTechnologiesChange}
+                                        value={ tech }
+                                        checked={ formData.technologies.includes(tech) }
+                                        onChange={ handleTechnologiesChange }
                                     />
                                 }
-                                label={tech}
+                                label={ tech }
                             />
-                        ))}
+                        )) }
                     </div>
 
-                    {/* Resume Section */}
+                    {/* Resume Section */ }
                     <div>
-                        {pdfFile ? (
+                        { pdfFile ? (
                             <div className='mb-2'>
                                 <Typography variant="h6">Existing Resume:</Typography>
                                 <Button
                                     variant="outlined"
                                     color="secondary"
-                                    sx={{ padding: '4px 25px' }}
-                                    onClick={() => setShowResume(!showResume)}>
-                                    {showResume ? 'Hide Resume' : 'View Resume'}
+                                    sx={ { padding: '4px 25px' } }
+                                    onClick={ () => setShowResume(!showResume) }>
+                                    { showResume ? 'Hide Resume' : 'View Resume' }
                                 </Button>
 
-                                {showResume && (
+                                { showResume && (
                                     <iframe
-                                        src={validViewPdf}
+                                        src={ validViewPdf }
                                         width="100%"
                                         height="600px"
                                         title="Resume Preview"
                                     />
-                                )}
+                                ) }
                             </div>
                         ) : (
                             <Typography variant="h6">No resume uploaded</Typography>
-                        )}
+                        ) }
                         <Button variant="contained" component="label">
                             Upload Resume
                             <input type="file" hidden accept="application/pdf"
-                                onChange={(e) => handleResumeChange(e, (pdf) => {
+                                onChange={ (e) => handleResumeChange(e, (pdf) => {
                                     setFormData((prev) => ({ ...prev, resume: pdf }));
                                     setPdfFile(pdf);  // Ensure the preview updates
-                                }, setError)}
+                                }, setError) }
 
                             />
                         </Button>
                     </div>
 
-                    <Box sx={{ textAlign: 'center', marginTop: 4 }}>
+                    <Box sx={ { textAlign: 'center', marginTop: 4 } }>
                         <Button
                             variant="contained"
                             color="primary"
                             type="submit"
-                            sx={{ padding: '12px 30px' }}
-                            disabled={loading} // Disable when loading
+                            sx={ { padding: '12px 30px' } }
+                            disabled={ loading } // Disable when loading
                         >
-                            {loading ? 'Updating...' : 'Update Trainer'}
+                            { loading ? 'Updating...' : 'Update Trainer' }
                         </Button>
                     </Box>
                 </Box>

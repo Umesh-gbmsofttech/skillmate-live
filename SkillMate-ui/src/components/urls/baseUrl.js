@@ -2,5 +2,6 @@
 // export default baseUrl;
 
 
-export default 'http://localhost:8080/';
-// export default 'https://989rdskd-8080.inc1.devtunnels.ms/';
+// export default 'http://localhost:8080/';
+// export default 'http://skillmate-backend-env.eba-3c3sawk3.eu-north-1.elasticbeanstalk.com/';
+export default 'http://skillmate-backend.eu-north-1.elasticbeanstalk.com/';

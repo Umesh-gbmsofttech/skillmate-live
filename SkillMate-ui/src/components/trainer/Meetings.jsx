@@ -31,7 +31,7 @@ function Meetings({ userData, trainerId }) {
     );
     const token = useSelector((state) => state.auth.token);
 
-    const [meetingDetails, setMeetingDetails] = useState({
+    const [ meetingDetails, setMeetingDetails ] = useState({
         fromTime: '',
         toTime: '',
         meetingLink: '',
@@ -40,21 +40,21 @@ function Meetings({ userData, trainerId }) {
         selectedCourse: '',
     });
 
-    const [previousMeetings, setPreviousMeetings] = useState([]);
+    const [ previousMeetings, setPreviousMeetings ] = useState([]);
 
     // Fetch batches only if trainerId is available and batches are not yet loaded
     useEffect(() => {
         if (trainerId && batches.length === 0) {
             dispatch(fetchTrainerBatches(trainerId));
         }
-    }, [trainerId, batches.length, dispatch]);
+    }, [ trainerId, batches.length, dispatch ]);
 
     // Optimized handleMeetingInputChange using useCallback
     const handleMeetingInputChange = useCallback((e) => {
         const { name, value } = e.target;
         setMeetingDetails((prevDetails) => ({
             ...prevDetails,
-            [name]: value,
+            [ name ]: value,
         }));
     }, []);
 
@@ -66,7 +66,7 @@ function Meetings({ userData, trainerId }) {
         if (selectedBatch) {
             setMeetingDetails((prevDetails) => ({
                 ...prevDetails,
-                selectedBatches: [selectedBatchId],
+                selectedBatches: [ selectedBatchId ],
                 selectedCourse: selectedBatch.course.id,
                 fromTime: selectedBatch.startTime,
                 toTime: selectedBatch.endTime,
@@ -80,7 +80,7 @@ function Meetings({ userData, trainerId }) {
                 toTime: '',
             }));
         }
-    }, [batches]);
+    }, [ batches ]);
 
     // Optimized handleSubmit using useCallback and refactored logic
     const handleSubmit = useCallback(async () => {
@@ -100,7 +100,7 @@ function Meetings({ userData, trainerId }) {
         const localDate = today.toLocaleDateString('en-CA'); // Ensures 'YYYY-MM-DD' format
 
         // 🟢 Get batch start date or fallback to today's date
-        const selectedBatch = batches.find(batch => batch.id === meetingDetails.selectedBatches[0]);
+        const selectedBatch = batches.find(batch => batch.id === meetingDetails.selectedBatches[ 0 ]);
         const batchDate = selectedBatch?.startDate || localDate;
 
         // 🟢 Format date-time correctly without 'Z'
@@ -108,7 +108,7 @@ function Meetings({ userData, trainerId }) {
         const formattedToTime = `${batchDate}T${meetingDetails.toTime}:00`;
 
         // 🟢 Get current timestamp for createdAt (without 'Z')
-        const createdAt = new Date().toISOString().split('.')[0]; // Removes milliseconds & 'Z'
+        const createdAt = new Date().toISOString().split('.')[ 0 ]; // Removes milliseconds & 'Z'
 
         const payload = {
             startTime: formattedFromTime,
@@ -117,7 +117,7 @@ function Meetings({ userData, trainerId }) {
             createdAt: createdAt, // 🟢 Ensures 'Z' is removed
             course: { id: meetingDetails.selectedCourse },
             trainer: { id: trainerId },
-            batch: { id: meetingDetails.selectedBatches[0] },
+            batch: { id: meetingDetails.selectedBatches[ 0 ] },
         };
 
         try {
@@ -140,158 +140,158 @@ function Meetings({ userData, trainerId }) {
         } catch (error) {
             showErrorToast(`Error saving meeting: ${error}`);
         }
-    }, [meetingDetails, trainerId, batches]);
+    }, [ meetingDetails, trainerId, batches ]);
 
 
     // Memoized batch selection information
     const selectedBatch =
         meetingDetails.selectedBatches.length > 0
-            ? batches.find((batch) => batch.id === meetingDetails.selectedBatches[0])
+            ? batches.find((batch) => batch.id === meetingDetails.selectedBatches[ 0 ])
             : null;
 
     const selectedCourse = selectedBatch?.course;
 
     return (
-        <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-            <Paper style={{ padding: '20px' }}>
+        <div style={ { padding: '20px', maxWidth: '600px', margin: 'auto' } }>
+            <Paper style={ { padding: '20px' } }>
                 <Typography
                     variant="h5"
                     gutterBottom
-                    sx={{
+                    sx={ {
                         textAlign: 'center',
                         fontFamily: 'var(--font-p2)',
                         color: 'var(--color-p2)',
-                    }}
+                    } }
                 >
                     Create a Meeting
                 </Typography>
-                <Grid container spacing={2} direction="column"> {/* Changed direction to column */}
-                    <Grid item xs={12}>
+                <Grid container spacing={ 2 } direction="column">
+                    <Grid item xs={ 12 }>
                         <FormControl fullWidth variant="outlined">
                             <InputLabel
-                                sx={{
+                                sx={ {
                                     textAlign: 'center',
                                     fontFamily: 'var(--font-p2)',
                                     color: 'var(--color-p2)',
-                                }}
+                                } }
                             >
                                 Choose Batch
                             </InputLabel>
                             <Select
-                                sx={{
+                                sx={ {
                                     textAlign: 'center',
                                     fontFamily: 'var(--font-p2)',
                                     color: 'var(--color-p2)',
-                                }}
+                                } }
                                 label="Choose Batch"
-                                value={meetingDetails.selectedBatches[0] || ''}
-                                onChange={handleBatchChange}
-                                renderValue={(selected) => {
+                                value={ meetingDetails.selectedBatches[ 0 ] || '' }
+                                onChange={ handleBatchChange }
+                                renderValue={ (selected) => {
                                     const batch = batches.find((batch) => batch.id === selected);
                                     return batch ? batch.course.title : 'Select Batch';
-                                }}
+                                } }
                             >
-                                {batches.map((batch) => (
+                                { batches.map((batch) => (
                                     <MenuItem
-                                        sx={{
+                                        sx={ {
                                             fontFamily: 'var(--font-p2)',
                                             color: 'var(--color-p2)',
-                                        }}
-                                        key={batch.id}
-                                        value={batch.id}
+                                        } }
+                                        key={ batch.id }
+                                        value={ batch.id }
                                     >
                                         <Checkbox
-                                            checked={meetingDetails.selectedBatches.includes(
+                                            checked={ meetingDetails.selectedBatches.includes(
                                                 batch.id
-                                            )}
+                                            ) }
                                         />
                                         <ListItemText
-                                            sx={{
+                                            sx={ {
                                                 fontFamily: 'var(--font-p2)',
                                                 color: 'var(--color-p2)',
-                                            }}
-                                            primary={`Batch Id: ${batch.id} - ${batch.course.title}`}
+                                            } }
+                                            primary={ `Batch Id: ${batch.id} - ${batch.course.title}` }
                                         />
                                     </MenuItem>
-                                ))}
+                                )) }
                             </Select>
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={12}>
-                        {selectedCourse && (
+                    <Grid item xs={ 12 }>
+                        { selectedCourse && (
                             <Box display="flex" alignItems="center">
                                 <Avatar
-                                    src={`data:image/jpeg;base64,${selectedCourse.image}`}
+                                    src={ `data:image/jpeg;base64,${selectedCourse.image}` }
                                 />
                                 <Typography
                                     variant="body1"
-                                    style={{ marginLeft: '10px' }}
-                                    sx={{
+                                    style={ { marginLeft: '10px' } }
+                                    sx={ {
                                         fontFamily: 'var(--font-p2)',
                                         color: 'var(--color-p2)',
-                                    }}
+                                    } }
                                 >
-                                    {selectedCourse.title}
+                                    { selectedCourse.title }
                                 </Typography>
                             </Box>
-                        )}
+                        ) }
                     </Grid>
 
-                    <Grid item xs={12}>
+                    <Grid item xs={ 12 }>
                         <TextField
                             fullWidth
                             label="Meeting Link"
                             name="meetingLink"
-                            value={meetingDetails.meetingLink}
-                            onChange={handleMeetingInputChange}
+                            value={ meetingDetails.meetingLink }
+                            onChange={ handleMeetingInputChange }
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={ 12 }>
                         <TextField
                             fullWidth
                             label="From Time"
                             type="time"
                             name="fromTime"
-                            value={meetingDetails.fromTime}
-                            onChange={handleMeetingInputChange}
-                            InputLabelProps={{
+                            value={ meetingDetails.fromTime }
+                            onChange={ handleMeetingInputChange }
+                            InputLabelProps={ {
                                 shrink: true,
-                            }}
+                            } }
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={ 12 }>
                         <TextField
                             fullWidth
                             label="To Time"
                             type="time"
                             name="toTime"
-                            value={meetingDetails.toTime}
-                            onChange={handleMeetingInputChange}
-                            InputLabelProps={{
+                            value={ meetingDetails.toTime }
+                            onChange={ handleMeetingInputChange }
+                            InputLabelProps={ {
                                 shrink: true,
-                            }}
+                            } }
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item xs={12} >
+                    <Grid item xs={ 12 } >
                         <TextField
                             fullWidth
                             label="Message"
                             name="message"
-                            value={meetingDetails.message}
-                            onChange={handleMeetingInputChange}
+                            value={ meetingDetails.message }
+                            onChange={ handleMeetingInputChange }
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={ 12 }>
                         <Button
                             fullWidth
                             variant="contained"
                             color="primary"
-                            onClick={handleSubmit}
+                            onClick={ handleSubmit }
                         >
                             Submit
                         </Button>

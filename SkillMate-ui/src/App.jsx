@@ -57,31 +57,33 @@ import WriteReview from './components/rating-review/WriteReview';
 
 
 function App() {
-
-  const username = 'admin';
+  const username = useSelector((state) => state.auth.username);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const [showForm, setShowForm] = useState(true);
+  const [ showForm, setShowForm ] = useState(false);
 
-  // Function to open the form
+  // if (!isAuthenticated) {
+  //   return;
+  // }
+  // if (username != "ADMIN") {
+  //   return;
+  // }
   const openForm = () => {
-    setShowForm(true); // Open form
+    setShowForm(true);
   };
 
-  // Function to close the form
   const closeForm = () => {
-    // document.querySelector('.contact-us__enquiry-form-container-overlay').style.display = 'none';
-    setShowForm(false); // Close form
+    setShowForm(false);
   };
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      openForm();
+    }, 60000);
+
     if (!showForm) {
-      const timer = setTimeout(() => {
-        openForm(); // Open form after 5 minutes in loop
-      }, 50000);
       return () => clearTimeout(timer); // Cleanup timer
     }
-  }, [showForm]);
-
+  }, [ showForm ]);
 
   // Mouse move event listener for cursor tracker
   // useEffect(() => {
@@ -103,90 +105,90 @@ function App() {
     // debouncing throatling
 
     <Router>
-      {/* <div className="cursor-tracker"></div> */}
+      {/* <div className="cursor-tracker"></div> */ }
       <Navbar />
       <Routes>
-        <Route path="*" element={<h1 className='page-not-found-error-msg'>404 - Page Not Found</h1>} />
+        <Route path="*" element={ <h1 className='page-not-found-error-msg'>404 - Page Not Found</h1> } />
         <Route path="/" element={
           <>
-            {/* home */}
+            {/* home */ }
             <Carousel />
             <ConfirmationDialog />
-            <Courses topCourses={true} />
-            <TopTrainersAndStudents sectionHeading={'Our Top Trainers'} trainer={'trainer'} />
-            <TopTrainersAndStudents sectionHeading={'Successfully	Placed	Students'} student={'student'} />
-            {/* <TestimonialsOfPlatformUsers heading={'Testimonials of Platform Users'} /> */}
+            <Courses topCourses={ true } />
+            <TopTrainersAndStudents sectionHeading={ 'Our Top Trainers' } trainer={ 'trainer' } />
+            <TopTrainersAndStudents sectionHeading={ 'Successfully	Placed	Students' } student={ 'student' } />
+            {/* <TestimonialsOfPlatformUsers heading={'Testimonials of Platform Users'} /> */ }
             <ReviewsSection />
             <TechnologyStack />
             <OurStudentsPlacedIn />
             <Chatbot />
           </>
         } />
-        <Route path="/navbar" element={<Navbar />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/login/email" element={<LoginWithEmail />} />
-        <Route path="/login/mobile" element={<LoginWithMobile />} />
-        <Route path="/student-signup" element={<StudentSignUp />} />
-        <Route path="/trainer-signup" element={<TrainerSignUp />} />
-        <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/student-or-trainer/signup" element={<Student_Or_Trainer_signup />} />
-        <Route path="/reviews-section" element={<ReviewsSection />} />
-        <Route path="/reviews-section/write" element={<WriteReview />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/subscriptions" element={<Subscription />} />
-        <Route path="/about" element={<Footer />} />
-        <Route path="/student-profile" element={<StudentProfile username />} />
-        <Route path="/student-profile-update/:studentId" element={<StudentProfileUpdate username />} />
-        <Route path="/trainer-profile" element={<TrainerProfile username />} />
-        <Route path="/trainer-profile-update/:trainerId" element={<TrainerProfileUpdate username />} />
-        <Route path="/admin-profile" element={<AdminProfile username />} />
-        <Route path="/admin-profile/manage-trainers" element={<ManageTrainersList />} />
-        <Route path="/admin-profile/manage-trainers/assign-course-to/trainer" element={<AssignCourseToTrainer />} />
-        <Route path="/admin-profile/manage-students" element={<ManageStudentsList />} />
-        <Route path="/admin-profile/edit-courses" element={<AdEditCourse />} />
-        <Route path="/admin-profile/manage-courses" element={<ManageCoursesList />} />
-        <Route path="/admin-profile/edit-course" element={<AddCourseForm />} />
+        <Route path="/navbar" element={ <Navbar /> } />
+        <Route path="/contact" element={ <Contact /> } />
+        <Route path="/courses" element={ <Courses /> } />
+        <Route path="/login/email" element={ <LoginWithEmail /> } />
+        <Route path="/login/mobile" element={ <LoginWithMobile /> } />
+        <Route path="/student-signup" element={ <StudentSignUp /> } />
+        <Route path="/trainer-signup" element={ <TrainerSignUp /> } />
+        <Route path="/admin-login" element={ <AdminLogin /> } />
+        <Route path="/student-or-trainer/signup" element={ <Student_Or_Trainer_signup /> } />
+        <Route path="/reviews-section" element={ <ReviewsSection /> } />
+        <Route path="/reviews-section/write" element={ <WriteReview /> } />
+        <Route path="/community" element={ <Community /> } />
+        <Route path="/subscriptions" element={ <Subscription /> } />
+        <Route path="/about" element={ <Footer /> } />
+        <Route path="/student-profile" element={ <StudentProfile /> } />
+        <Route path="/student-profile-update/:studentId" element={ <StudentProfileUpdate /> } />
+        <Route path="/trainer-profile" element={ <TrainerProfile /> } />
+        <Route path="/trainer-profile-update/:trainerId" element={ <TrainerProfileUpdate /> } />
+        <Route path="/admin-profile" element={ <AdminProfile /> } />
+        <Route path="/admin-profile/manage-trainers" element={ <ManageTrainersList /> } />
+        <Route path="/admin-profile/manage-trainers/assign-course-to/trainer" element={ <AssignCourseToTrainer /> } />
+        <Route path="/admin-profile/manage-students" element={ <ManageStudentsList /> } />
+        <Route path="/admin-profile/edit-courses" element={ <AdEditCourse /> } />
+        <Route path="/admin-profile/manage-courses" element={ <ManageCoursesList /> } />
+        <Route path="/admin-profile/edit-course" element={ <AddCourseForm /> } />
 
-        <Route path="/buy-course" element={<BuyCourse />} />
-        <Route path="/my-courses" element={<MyCourses />} />
-        <Route path="/admin-profile/manage-batches" element={<ManageBatches />} />
-        <Route path="/admin-profile/manage-batches/create/new" element={<CreateBatch />} />
-        <Route path="/admin-profile/manage-batches/edit/:batchId" element={<UpdateBatch />} />
+        <Route path="/buy-course" element={ <BuyCourse /> } />
+        <Route path="/my-courses" element={ <MyCourses /> } />
+        <Route path="/admin-profile/manage-batches" element={ <ManageBatches /> } />
+        <Route path="/admin-profile/manage-batches/create/new" element={ <CreateBatch /> } />
+        <Route path="/admin-profile/manage-batches/edit/:batchId" element={ <UpdateBatch /> } />
 
-        {/* Footer Career section */}
-        <Route path="/careers/software-engineer" element={<SoftwareEngineer />} />
-        <Route path="/careers/frontend-developer" element={<FrontendDeveloper />} />
-        <Route path="/careers/backend-developer" element={<BackendDeveloper />} />
-        <Route path="/careers/fullstack-developer" element={<FullstackDeveloper />} />
-        {/* Footer Explore section */}
-        <Route path="/explore/ui-ux-design" element={<UiUxDesign />} />
-        <Route path="/explore/collaborative-design-tools" element={<CollaborativeDesignTools />} />
-        <Route path="/explore/design-systems" element={<DesignSystems />} />
-        <Route path="/explore/prototyping-wireframing" element={<Prototyping_Wireframing />} />
-        <Route path="/explore/web-development-tools" element={<WebDevelopmentTools />} />
-        {/* Footer Skillmate section */}
-        <Route path="/skillmate/about" element={<About />} />
-        <Route path="/skillmate/what-we-offer" element={<WhatWeOffer />} />
+        {/* Footer Career section */ }
+        <Route path="/careers/software-engineer" element={ <SoftwareEngineer /> } />
+        <Route path="/careers/frontend-developer" element={ <FrontendDeveloper /> } />
+        <Route path="/careers/backend-developer" element={ <BackendDeveloper /> } />
+        <Route path="/careers/fullstack-developer" element={ <FullstackDeveloper /> } />
+        {/* Footer Explore section */ }
+        <Route path="/explore/ui-ux-design" element={ <UiUxDesign /> } />
+        <Route path="/explore/collaborative-design-tools" element={ <CollaborativeDesignTools /> } />
+        <Route path="/explore/design-systems" element={ <DesignSystems /> } />
+        <Route path="/explore/prototyping-wireframing" element={ <Prototyping_Wireframing /> } />
+        <Route path="/explore/web-development-tools" element={ <WebDevelopmentTools /> } />
+        {/* Footer Skillmate section */ }
+        <Route path="/skillmate/about" element={ <About /> } />
+        <Route path="/skillmate/what-we-offer" element={ <WhatWeOffer /> } />
 
       </Routes>
 
-      {showForm && !isAuthenticated && <EnquiryForm closeForm={closeForm} />}
+      { showForm && !isAuthenticated && <EnquiryForm closeForm={ closeForm } /> }
 
 
       <ToastContainer
         // position="bottom-center"
         position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
+        autoClose={ 5000 }
+        hideProgressBar={ false }
+        newestOnTop={ false }
+        closeOnClick={ false }
+        rtl={ false }
         pauseOnFocusLoss
         draggable
         pauseOnHover
         theme="light"
-        transition={Bounce}
+        transition={ Bounce }
       />
 
       <Footer />

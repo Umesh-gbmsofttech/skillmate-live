@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import urls from '../urls/Urls';
 import {
   setMobileNumber,
   setOtp,
@@ -21,7 +20,7 @@ const LoginWithMobile = () => {
   // Redux state
   const { mobileNumber, otp, isOtpSent, error } = useSelector((state) => state.auth);
 
-  const [loading, setLoading] = useState(false);
+  const [ loading, setLoading ] = useState(false);
 
   // Handle sending OTP
   const handleSendOtp = async () => {
@@ -69,12 +68,11 @@ const LoginWithMobile = () => {
         }));
 
         // Store token in localStorage
-        localStorage.setItem('token', result.token);
+        // localStorage.setItem('token', result.token);
 
-        // Navigate to the profile page after successful login
         dispatch(setIsOtpSent(false));
         dispatch(setIsOtpVerified(true));
-        navigate('/'); // Redirect to the home page or your preferred page
+        navigate('/');
       } else {
         const errorMessage = await response.text();
         dispatch(setError(errorMessage));
@@ -89,10 +87,10 @@ const LoginWithMobile = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+    <div className="container d-flex justify-content-center align-items-center" style={ { minHeight: '100vh' } }>
       <div className="card p-4 shadow-lg">
         <h2 className="text-center mb-4">Login with Mobile</h2>
-        {!isOtpSent ? (
+        { !isOtpSent ? (
           <div>
             <div className="form-group mb-3">
               <label htmlFor="mobileNumber" className="form-label">
@@ -102,17 +100,17 @@ const LoginWithMobile = () => {
                 type="text"
                 id="mobileNumber"
                 className="form-control"
-                value={mobileNumber}
-                onChange={(e) => dispatch(setMobileNumber(e.target.value))}
+                value={ mobileNumber }
+                onChange={ (e) => dispatch(setMobileNumber(e.target.value)) }
                 placeholder="Enter your mobile number"
               />
             </div>
             <button
               className="btn btn-primary w-100"
-              onClick={handleSendOtp}
-              disabled={loading}
+              onClick={ handleSendOtp }
+              disabled={ loading }
             >
-              {loading ? (
+              { loading ? (
                 <span
                   className="spinner-border spinner-border-sm"
                   role="status"
@@ -120,7 +118,7 @@ const LoginWithMobile = () => {
                 />
               ) : (
                 'Send OTP'
-              )}
+              ) }
             </button>
           </div>
         ) : (
@@ -133,17 +131,17 @@ const LoginWithMobile = () => {
                 type="text"
                 id="otp"
                 className="form-control"
-                value={otp}
-                onChange={(e) => dispatch(setOtp(e.target.value))}
+                value={ otp }
+                onChange={ (e) => dispatch(setOtp(e.target.value)) }
                 placeholder="Enter the OTP"
               />
             </div>
             <button
               className="btn btn-success w-100"
-              onClick={handleVerifyOtp}
-              disabled={loading}
+              onClick={ handleVerifyOtp }
+              disabled={ loading }
             >
-              {loading ? (
+              { loading ? (
                 <span
                   className="spinner-border spinner-border-sm"
                   role="status"
@@ -151,17 +149,17 @@ const LoginWithMobile = () => {
                 />
               ) : (
                 'Login'
-              )}
+              ) }
             </button>
           </div>
-        )}
-        {/* {error && <p className="text-danger mt-3">{error}</p>} */}
-        {error && <div className="alert alert-danger mt-3" role="alert">{error}</div>}
+        ) }
+        {/* {error && <p className="text-danger mt-3">{error}</p>} */ }
+        { error && <div className="alert alert-danger mt-3" role="alert">{ error }</div> }
 
         <div className="mt-4 text-center">
           <p className="mb-0">
             <a href="#"
-              onClick={() => navigate('/login/email')}
+              onClick={ () => navigate('/login/email') }
               className="text-decoration-none"
             >
               Login With Email
@@ -169,7 +167,7 @@ const LoginWithMobile = () => {
           </p>
           <p className="mb-0">
             <a href="#"
-              onClick={() => navigate('/student-or-trainer/signup')}
+              onClick={ () => navigate('/student-or-trainer/signup') }
               className="text-decoration-none"
             >
               Don't have an account? Sign Up

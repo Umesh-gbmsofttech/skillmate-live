@@ -27,6 +27,8 @@ function StudentProfile() {
     const { courses, batches } = useSelector((state) => state.myCourses); // Access batches from state
     const token = useSelector((state) => state.auth.token);
     const dispatch = useDispatch();
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
 
     const user = {
         name: userData?.name || 'John Doe',
@@ -73,7 +75,9 @@ function StudentProfile() {
     const handleCloseDialog = () => {
         setOpenDialog(null);
     };
-
+    if (!isAuthenticated) {
+        return;
+    }
     return (
         <>
             <Box sx={ { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', p: 2 } }>

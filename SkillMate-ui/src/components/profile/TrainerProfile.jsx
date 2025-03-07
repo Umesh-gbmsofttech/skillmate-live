@@ -26,6 +26,8 @@ const TrainerProfile = () => {
     const userData = useSelector((state) => state.auth.userData);
     const trainerId = userData?.id;
     const navigate = useNavigate();
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
 
 
     const { courses } = useSelector((state) => state.trainerCourses);
@@ -75,6 +77,9 @@ const TrainerProfile = () => {
         setResumeOpen(true);
     };
 
+    if (!isAuthenticated) {
+        return;
+    }
     return (
         <Box sx={ { marginBottom: { sx: 10, md: 20 }, marginTop: { sx: 5, md: 10 } } }>
             <Box sx={ { display: "flex", justifyContent: "center", alignItems: "center", height: "50vh", p: 2 } }>

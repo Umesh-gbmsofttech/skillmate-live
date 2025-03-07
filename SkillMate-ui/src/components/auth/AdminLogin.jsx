@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/authSlice';
-import urls from '../urls/Urls';
 import { showSuccessToast, showErrorToast } from '../utility/ToastService'; // Import toast functions
 import baseUrl from '../urls/baseUrl'
 
 
 const AdminLogin = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [ username, setUsername ] = useState('');
+    const [ password, setPassword ] = useState('');
+    const [ error, setError ] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [loading, setLoading] = useState(false);
+    const [ loading, setLoading ] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -57,7 +56,7 @@ const AdminLogin = () => {
     };
 
     return (
-        <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+        <div className="container d-flex justify-content-center align-items-center" style={ { minHeight: '100vh' } }>
             <div className="card p-4 shadow-lg admin-sign-up-container">
                 <h2>Admin Login</h2>
 
@@ -65,8 +64,8 @@ const AdminLogin = () => {
                     Username:
                     <input
                         type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={ username }
+                        onChange={ (e) => setUsername(e.target.value) }
                         required
                         className="form-control"
                     />
@@ -76,20 +75,20 @@ const AdminLogin = () => {
                     Password:
                     <input
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={ password }
+                        onChange={ (e) => setPassword(e.target.value) }
                         required
                         className="form-control"
                     />
                 </label>
-                {error && <div className="alert alert-danger mt-3" role="alert">{error}</div>}
+                { error && <div className="alert alert-danger mt-3" role="alert">{ error }</div> }
                 <button
                     type='submit'
                     className="btn btn-success w-100"
-                    onClick={handleSubmit}
-                    disabled={loading}
+                    onClick={ handleSubmit }
+                    disabled={ loading }
                 >
-                    {loading ? (
+                    { loading ? (
                         <span
                             className="spinner-border spinner-border-sm"
                             role="status"
@@ -97,7 +96,7 @@ const AdminLogin = () => {
                         />
                     ) : (
                         'Submit'
-                    )}
+                    ) }
                 </button>
             </div>
         </div>
