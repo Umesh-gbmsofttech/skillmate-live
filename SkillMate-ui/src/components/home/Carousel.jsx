@@ -62,15 +62,15 @@ const Carousel = () => {
   return (
     <div className="carousel-container">
       <h2 className="carousel-heading">Our Spiritual Journey</h2>
-      <Slider {...settings}>
-        {spiritualImages.map((img, index) => (
-          <div className="carousel-slide" key={index}>
+      <Slider { ...settings }>
+        { spiritualImages.map((img, index) => (
+          <div className="carousel-slide" key={ index }>
             <div className="carousel-image-container">
-              <img className="carousel-image" src={img.image} alt={`Slide ${index + 1}`} />
-              {/* <h3 className="carousel-caption">{img.caption}</h3> */}
+              <img className="carousel-image" src={ img.image } alt={ `Slide ${index + 1}` } />
+              {/* <h3 className="carousel-caption">{img.caption}</h3> */ }
             </div>
           </div>
-        ))}
+        )) }
       </Slider>
     </div>
   );

@@ -49,6 +49,9 @@ const CarouselWrapper = styled.div`
 const CarouselTrack = styled.div`
     display: flex;
     animation: ${scrollAnimation} ${scrollDuration}s linear infinite;
+     &:hover {
+        animation-play-state: paused;
+    }
 `;
 
 const CompanyLogo = styled.div`
