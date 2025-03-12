@@ -51,10 +51,10 @@ public class Test {
         }
     }
 
-    // Custom method for printing number using a Consumer
-    static void printNumbers(int[] num, Consumer<int> consumer) {
-        for (int num : num) {
-            consumer.accept(num);
-        }
-    }
+    // // Custom method for printing number using a Consumer
+    // static void printNumbers(int[] num, Consumer<int> consumer) {
+    // for (int num : num) {
+    // consumer.accept(num);
+    // }
+    // }
 }
